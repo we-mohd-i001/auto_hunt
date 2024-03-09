@@ -4,4 +4,4 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/custom_logo.png"
+  image_path: "assets/images/auto_hunt_logo.png"
