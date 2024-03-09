@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
@@ -51,7 +52,7 @@ class _ContinueWithEmailPageState extends State<ContinueWithEmailPage> {
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    '''Login''',
+                    'Login',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 36,
@@ -67,72 +68,125 @@ class _ContinueWithEmailPageState extends State<ContinueWithEmailPage> {
                   ),
                   const SizedBox(height: 60),
 
-                  ContainerWithRoundedBorder(
-                    height: 280,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const InputText(
-                              padding: EdgeInsets.all(16),
-                              keyboardType: TextInputType.emailAddress,
-                              suffixIcon: Icons.email,
-                              label: 'Email',
-                              autoValidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              maxLines: 1,
-                            ),
-                            InputText(
-                              padding: const EdgeInsets.all(16),
-
-                              // keyboardType: TextInputType.visiblePassword,
-                              isPassword: isPasswordVisible,
-                              suffixIcon: isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              suffixOnTap: () {
-                                setState(() {
-                                  isPasswordVisible = !isPasswordVisible;
-                                });
-                              },
-                              label: 'Password',
-                              maxLines: 1,
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: Hero(
-                                tag: 'hero1',
-                                child: ButtonElevated(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                  onPressed: () {},
-                                  text: "Login",
-                                  fontSize: 17,
-                                  buttonType: ButtonType.success,
-                                  foregroundColor: AppTheme.colors['white'],
-                                  borderRadius: 8,
+                  Stack(
+                    children: [
+                      Hero(
+                          tag: 'hero1',
+                          child: Container(
+                            height: 280,
+                          )),
+                      ContainerWithRoundedBorder(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        height: 300,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                InputText(
+                                  validator: (_) => 'Invalid email',
+                                  padding: EdgeInsets.all(16),
+                                  keyboardType: TextInputType.emailAddress,
+                                  suffixIcon: Icons.email,
+                                  label: 'Email',
+                                  maxLines: 1,
                                 ),
-                              ),
+                                InputText(
+                                  validator: (_) => 'Invalid Password',
+                                  padding: const EdgeInsets.all(16),
+
+                                  // keyboardType: TextInputType.visiblePassword,
+                                  isPassword: isPasswordVisible,
+                                  suffixIcon: isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  suffixOnTap: () {
+                                    setState(() {
+                                      isPasswordVisible = !isPasswordVisible;
+                                    });
+                                  },
+                                  label: 'Password',
+                                  maxLines: 1,
+                                ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ButtonElevated(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    onPressed: () {
+                                      _formKey.currentState?.validate();
+                                    },
+                                    text: "Login",
+                                    fontSize: 17,
+                                    buttonType: ButtonType.success,
+                                    foregroundColor: AppTheme.colors['white'],
+                                    borderRadius: 8,
+                                  ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ButtonCheckBox(
+                                        padding: const EdgeInsets.all(0),
+                                        items: const [
+                                          CheckboxItem(
+                                              text: 'Remember me!', data: Text)
+                                        ],
+                                        onChanged: (items) {
+                                          setState(() {});
+                                        }),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Text(
+                                        'Forgot Password?',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: AppTheme.colors['danger']),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+
+                  SizedBox(
+                    height: 100,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Not a member yet? ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.white),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            ' Join now',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: AppTheme.colors['warning']),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    ButtonCheckBox(items: const[
-                      CheckboxItem(text: 'Remember me!',  data: Text)
-                    ], onChanged: (items){
-                      setState(() {
 
-                      });
-                    })
-                  ],),
                   // const Spacer(),
                   // const Spacer(),
                 ],
