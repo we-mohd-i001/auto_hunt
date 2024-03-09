@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:yourtasks/application/pages/view_states/continue_with_email_page.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
+import '../common_widgets/logo_with_name.dart';
+import '../view_states/continue_with_email_page.dart';
 
 class LoginPage extends StatelessWidget {
   static const String routePath = '/login';
@@ -49,22 +50,7 @@ Widget buildMobile(BuildContext context){
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage:
-                    AssetImage('assets/images/auto_hunt_logo.png'),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Auto.Hunt',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 22,
-                        color: Colors.white),
-                  )
-                ],
-              ),
+              const LogoWithName(),
               const SizedBox(height: 20),
               const Text(
                 '''Let's get started''',
@@ -225,7 +211,7 @@ Widget buildTablet(){
               SizedBox(width: 350,
 
                 child: Column(children: [
-                  SizedBox(height: 70,),
+                  const SizedBox(height: 70,),
                   SizedBox(
                     width: double.infinity,
                     child: ButtonElevated(
@@ -287,5 +273,5 @@ Widget buildTablet(){
 }
 
 Widget buildDeskTop(){
-  return Text('We are not on Desktop.');
+  return const Text('We are not on Desktop.');
 }
