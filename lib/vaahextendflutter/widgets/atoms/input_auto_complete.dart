@@ -140,6 +140,8 @@ class _InputAutoCompleteState extends State<InputAutoComplete> {
                 if (fieldFocusNode.hasFocus) fieldFocusNode.unfocus();
               },
               decoration: InputDecoration(
+                filled: true,
+                fillColor: AppTheme.colors['white'],
                 contentPadding: widget.padding,
                 border: border(AppTheme.colors['black']!.shade400),
                 enabledBorder: border(AppTheme.colors['black']!.shade400),
