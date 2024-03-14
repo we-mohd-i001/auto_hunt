@@ -8,7 +8,7 @@ import '../views/pages/permission_denied.dart';
 import '../views/pages/ui/index.dart';
 
 final Map<String, Route<dynamic> Function()> routes = {
-  '/': MyHomePage.route,
+  '/': LoginPage.route,
   LoginPage.routePath: LoginPage.route,
   ContinueWithEmailPage.routePath: ContinueWithEmailPage.route,
   MyHomePage.routePath: MyHomePage.route,

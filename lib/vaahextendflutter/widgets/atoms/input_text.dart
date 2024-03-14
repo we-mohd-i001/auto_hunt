@@ -26,6 +26,7 @@ class InputText extends StatelessWidget {
   final Function()? suffixOnTap;
   final int? minLines;
   final int? maxLines;
+  final bool isPassword;
 
   const InputText({
     super.key,
@@ -48,11 +49,13 @@ class InputText extends StatelessWidget {
     this.suffixOnTap,
     this.minLines,
     this.maxLines,
+    this.isPassword = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: isPassword,
       decoration: InputDecoration(
         contentPadding: padding,
         border: border(AppTheme.colors['black']!.shade400),
