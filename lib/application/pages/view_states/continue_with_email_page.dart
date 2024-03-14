@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
+import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
@@ -7,6 +7,7 @@ import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../common_widgets/logo_with_name.dart';
+import '../home/my_home_page.dart';
 
 class ContinueWithEmailPage extends StatefulWidget {
   static const String routePath = '/with_email';
@@ -118,6 +119,7 @@ class _ContinueWithEmailPageState extends State<ContinueWithEmailPage> {
                                         vertical: 16),
                                     onPressed: () {
                                       _formKey.currentState?.validate();
+                                      Navigator.pushNamed(context, MyHomePage.routePath);
                                     },
                                     text: "Login",
                                     fontSize: 17,
