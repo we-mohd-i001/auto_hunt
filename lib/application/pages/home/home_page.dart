@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import '../../../constants/others/other_consts.dart';
 import '../../../constants/strings/strings.dart';
 import '../../../vaahextendflutter/app_theme.dart';
@@ -87,13 +89,7 @@ class HomePage extends StatelessWidget {
             ),
             SliverList(
               // Use a delegate to build items as they're scrolled on screen.
-              delegate: SliverChildBuilderDelegate(
-                // The builder function returns a ListTile with a title that
-                // displays the index of the current item.
-                (context, index) => ListTile(title: Text('Item #$index')),
-                // Builds 1000 ListTiles
-                childCount: 1000,
-              ),
+              delegate: SliverChildListDelegate(homeScreen),
             ),
           ],
         ),
@@ -131,8 +127,7 @@ Widget homeScreenOptions() {
         ),
         Expanded(
             flex: 0,
-            child:
-                optionsHomeScreen(Icons.car_crash_rounded, Strings.sellCar)),
+            child: optionsHomeScreen(Icons.car_crash_rounded, Strings.sellCar)),
       ],
     ),
   );
@@ -154,5 +149,60 @@ Widget optionsHomeScreen(icon, text) {
             color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
       )
     ],
+  );
+}
+
+List<Widget> homeScreen = [
+  searchByBrands(),
+  const Text('data'),
+  const Text('data'),
+  const Text('data'),
+];
+
+Widget searchByBrands() {
+  return Column(
+    children: [
+      const Row(
+        children: [Text(Strings.searchByBrand), Text(Strings.learnMore)],
+      ),
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+brands(OtherConsts.bmwLogo),
+brands(OtherConsts.teslaLogo),
+brands(OtherConsts.mercedesLogo),
+brands(OtherConsts.toyotaLogo),
+brands(OtherConsts.nissanLogo),
+brands(OtherConsts.profileImageUrl),
+brands(OtherConsts.profileImageUrl),
+brands(OtherConsts.profileImageUrl),
+
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+Widget brands(image){
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      decoration:  BoxDecoration(
+        color: Colors.grey.shade300,
+        borderRadius: BorderRadius.circular(8),
+
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: CircleAvatar(
+          radius: 28,
+          backgroundImage:
+        NetworkImage(image, ),
+
+        ),
+      ),
+    ),
   );
 }
