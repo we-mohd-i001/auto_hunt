@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../vaahextendflutter/helpers/constants.dart';
+import 'package:get/get.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
@@ -8,8 +8,19 @@ import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.d
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../common_widgets/logo_with_name.dart';
 import '../home/my_home_page.dart';
+import '../login/controller/auth_controller.dart';
+import '../signup/sign_up_page.dart';
 
-class ContinueWithEmailPage extends StatefulWidget {
+class Junk extends StatelessWidget {
+  const Junk({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class ContinueWithEmailPage extends StatelessWidget {
   static const String routePath = '/with_email';
 
   static Route<void> route() {
@@ -22,14 +33,8 @@ class ContinueWithEmailPage extends StatefulWidget {
   const ContinueWithEmailPage({super.key});
 
   @override
-  State<ContinueWithEmailPage> createState() => _ContinueWithEmailPageState();
-}
-
-class _ContinueWithEmailPageState extends State<ContinueWithEmailPage> {
-  final _formKey = GlobalKey<FormState>();
-  bool isPasswordVisible = false;
-  @override
   Widget build(BuildContext context) {
+    var controller = Get.put(AuthController());
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -81,81 +86,97 @@ class _ContinueWithEmailPageState extends State<ContinueWithEmailPage> {
                         height: 300,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                InputText(
-                                  validator: (_) => 'Invalid email',
-                                  padding: EdgeInsets.all(16),
-                                  keyboardType: TextInputType.emailAddress,
-                                  suffixIcon: Icons.email,
-                                  label: 'Email',
-                                  maxLines: 1,
-                                ),
-                                InputText(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              InputText(
+                                controller: controller.emailController,
+                                validator: (_) => 'Invalid email',
+                                padding: const EdgeInsets.all(16),
+                                keyboardType: TextInputType.emailAddress,
+                                suffixIcon: Icons.email,
+                                label: 'Email',
+                                maxLines: 1,
+                              ),
+                              Obx(
+                                () => InputText(
+                                  controller: controller.passwordController,
                                   validator: (_) => 'Invalid Password',
                                   padding: const EdgeInsets.all(16),
 
                                   // keyboardType: TextInputType.visiblePassword,
-                                  isPassword: isPasswordVisible,
-                                  suffixIcon: isPasswordVisible
+                                  isPassword:
+                                      controller.isPasswordVisible.value,
+                                  suffixIcon: controller.isPasswordVisible.value
                                       ? Icons.visibility
                                       : Icons.visibility_off,
                                   suffixOnTap: () {
-                                    setState(() {
-                                      isPasswordVisible = !isPasswordVisible;
-                                    });
+                                    controller
+                                        .togglePasswordVisibilityLoginPage();
                                   },
                                   label: 'Password',
                                   maxLines: 1,
                                 ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ButtonElevated(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    onPressed: () {
-                                      _formKey.currentState?.validate();
-                                      Navigator.pushNamed(context, MyHomePage.routePath);
-                                    },
-                                    text: "Login",
-                                    fontSize: 17,
-                                    buttonType: ButtonType.success,
-                                    foregroundColor: AppTheme.colors['white'],
-                                    borderRadius: 8,
-                                  ),
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Obx(
+                                  () => controller.isLoading.value
+                                      ? const Center(
+                                          child: CircularProgressIndicator(
+                                            valueColor: AlwaysStoppedAnimation(
+                                                Colors.green),
+                                          ),
+                                        )
+                                      : ButtonElevated(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 16),
+                                          onPressed: () async {
+                                            controller.isLoading(true);
+                                            //_formKey.currentState?.validate();
+                                            await controller.loginMethod().then((value) {
+                                              Get.snackbar('Success',
+                                                  'Logged in successfully.',
+                                                  backgroundColor: Colors.white,
+                                                  borderRadius: 6);
+                                              Get.offAllNamed(MyHomePage.routePath);
+                                            });
+                                          },
+                                          text: "Login",
+                                          fontSize: 17,
+                                          buttonType: ButtonType.success,
+                                          foregroundColor:
+                                              AppTheme.colors['white'],
+                                          borderRadius: 8,
+                                        ),
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ButtonCheckBox(
-                                        padding: const EdgeInsets.all(0),
-                                        items: const [
-                                          CheckboxItem(
-                                              text: 'Remember me!', data: Text)
-                                        ],
-                                        onChanged: (items) {
-                                          setState(() {});
-                                        }),
-                                    GestureDetector(
-                                      onTap: () {},
-                                      child: Text(
-                                        'Forgot Password?',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                            color: AppTheme.colors['danger']),
-                                      ),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ButtonCheckBox(
+                                      padding: const EdgeInsets.all(0),
+                                      items: const [
+                                        CheckboxItem(
+                                            text: 'Remember me!', data: Text)
+                                      ],
+                                      onChanged: (items) {}),
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Text(
+                                      'Forgot Password?',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
+                                          color: AppTheme.colors['danger']),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -176,7 +197,9 @@ class _ContinueWithEmailPageState extends State<ContinueWithEmailPage> {
                               color: Colors.white),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(context, SignupPage.routePath);
+                          },
                           child: Text(
                             ' Join now',
                             style: TextStyle(

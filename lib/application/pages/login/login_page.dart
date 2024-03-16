@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
@@ -101,7 +102,7 @@ Widget buildMobile(BuildContext context){
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   fontSize: 17,
                   onPressed: () {},
-                  text: "Continue with Facebook",
+                  text: "Continue with Google",
 
 
                   // style:  ButtonStyle(
@@ -115,7 +116,7 @@ Widget buildMobile(BuildContext context){
                   //
                   // ),
                   borderRadius: 8,
-                  iconData: Icons.facebook,
+                  iconData: FontAwesomeIcons.google,
                   iconSize: 19,
                 ),
               ),
@@ -235,10 +236,10 @@ Widget buildTablet(){
                       fontSize: 17,
                       onPressed: () {},
                       foregroundColor: AppTheme.colors['white'],
-                      text: "Continue with Facebook",
+                      text: "Continue with Google",
                       buttonType: ButtonType.secondary,
                       borderRadius: 8,
-                      iconData: Icons.facebook,
+                      iconData: FontAwesomeIcons.google,
                       iconSize: 19,
                     ),
                   ),
