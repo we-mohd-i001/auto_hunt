@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:yourtasks/application/pages/login/controller/auth_controller.dart';
 import 'package:yourtasks/constants/consts.dart';
 import 'package:yourtasks/vaahextendflutter/widgets/atoms/buttons.dart';
@@ -177,6 +176,7 @@ class _SignupPageState extends State<SignupPage> {
                         if (_formKey.currentState!.validate()) {
                           if (isCheck != false) {
                             try {
+                              controller.isLoading(true);
                               await controller
                                   .signUpMethod(_emailController.text,
                                       _passwordController.text)
@@ -187,7 +187,6 @@ class _SignupPageState extends State<SignupPage> {
                                     _emailController.text);
                               }).then((value) {
                                 Get.snackbar('Success', 'SignUp Successful');
-                                //TODO : Add named route here
                                 Get.offAllNamed(MyHomePage.routePath);
                               });
                             } catch (e) {
