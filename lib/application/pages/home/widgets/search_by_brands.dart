@@ -8,14 +8,23 @@ Widget searchByBrands() {
   return Column(
     children: [
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(Strings.searchByBrand),
+            const Text(
+              Strings.searchByBrand,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
             Text(
               Strings.learnMore,
-              style: TextStyle(color: AppTheme.colors['secondary']),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: AppTheme.colors['secondary']),
             )
           ],
         ),
@@ -38,5 +47,3 @@ Widget searchByBrands() {
     ],
   );
 }
-
-

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import 'widgets/home_screen_options.dart';
 import 'widgets/location_and_profile.dart';
+import 'widgets/most_popular_cars.dart';
 import 'widgets/search_by_brands.dart';
 import 'widgets/search_widget.dart';
 
@@ -11,7 +12,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SizedBox(
+    return Container(
+      color: Colors.grey.shade100,
       width: size.width,
       height: size.height,
       child: SafeArea(
@@ -48,7 +50,5 @@ class HomePage extends StatelessWidget {
 
 List<Widget> homeScreen = [
   searchByBrands(),
-  const Text('data'),
-  const Text('data'),
-  const Text('data'),
+  mostPopularCars(),
 ];
