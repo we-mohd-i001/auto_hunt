@@ -9,7 +9,8 @@ import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
-import '../home/my_home_page.dart';
+import '../main_navigator/main_navigator.dart';
+
 
 class SignupPage extends StatefulWidget {
   static const String routePath = '/signup';

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yourtasks/application/pages/home/home_page.dart';
+import 'package:yourtasks/application/pages/login/controller/auth_controller.dart';
+import 'package:yourtasks/application/pages/login/login_page.dart';
+import 'package:yourtasks/vaahextendflutter/widgets/atoms/buttons.dart';
 
 import 'controller/main_navigator_controller.dart';
 
@@ -18,6 +21,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var authController = Get.put(AuthController());
     var controller = Get.put(MyHomeController());
 
     var navBarItems = [
@@ -41,6 +45,16 @@ class MyHomePage extends StatelessWidget {
       ),
       Container(
         color: Colors.cyanAccent,
+        child: Center(
+          child: ButtonOutlinedWithIcon(
+            iconData: Icons.logout_rounded,
+            text: 'Log Out',
+            onPressed: () async {
+              await authController.signOutMethod();
+              Get.offAllNamed(LoginPage.routePath);
+            },
+          ),
+        ),
       ),
     ];
     return Scaffold(
