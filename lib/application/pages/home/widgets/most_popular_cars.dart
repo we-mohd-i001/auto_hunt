@@ -5,10 +5,11 @@ import '../../../../vaahextendflutter/app_theme.dart';
 import 'car_bio.dart';
 
 Widget mostPopularCars() {
-  return Column(mainAxisAlignment: MainAxisAlignment.start,
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
     children: [
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -31,9 +32,20 @@ Widget mostPopularCars() {
       ),
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [carBio('BMW M8 : M - Competition', 'Paid - Diesel Car', OtherConsts.carBMWM8,  ), carBio('Name', 'Type',OtherConsts.carBMW), carBio('Name', 'type',OtherConsts.carBMW)],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              carBio(
+                'BMW M8 : M - Competition',
+                'Paid - Diesel Car',
+                OtherConsts.carBMWM8,
+              ),
+              carBio('Name', 'Type', OtherConsts.carBMW),
+              carBio('Name', 'type', OtherConsts.carBMW)
+            ],
+          ),
         ),
       ),
     ],

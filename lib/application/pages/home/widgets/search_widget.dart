@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../constants/strings/strings.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_auto_complete.dart';
@@ -9,7 +10,7 @@ Widget searchWidget(){
     child: InputAutoComplete(
       optionsBackgroundColor: Colors.white,
       isShadowEnabled: true,
-      icon: Icons.search_rounded,
+      icon: FontAwesomeIcons.magnifyingGlass,
       label: Strings.searchHint,
       hints: [
         'BMW',

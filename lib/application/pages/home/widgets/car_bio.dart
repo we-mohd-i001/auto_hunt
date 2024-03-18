@@ -5,8 +5,18 @@ Widget carBio(name, fuelAndType, image) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     child: Container(
+      height: 240,
+      width: 220,
       decoration: BoxDecoration(
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 6,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
@@ -22,7 +32,7 @@ Widget carBio(name, fuelAndType, image) {
                 fontSize: 14,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 6),
             Text(
               fuelAndType,
               style: TextStyle(
@@ -38,11 +48,28 @@ Widget carBio(name, fuelAndType, image) {
                   ),
                 ),
               ),
-              child: Container(
-                height: 200,
+              child: const SizedBox(
+                height: 140,
                 width: 220,
               ),
-            )
+            ),
+            Expanded(
+                child: SizedBox(
+              width: double.infinity,
+              child: Row(
+                children: [
+                  Icon(Icons.person,size: 16, color: AppTheme.colors['primary'],),
+                  const SizedBox(width: 4),
+                  const Text('4'),
+                  const SizedBox(width: 6),
+                  Icon(Icons.cable_rounded,size: 16, color: AppTheme.colors['primary'],),
+                  const SizedBox(width: 4),
+                  const Text('AM'),
+                  const Spacer(),
+                  const Expanded(child: Text('₹320/d'))
+                ],
+              ),
+            ))
           ],
         ),
       ),
