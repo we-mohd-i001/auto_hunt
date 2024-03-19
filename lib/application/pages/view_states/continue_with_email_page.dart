@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../vaahextendflutter/app_theme.dart';
@@ -135,13 +136,12 @@ class ContinueWithEmailPage extends StatelessWidget {
                                           onPressed: () async {
                                             controller.isLoading(true);
                                             //_formKey.currentState?.validate();
-                                            await controller.loginMethod().then((value) {
-                                              Get.snackbar('Success',
-                                                  'Logged in successfully.',
-                                                  backgroundColor: Colors.white,
-                                                  borderRadius: 6);
-                                              Get.offAllNamed(MyHomePage.routePath);
-                                            });
+                                           UserCredential? userCredential =  await controller.loginMethod();
+                                            if(userCredential != null){
+                                            } else {
+                                              controller.isLoading(false);
+                                            }
+                                            controller.isLoading(false);
                                           },
                                           text: "Login",
                                           fontSize: 17,

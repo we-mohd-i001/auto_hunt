@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:yourtasks/application/pages/home/home_page.dart';
 import 'package:yourtasks/application/pages/login/controller/auth_controller.dart';
 import 'package:yourtasks/application/pages/login/login_page.dart';
+import 'package:yourtasks/vaahextendflutter/app_theme.dart';
 import 'package:yourtasks/vaahextendflutter/widgets/atoms/buttons.dart';
 
 import '../profile/profile_page.dart';
@@ -47,6 +48,7 @@ class MyHomePage extends StatelessWidget {
       const ProfilePage(),
     ];
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Obx(
@@ -60,7 +62,7 @@ class MyHomePage extends StatelessWidget {
         () => BottomNavigationBar(
           currentIndex: controller.currentNavIndex.value,
           items: navBarItems,
-          selectedItemColor: Colors.red,
+          selectedItemColor: AppTheme.colors['primary'],
           unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700),
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w800),
           type: BottomNavigationBarType.fixed,

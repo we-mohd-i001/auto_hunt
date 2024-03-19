@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../../../../constants/others/other_consts.dart';
 import '../../../../constants/strings/strings.dart';
 
 Widget locationAndProfile(){
@@ -25,11 +23,6 @@ Widget locationAndProfile(){
                     color: Colors.white)),
           ],
         ),
-        CircleAvatar(
-          radius: 30,
-          backgroundImage:
-          NetworkImage(OtherConsts.profileImageUrl),
-        )
       ],
     ),
   );
