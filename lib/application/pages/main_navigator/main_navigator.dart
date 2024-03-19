@@ -5,6 +5,7 @@ import 'package:yourtasks/application/pages/login/controller/auth_controller.dar
 import 'package:yourtasks/application/pages/login/login_page.dart';
 import 'package:yourtasks/vaahextendflutter/widgets/atoms/buttons.dart';
 
+import '../profile/profile_page.dart';
 import 'controller/main_navigator_controller.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -43,19 +44,7 @@ class MyHomePage extends StatelessWidget {
       Container(
         color: Colors.purpleAccent,
       ),
-      Container(
-        color: Colors.cyanAccent,
-        child: Center(
-          child: ButtonOutlinedWithIcon(
-            iconData: Icons.logout_rounded,
-            text: 'Log Out',
-            onPressed: () async {
-              await authController.signOutMethod();
-              Get.offAllNamed(LoginPage.routePath);
-            },
-          ),
-        ),
-      ),
+      const ProfilePage(),
     ];
     return Scaffold(
       body: Column(
