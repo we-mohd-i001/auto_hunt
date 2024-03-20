@@ -1,4 +1,11 @@
+// To parse this JSON data, do
+//
+//     final brandsModel = brandsModelFromJson(jsonString);
+
 import 'dart:convert';
+
+BrandsModel brandsModelFromJson(String str) =>
+    BrandsModel.fromJson(json.decode(str));
 
 class BrandsModel {
   List<Brand> brands;
@@ -14,17 +21,9 @@ class BrandsModel {
         brands: brands ?? this.brands,
       );
 
-  factory BrandsModel.fromRawJson(String str) => BrandsModel.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
   factory BrandsModel.fromJson(Map<String, dynamic> json) => BrandsModel(
-    brands: List<Brand>.from(json["brands"].map((x) => Brand.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "brands": List<dynamic>.from(brands.map((x) => x.toJson())),
-  };
+        brands: List<Brand>.from(json["brands"].map((x) => Brand.fromJson(x))),
+      );
 }
 
 class Brand {
@@ -49,19 +48,9 @@ class Brand {
         cars: cars ?? this.cars,
       );
 
-  factory Brand.fromRawJson(String str) => Brand.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
   factory Brand.fromJson(Map<String, dynamic> json) => Brand(
-    name: json["name"],
-    logoUrl: json["logoUrl"],
-    cars: List<String>.from(json["cars"].map((x) => x)),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "logoUrl": logoUrl,
-    "cars": List<dynamic>.from(cars.map((x) => x)),
-  };
+        name: json["name"],
+        logoUrl: json["logoUrl"],
+        cars: List<String>.from(json["cars"].map((x) => x)),
+      );
 }

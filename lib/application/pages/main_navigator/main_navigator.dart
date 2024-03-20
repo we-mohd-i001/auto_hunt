@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/application/pages/home/controllers/brands_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../home/home_page.dart';
 import '../login/controller/auth_controller.dart';
@@ -20,6 +21,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var brandsController = Get.put(BrandsController());
     var authController = Get.put(AuthController());
     var controller = Get.put(MyHomeController());
 

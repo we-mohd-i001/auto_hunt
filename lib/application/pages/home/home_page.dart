@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:yourtasks/application/pages/home/controllers/brands_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import 'widgets/home_screen_options.dart';
 import 'widgets/location_and_profile.dart';
@@ -11,6 +13,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.grey.shade100,

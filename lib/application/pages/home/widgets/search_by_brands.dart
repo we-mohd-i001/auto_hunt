@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../../constants/others/other_consts.dart';
 import '../../../../constants/strings/strings.dart';
 import '../../../../vaahextendflutter/app_theme.dart';
+import '../controllers/brands_controller.dart';
 import 'brands.dart';
 
 Widget searchByBrands() {
+  var brandsController = Get.find<BrandsController>();
   return Column(
     children: [
       Padding(
@@ -29,21 +32,33 @@ Widget searchByBrands() {
           ],
         ),
       ),
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            brands(OtherConsts.bmwLogo),
-            brands(OtherConsts.teslaLogo),
-            brands(OtherConsts.mercedesLogo),
-            brands(OtherConsts.toyotaLogo),
-            brands(OtherConsts.nissanLogo),
-            brands(OtherConsts.profileImageUrl),
-            brands(OtherConsts.profileImageUrl),
-            brands(OtherConsts.profileImageUrl),
-          ],
+      Obx(() => SizedBox(
+        width: 200,
+        height: 100,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: brandsController.brands.length,
+          itemBuilder: (BuildContext context, int index) {
+            var brandsList = brandsController.brands;
+            debugPrint(brandsList.toString());
+            return brands(OtherConsts.bmwLogo, brandsList[index]);
+          },
+          // child: Row(
+          //   children: [
+          //     brands(OtherConsts.bmwLogo),
+          //     brands(OtherConsts.teslaLogo),
+          //     brands(OtherConsts.mercedesLogo),
+          //     brands(OtherConsts.toyotaLogo),
+          //     brands(OtherConsts.nissanLogo),
+          //     brands(OtherConsts.profileImageUrl),
+          //     brands(OtherConsts.profileImageUrl),
+          //     brands(OtherConsts.profileImageUrl),
+          //   ],
+          // ),
         ),
-      ),
+      ),),
+
+
     ],
   );
 }

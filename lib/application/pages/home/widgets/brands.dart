@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget brands(image) {
+Widget brands(image, title) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8),
     child: Container(
@@ -12,19 +12,24 @@ Widget brands(image) {
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                image,
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                    image,
+                  ),
+                ),
               ),
-            ),
-          ),
-          child: Container(
-            height: 56,
-            width: 56,
-          ),
+              child: Container(
+                height: 56,
+                width: 56,
+              ),
 
+            ),
+            Text(title)
+          ],
         ),
       ),
     ),
