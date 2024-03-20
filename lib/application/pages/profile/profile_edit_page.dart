@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import '../../../common_widgets/profile_picture_container.dart';
-import '../../../constants/others/other_consts.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
@@ -67,12 +66,33 @@ class ProfileEditPage extends StatelessWidget {
                               File(profileController.profileImagePath.value)),
                           44.0,
                         ),
-                  ButtonOutlinedWithIcon(
-                      onPressed: () {
-                        profileController.changeImage();
-                      },
-                      text: 'Change Profile Photo',
-                      iconData: Icons.person),
+                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ButtonOutlinedWithIcon(
+                          onPressed: () {
+                            profileController.changeImage();
+                          },
+                          text: 'Change Profile Photo',
+                          iconData: Icons.person),
+                      const SizedBox(width: 10),
+                      profileController.isImageLoading.value ? const SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator()):
+                      ButtonIcon(onPressed: () async{
+                        profileController.isImageLoading(true);
+                        if (profileController
+                            .profileImagePath.value.isNotEmpty) {
+                          await profileController.uploadProfileImage();
+                        } else {
+                          profileController.profileImageLink =
+                          data['imageUrl'];
+                        }
+                        profileController.updateProfileImage(profileController.profileImageLink);
+
+                      }, iconData: FontAwesomeIcons.check)
+                    ],
+                  ),
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -151,13 +171,6 @@ class ProfileEditPage extends StatelessWidget {
                       : ButtonOutlined(
                           onPressed: () async {
                             profileController.isLoading(true);
-                            if (profileController
-                                .profileImagePath.value.isNotEmpty) {
-                              await profileController.uploadProfileImage();
-                            } else {
-                              profileController.profileImageLink =
-                                  data['imageUrl'];
-                            }
 
                             if (data['password'] ==
                                 profileController.oldPassController.text) {
@@ -169,16 +182,16 @@ class ProfileEditPage extends StatelessWidget {
                               await profileController.updateProfile(
                                   profileController.nameController.text,
                                   profileController.passwordController.text,
-                                  profileController.profileImageLink);
-                              await Get.snackbar(
-                                  'Success', 'Profile Update Complete');
+                                  );
+                              Get.snackbar(
+                                  'Success', 'Profile Update Complete', backgroundColor: Colors.white);
                             } else {
                               Get.snackbar('Password Incorrect',
-                                  'The old password is incorrect! Please reenter the password.');
+                                  'The old password is incorrect! Please reenter the correct password.',  backgroundColor: Colors.white);
                               profileController.isLoading(false);
                             }
                           },
-                          text: 'Submit',
+                          text: 'Save',
                           foregroundColor: AppTheme.colors['primary'],
                         ),
                 ],

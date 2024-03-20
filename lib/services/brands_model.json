@@ -1,0 +1,33 @@
+{
+  "brands" : [
+    {
+      "name" : "Audi",
+      "logoUrl" : "",
+      "cars" : [
+        "Audi R8",
+        "Audi A8",
+        "Audi A6"
+      ]
+    },
+    {
+      "name" : "BMW",
+      "logoUrl" : "",
+      "cars" : [
+        "BMW 730d",
+        "BMW M8 Competition",
+        "BMW M5 Competition",
+        "BMW M3"
+      ]
+    },
+    {
+      "name" : "Hyundai",
+      "logoUrl": "",
+      "cars" : [
+        "Hyundai Verna",
+        "Hyundai Sonata",
+        "Hyundai Creta",
+        "Hyundai Santro"
+      ]
+    }
+  ]
+}

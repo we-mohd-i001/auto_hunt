@@ -8,7 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' show basename;
 import 'package:image_picker/image_picker.dart';
-import 'package:yourtasks/constants/consts.dart';
+
+import '../../../../constants/consts.dart';
+
 
 class ProfileController extends GetxController {
   var profileImagePath = ''.obs;
@@ -19,6 +21,7 @@ class ProfileController extends GetxController {
 
   var profileImageLink = '';
   var isLoading = false.obs;
+  var isImageLoading = false.obs;
 
   togglePasswordVisibility() {
     passwordVisibility.value = !passwordVisibility.value;
@@ -45,13 +48,30 @@ class ProfileController extends GetxController {
     profileImageLink = await ref.getDownloadURL();
   }
 
-  updateProfile(name, password, imageUrl) async {
+  updateProfile(name, password) async {
     var store = firestore.collection(usersCollection).doc(currentUser!.uid);
     await store.set(
-      {'name': name, 'password': password, 'imageUrl': imageUrl},
+      {'name': name, 'password': password},
       SetOptions(merge: true),
     );
     isLoading(false);
+  }
+  updateProfileImage(imageUrl) async{
+    final store = firestore.collection(usersCollection).doc(currentUser!.uid);
+    await store.set({
+      'imageUrl' : imageUrl
+    }, SetOptions(merge: true));
+    isImageLoading(false);
+    Get.snackbar(
+      "Success",
+      '',
+
+      colorText: Colors.black,
+      backgroundColor: Colors.white70,
+      snackPosition: SnackPosition.BOTTOM,
+      padding: const EdgeInsets.only(top: 20, left: 20),
+      margin: const EdgeInsets.only(bottom: 160, left: 20, right: 20),
+    );
   }
 
   authPasswordChange(email, password, newPassword)async{
