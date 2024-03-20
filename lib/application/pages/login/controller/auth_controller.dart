@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:yourtasks/vaahextendflutter/app_theme.dart';
 
 import '../../../../constants/consts.dart';
+import '../../main_navigator/main_navigator.dart';
 
 class AuthController extends GetxController {
   var emailController = TextEditingController();
@@ -22,8 +23,15 @@ class AuthController extends GetxController {
     try {
       await auth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
+      Get.snackbar('Success',
+          'Logged in successfully.',
+          backgroundColor: AppTheme.colors['white'],
+          borderRadius: 6);
+      Get.offAllNamed(MyHomePage.routePath);
     } on FirebaseAuthException catch (e) {
-      Get.snackbar('Error', '', backgroundColor: AppTheme.colors['white'], messageText: Text('Login Unsuccessful ${e.toString()}'));
+      Get.snackbar('Error', '',
+          backgroundColor: AppTheme.colors['white'],
+          messageText: Text('Login Unsuccessful ${e.toString()}'));
     }
   }
 
@@ -43,8 +51,15 @@ class AuthController extends GetxController {
   storeUserData(name, password, email) async {
     DocumentReference store =
         await firestore.collection(usersCollection).doc(currentUser!.uid);
-    store.set(
-        {'name': name, 'email': email, 'password': password, 'imageUrl': '', 'id': currentUser!.uid});
+    store.set({
+      'name': name,
+      'email': email,
+      'password': password,
+      'imageUrl': '',
+      'id': currentUser!.uid,
+      'liked_cars_count': "00",
+      'order_count': "00",
+    });
   }
 
   signOutMethod() async {
