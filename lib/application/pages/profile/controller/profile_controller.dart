@@ -22,6 +22,7 @@ class ProfileController extends GetxController {
   var profileImageLink = '';
   var isLoading = false.obs;
   var isImageLoading = false.obs;
+  var isDisabled = true.obs;
 
   togglePasswordVisibility() {
     passwordVisibility.value = !passwordVisibility.value;
@@ -31,9 +32,11 @@ class ProfileController extends GetxController {
     try {
       final img = await ImagePicker()
           .pickImage(source: ImageSource.gallery, imageQuality: 70);
+
       if (img == null) {
         return;
       }
+      isDisabled(false);
       profileImagePath.value = img.path;
     } on PlatformException catch (e) {
       Get.snackbar('Error', e.toString());

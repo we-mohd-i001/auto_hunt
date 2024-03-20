@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/enums.dart';
 import '../../../common_widgets/profile_picture_container.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
@@ -79,7 +80,9 @@ class ProfileEditPage extends StatelessWidget {
                           height: 16,
                           width: 16,
                           child: CircularProgressIndicator()):
-                      ButtonIcon(onPressed: () async{
+                      ButtonIcon(onPressed: profileController.isDisabled.value ? (){
+                        Get.snackbar('Image not Selected', 'Please Select an Image first.', colorText:Colors.red,backgroundColor: Colors.white);
+                      } : () async{
                         profileController.isImageLoading(true);
                         if (profileController
                             .profileImagePath.value.isNotEmpty) {
@@ -90,7 +93,9 @@ class ProfileEditPage extends StatelessWidget {
                         }
                         profileController.updateProfileImage(profileController.profileImageLink);
 
-                      }, iconData: FontAwesomeIcons.check)
+                      }, iconData: FontAwesomeIcons.check,
+                      buttonType: profileController.isDisabled.value ? ButtonType.secondary : ButtonType.primary,
+                      )
                     ],
                   ),
                   Padding(
