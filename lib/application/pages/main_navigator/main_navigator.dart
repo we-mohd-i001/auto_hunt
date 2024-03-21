@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/application/pages/home/home_page.dart';
-import 'package:yourtasks/application/pages/login/controller/auth_controller.dart';
-import 'package:yourtasks/application/pages/login/login_page.dart';
-import 'package:yourtasks/vaahextendflutter/app_theme.dart';
-import 'package:yourtasks/vaahextendflutter/widgets/atoms/buttons.dart';
-
+import 'package:yourtasks/application/pages/home/controllers/brands_controller.dart';
+import '../../../vaahextendflutter/app_theme.dart';
+import '../home/home_page.dart';
+import '../login/controller/auth_controller.dart';
 import '../profile/profile_page.dart';
 import 'controller/main_navigator_controller.dart';
 
@@ -23,6 +21,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var brandsController = Get.put(BrandsController(context: context));
     var authController = Get.put(AuthController());
     var controller = Get.put(MyHomeController());
 
@@ -30,9 +29,9 @@ class MyHomePage extends StatelessWidget {
       const BottomNavigationBarItem(
           icon: Icon(Icons.home_rounded, size: 26), label: 'Home'),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.category_rounded, size: 26), label: 'Categories'),
+          icon: Icon(Icons.category_rounded, size: 26), label: 'Brands'),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_bag_rounded, size: 26), label: 'Cart'),
+          icon: Icon(Icons.message_rounded, size: 26), label: 'Messages'),
       const BottomNavigationBarItem(
           icon: Icon(Icons.person_2_rounded, size: 26), label: 'Profile')
     ];

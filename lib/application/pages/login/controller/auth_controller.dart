@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/vaahextendflutter/app_theme.dart';
 
 import '../../../../constants/consts.dart';
+import '../../../../vaahextendflutter/app_theme.dart';
 import '../../main_navigator/main_navigator.dart';
 
 class AuthController extends GetxController {

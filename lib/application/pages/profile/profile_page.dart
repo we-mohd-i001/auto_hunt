@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../common_widgets/profile_picture_container.dart';
 import '../../../constants/consts.dart';
-import '../../../constants/others/other_consts.dart';
 import '../../../services/firestore_services.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../login/controller/auth_controller.dart';
