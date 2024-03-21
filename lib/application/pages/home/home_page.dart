@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yourtasks/application/pages/home/controllers/brands_controller.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import 'widgets/home_screen_options.dart';
 import 'widgets/location_and_profile.dart';
@@ -13,7 +14,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.grey.shade100,
@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
                     children: [
                       locationAndProfile(),
                       searchWidget(),
-                      const SizedBox(height: 8),
+                      verticalMargin8,
                       Expanded(child: homeScreenOptions()),
                     ],
                   ),
@@ -42,7 +42,10 @@ class HomePage extends StatelessWidget {
               expandedHeight: 230,
             ),
             SliverList(
-              delegate: SliverChildListDelegate(homeScreen),
+              delegate: SliverChildListDelegate([
+                searchByBrands(),
+                mostPopularCars(),
+              ]),
             ),
           ],
         ),
@@ -50,8 +53,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-List<Widget> homeScreen = [
-  searchByBrands(),
-  mostPopularCars(),
-];

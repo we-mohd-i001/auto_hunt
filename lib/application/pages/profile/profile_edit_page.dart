@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/enums.dart';
 import '../../../common_widgets/profile_picture_container.dart';
 import '../../../vaahextendflutter/app_theme.dart';
@@ -75,7 +76,7 @@ class ProfileEditPage extends StatelessWidget {
                           },
                           text: 'Change Profile Photo',
                           iconData: Icons.person),
-                      const SizedBox(width: 10),
+                     horizontalMargin8,
                       profileController.isImageLoading.value ? const SizedBox(
                           height: 16,
                           width: 16,

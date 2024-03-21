@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../../../vaahextendflutter/app_theme.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
+import '../../../vaahextendflutter/app_theme.dart';
 
-Widget carBio(name, fuelAndType, image) {
+Widget carBio(name, fuelAndType, image, width) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     child: Container(
       height: 240,
-      width: 220,
+      width: width,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -32,7 +33,8 @@ Widget carBio(name, fuelAndType, image) {
                 fontSize: 14,
               ),
             ),
-            const SizedBox(height: 6),
+            verticalMargin4,
+            verticalMargin2,
             Text(
               fuelAndType,
               style: TextStyle(
@@ -48,9 +50,9 @@ Widget carBio(name, fuelAndType, image) {
                   ),
                 ),
               ),
-              child: const SizedBox(
+              child: SizedBox(
                 height: 140,
-                width: 220,
+                width: width,
               ),
             ),
             Expanded(
@@ -59,11 +61,11 @@ Widget carBio(name, fuelAndType, image) {
               child: Row(
                 children: [
                   Icon(Icons.person,size: 16, color: AppTheme.colors['primary'],),
-                  const SizedBox(width: 4),
+                  verticalMargin4,
                   const Text('4'),
-                  const SizedBox(width: 6),
+                  verticalMargin8,
                   Icon(Icons.cable_rounded,size: 16, color: AppTheme.colors['primary'],),
-                  const SizedBox(width: 4),
+                  verticalMargin4,
                   const Text('AM'),
                   const Spacer(),
                   const Expanded(child: Text('₹320/d'))

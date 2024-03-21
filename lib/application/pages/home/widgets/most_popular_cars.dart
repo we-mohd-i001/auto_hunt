@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../constants/others/other_consts.dart';
 import '../../../../constants/strings/strings.dart';
 import '../../../../vaahextendflutter/app_theme.dart';
-import 'car_bio.dart';
+import '../../common_widgets/car_bio.dart';
 
 Widget mostPopularCars() {
   return Column(
@@ -41,9 +41,10 @@ Widget mostPopularCars() {
                 'BMW M8 : M - Competition',
                 'Paid - Diesel Car',
                 OtherConsts.carBMWM8,
+                220.0
               ),
-              carBio('Name', 'Type', OtherConsts.carBMW),
-              carBio('Name', 'type', OtherConsts.carBMW)
+              carBio('Name', 'Type', OtherConsts.carBMW, 220.0),
+              carBio('Name', 'type', OtherConsts.carBMW, 220.0)
             ],
           ),
         ),

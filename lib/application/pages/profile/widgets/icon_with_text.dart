@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../../vaahextendflutter/helpers/constants.dart';
+
 Widget iconWithText(icon, text) {
   return Row(
     children: [
       Icon(icon),
-      const SizedBox(width: 8),
+      verticalMargin8,
       Text(text),
     ],
   );

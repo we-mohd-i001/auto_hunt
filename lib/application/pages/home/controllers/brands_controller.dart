@@ -7,20 +7,22 @@ class BrandsController extends GetxController {
   var carsList = [].obs;
   var brandsList = [].obs;
   final BuildContext context;
+  var isLogoLoading = true.obs;
 
-  BrandsController({required this.context} );
+  BrandsController({required this.context});
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     getBrandsList();
   }
 
-  getBrandsList()async{
+  getBrandsList() async {
     var rawData = await rootBundle.loadString("lib/services/brands_model.json");
     var decodedData = brandsModelFromJson(rawData);
     brandsList.value = decodedData.brands.toList();
-    print(brandsList.value[0].name);
+    isLogoLoading(false);
+
   }
 
   getCarsList(title) async {
