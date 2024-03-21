@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../../constants/others/other_consts.dart';
 import '../../../../constants/strings/strings.dart';
 import '../../../../vaahextendflutter/app_theme.dart';
@@ -59,16 +58,7 @@ Widget searchByBrands() {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 4, top: 8),
-                              child: brandsController.isLogoLoading.value
-                                  ? Shimmer.fromColors(
-                                      baseColor: Colors.white70,
-                                      highlightColor: Colors.grey,
-                                      child: const SizedBox(
-                                        height: 30,
-                                        width: 30,
-                                        child: CircularProgressIndicator(),
-                                      ))
-                                  : SizedBox(
+                              child: SizedBox(
                                       height: 30,
                                       child: Image.network(
                                         OtherConsts.brandsImages[index],
