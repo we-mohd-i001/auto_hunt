@@ -21,7 +21,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var brandsController = Get.put(BrandsController());
+    var brandsController = Get.put(BrandsController(context: context));
     var authController = Get.put(AuthController());
     var controller = Get.put(MyHomeController());
 

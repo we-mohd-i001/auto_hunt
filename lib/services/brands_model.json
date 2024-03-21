@@ -28,6 +28,35 @@
         "Hyundai Creta",
         "Hyundai Santro"
       ]
+    },
+    {
+      "name" : "Tesla",
+      "logoUrl": "",
+      "cars" : [
+        "Tesla Model S",
+        "Tesla Model X",
+        "Tesla Model Y"
+      ]
+    },
+    {
+      "name" : "Toyota",
+      "logoUrl": "",
+      "cars" : [
+        "Toyota Fortuner",
+        "Toyota Supra",
+        "Toyota Innova",
+        "Toyota Camry"
+      ]
+    },
+    {
+      "name" : "Nissan",
+      "logoUrl": "",
+      "cars" : [
+        "Nissan GTR",
+        "Nissan Magnite",
+        "Nissan Skyline",
+        "Nissan Terrano"
+      ]
     }
   ]
 }

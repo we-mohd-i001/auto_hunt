@@ -15,6 +15,11 @@ class OtherConsts {
       'https://upload.wikimedia.org/wikipedia/commons/8/8c/Nissan_logo.png';
   static const carBMW =
       'https://i.pinimg.com/736x/47/5d/05/475d05a41d699b3f3cf0ab0a54d64d5d.jpg';
-  static const carBMWM8 = 'https://www.freepnglogos.com/uploads/bmw-png/black-bmw-xdrive-car-png-image-pngpix-33.png';
-
+  static const carBMWM8 =
+      'https://www.freepnglogos.com/uploads/bmw-png/black-bmw-xdrive-car-png-image-pngpix-33.png';
+  static const audiLogo =
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Audi-Logo_2016.svg/1920px-Audi-Logo_2016.svg.png';
+  static const hyundaiLogo =
+      'https://upload.wikimedia.org/wikipedia/de/thumb/b/b1/Hyundai.svg/968px-Hyundai.svg.png?20080815131529';
+  static const brandsImages = [audiLogo, bmwLogo, hyundaiLogo, teslaLogo, toyotaLogo, nissanLogo];
 }
