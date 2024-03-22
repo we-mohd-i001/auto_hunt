@@ -3,6 +3,12 @@
     {
       "name" : "Audi",
       "logoUrl" : "",
+      "categories": [
+        "Luxury",
+        "Sports",
+        "Sedan",
+        "Hatchback"
+      ],
       "cars" : [
         "Audi R8",
         "Audi A8",
@@ -13,6 +19,12 @@
     {
       "name" : "BMW",
       "logoUrl" : "",
+      "categories": [
+        "Luxury",
+        "Sports",
+        "Sedan",
+        "Hatchback"
+      ],
       "cars" : [
         "BMW 730d",
         "BMW M8 Competition",
@@ -24,6 +36,12 @@
     {
       "name" : "Hyundai",
       "logoUrl": "",
+      "categories": [
+        "Luxury",
+        "Sports",
+        "Sedan",
+        "Hatchback"
+      ],
       "cars" : [
         "Hyundai Verna",
         "Hyundai Sonata",
@@ -34,6 +52,12 @@
     {
       "name" : "Tesla",
       "logoUrl": "",
+      "categories": [
+        "Luxury",
+        "Sports",
+        "Sedan",
+        "Hatchback"
+      ],
       "cars" : [
         "Tesla Model S",
         "Tesla Model X",
@@ -43,6 +67,12 @@
     {
       "name" : "Toyota",
       "logoUrl": "",
+      "categories": [
+        "Luxury",
+        "Sports",
+        "Sedan",
+        "Hatchback"
+      ],
       "cars" : [
         "Toyota Fortuner",
         "Toyota Supra",
@@ -53,6 +83,12 @@
     {
       "name" : "Nissan",
       "logoUrl": "",
+      "categories": [
+        "Luxury",
+        "Sports",
+        "Sedan",
+        "Hatchback"
+      ],
       "cars" : [
         "Nissan GTR",
         "Nissan Magnite",

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 
-Widget carBio(name, fuelAndType, image, width) {
+Widget carBio(name, fuelAndType, image, width, carRent, seatCapacity) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     child: Container(
@@ -62,13 +62,13 @@ Widget carBio(name, fuelAndType, image, width) {
                 children: [
                   Icon(Icons.person,size: 16, color: AppTheme.colors['primary'],),
                   verticalMargin4,
-                  const Text('4'),
+                  Text('$seatCapacity'),
                   verticalMargin8,
                   Icon(Icons.cable_rounded,size: 16, color: AppTheme.colors['primary'],),
                   verticalMargin4,
                   const Text('AM'),
                   const Spacer(),
-                  const Expanded(child: Text('₹320/d'))
+                  Text('₹$carRent/day')
                 ],
               ),
             ))

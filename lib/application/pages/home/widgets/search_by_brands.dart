@@ -50,6 +50,7 @@ Widget searchByBrands() {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0)),
                         onPressed: () {
+                          brandsController.getCarsList(brandsController.brandsList.value[index].name);
                           Get.to(() => BrandsDetailPage(
                                 data: brandsController.brandsList.value[index],
                               ));
