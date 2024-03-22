@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
@@ -54,7 +55,8 @@ Widget buildMobile(BuildContext context){
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const LogoWithName(),
-              const SizedBox(height: 20),
+              verticalMargin16,
+              verticalMargin4,
               const Text(
                 '''Let's get started''',
                 style: TextStyle(
@@ -62,7 +64,8 @@ Widget buildMobile(BuildContext context){
                     fontSize: 34,
                     color: Colors.white),
               ),
-              const SizedBox(height: 10),
+              verticalMargin8,
+              verticalMargin2,
               const Text(
                 'Sign up or login to see what',
                 style: TextStyle(
@@ -95,9 +98,7 @@ Widget buildMobile(BuildContext context){
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              verticalMargin16,
               SizedBox(
                 width: double.infinity,
                 child: ButtonOutlinedWithIcon(
@@ -124,9 +125,7 @@ Widget buildMobile(BuildContext context){
                   iconSize: 19,
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              verticalMargin16,
               SizedBox(
                 width: double.infinity,
                 child: ButtonOutlinedWithIcon(
@@ -176,7 +175,7 @@ Widget buildTablet(){
                         backgroundImage:
                         AssetImage('assets/images/auto_hunt_logo.png'),
                       ),
-                      SizedBox(width: 10),
+                      horizontalMargin12,
                       Text(
                         'Auto.Hunt',
                         style: TextStyle(
@@ -186,7 +185,8 @@ Widget buildTablet(){
                       )
                     ],
                   ),
-                  SizedBox(height: 20),
+                  verticalMargin16,
+                  verticalMargin4,
                   Text(
                     '''Let's get started''',
                     style: TextStyle(
@@ -194,7 +194,8 @@ Widget buildTablet(){
                         fontSize: 34,
                         color: Colors.white),
                   ),
-                  SizedBox(height: 10),
+                  verticalMargin2,
+                  verticalMargin8,
                   Text(
                     'Sign up or login to see what',
                     style: TextStyle(
@@ -216,7 +217,8 @@ Widget buildTablet(){
               SizedBox(width: 350,
 
                 child: Column(children: [
-                  const SizedBox(height: 70,),
+                  verticalMargin48,
+                  verticalMargin24,
                   SizedBox(
                     width: double.infinity,
                     child: ButtonElevated(
@@ -229,9 +231,7 @@ Widget buildTablet(){
                       borderRadius: 8,
                     ),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
+                  verticalMargin16,
                   Container(
                     color: AppTheme.colors['black'],
                     width: double.infinity,
@@ -247,9 +247,7 @@ Widget buildTablet(){
                       iconSize: 19,
                     ),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
+                  verticalMargin16,
                   Container(
                     color: AppTheme.colors['black'],
                     width: double.infinity,

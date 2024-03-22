@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import '../../../common_widgets/profile_picture_container.dart';
 import '../../../constants/consts.dart';
 import '../../../services/firestore_services.dart';
@@ -33,7 +34,6 @@ class ProfilePage extends StatelessWidget {
             const Center(child: CircularProgressIndicator(),);
           } else{
             var data = snapshot.data!.docs[0];
-            print(data);
             return SafeArea(
               child: Padding(
                 padding:
@@ -54,7 +54,7 @@ class ProfilePage extends StatelessWidget {
                                     File(profileController.profileImagePath.value))
                                     : NetworkImage(data['imageUrl']),
                                 28.0),
-                            const SizedBox(width: 8),
+                            horizontalMargin8,
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -80,10 +80,12 @@ class ProfilePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        verticalMargin16,
+                        verticalMargin4,
                         likedAndOrderedCars('${data['liked_cars_count']}',
                             '${data['order_count']}'),
-                        const SizedBox(height: 20),
+                        verticalMargin24,
+                        verticalMargin2,
                         navigatorWidgetToOrdersAndLiked()
                       ],
                     ),

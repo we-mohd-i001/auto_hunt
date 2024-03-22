@@ -20,7 +20,7 @@ Widget brands(image) {
               ),
             ),
           ),
-          child: Container(
+          child: const SizedBox(
             height: 56,
             width: 56,
           ),
