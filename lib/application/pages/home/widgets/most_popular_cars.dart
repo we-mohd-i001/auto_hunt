@@ -41,10 +41,12 @@ Widget mostPopularCars() {
                 'BMW M8 : M - Competition',
                 'Paid - Diesel Car',
                 OtherConsts.carBMWM8,
-                220.0
+                220.0,
+                3000,
+                4
               ),
-              carBio('Name', 'Type', OtherConsts.carBMW, 220.0),
-              carBio('Name', 'type', OtherConsts.carBMW, 220.0)
+              carBio('Name', 'Type', OtherConsts.carBMW, 220.0, 3000, 4),
+              carBio('Name', 'type', OtherConsts.carBMW, 220.0, 3000, 4)
             ],
           ),
         ),

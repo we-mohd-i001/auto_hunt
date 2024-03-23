@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/application/pages/home/controllers/brands_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
+import '../home/controllers/brands_controller.dart';
 import '../home/home_page.dart';
 import '../login/controller/auth_controller.dart';
 import '../profile/profile_page.dart';
@@ -36,14 +36,10 @@ class MyHomePage extends StatelessWidget {
           icon: Icon(Icons.person_2_rounded, size: 26), label: 'Profile')
     ];
 
-    var navBody = [
+    var pages = [
       const HomePage(),
-      Container(
-        color: Colors.amber,
-      ),
-      Container(
-        color: Colors.purpleAccent,
-      ),
+      Container(color: Colors.amber),
+      Container(color: Colors.purpleAccent),
       const ProfilePage(),
     ];
     return Scaffold(
@@ -52,7 +48,7 @@ class MyHomePage extends StatelessWidget {
         children: [
           Obx(
             () => Expanded(
-              child: navBody.elementAt(controller.currentNavIndex.value),
+              child: pages.elementAt(controller.currentNavIndex.value),
             ),
           ),
         ],
