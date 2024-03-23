@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
-import '../../../vaahextendflutter/app_theme.dart';
 
-Widget carBio(name, fuelAndType, image, width, carRent, seatCapacity) {
+import '../../../vaahextendflutter/app_theme.dart';
+import '../../../vaahextendflutter/helpers/constants.dart';
+
+Widget carBio(String? name, String? fuelAndType, String? image, width, carRent,
+    seatCapacity, Function()? onPressed, String tag) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     child: Container(
@@ -20,59 +22,75 @@ Widget carBio(name, fuelAndType, image, width, carRent, seatCapacity) {
         ],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              name,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            verticalMargin4,
-            verticalMargin2,
-            Text(
-              fuelAndType,
-              style: TextStyle(
+      child: MaterialButton(
+        onPressed: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                name ?? '',
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  color: AppTheme.colors['secondary']),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    image,
-                  ),
+                  fontSize: 14,
                 ),
               ),
-              child: SizedBox(
-                height: 140,
-                width: width,
+              verticalMargin4,
+              verticalMargin2,
+              Text(
+                fuelAndType ?? '',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    color: AppTheme.colors['secondary']),
               ),
-            ),
-            Expanded(
-                child: SizedBox(
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Icon(Icons.person,size: 16, color: AppTheme.colors['primary'],),
-                  verticalMargin4,
-                  Text('$seatCapacity'),
-                  verticalMargin8,
-                  Icon(Icons.cable_rounded,size: 16, color: AppTheme.colors['primary'],),
-                  verticalMargin4,
-                  const Text('AM'),
-                  const Spacer(),
-                  Text('₹$carRent/day')
-                ],
-              ),
-            ))
-          ],
+              image == null
+                  ? SizedBox(height: 140, width: width,)
+                  : Hero(
+                    tag: tag,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              image,
+                            ),
+                          ),
+                        ),
+                        child: SizedBox(
+                          height: 140,
+                          width: width,
+                        ),
+                      ),
+                  ),
+              Expanded(
+                  child: SizedBox(
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person,
+                      size: 16,
+                      color: AppTheme.colors['primary'],
+                    ),
+                    verticalMargin4,
+                    Text('$seatCapacity'),
+                    verticalMargin8,
+                    Icon(
+                      Icons.cable_rounded,
+                      size: 16,
+                      color: AppTheme.colors['primary'],
+                    ),
+                    verticalMargin4,
+                    const Text('AM'),
+                    const Spacer(),
+                    Text('₹$carRent/day')
+                  ],
+                ),
+              ))
+            ],
+          ),
         ),
       ),
     ),

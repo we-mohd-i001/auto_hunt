@@ -21,11 +21,12 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var brandsController = Get.put(BrandsController(context: context));
-    var authController = Get.put(AuthController());
-    var controller = Get.put(MyHomeController());
+    BrandsController brandsController =
+        Get.put(BrandsController(context: context));
+    AuthController authController = Get.put(AuthController());
+    MyHomeController controller = Get.put(MyHomeController());
 
-    var navBarItems = [
+    List<BottomNavigationBarItem> navBarItems = [
       const BottomNavigationBarItem(
           icon: Icon(Icons.home_rounded, size: 26), label: 'Home'),
       const BottomNavigationBarItem(
@@ -36,7 +37,7 @@ class MyHomePage extends StatelessWidget {
           icon: Icon(Icons.person_2_rounded, size: 26), label: 'Profile')
     ];
 
-    var pages = [
+    List<Widget> pages = [
       const HomePage(),
       Container(color: Colors.amber),
       Container(color: Colors.purpleAccent),

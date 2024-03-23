@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../data/models/brands/brands_model.dart';
 
 class BrandsController extends GetxController {
-  var subCat = [].obs;
-  var brandsList = [].obs;
+  RxList<dynamic> subCat = [].obs;
+  RxList<dynamic> brandsList = [].obs;
   final BuildContext context;
   RxInt selectedCategoryIndex = RxInt(-1);
 
@@ -19,7 +19,7 @@ class BrandsController extends GetxController {
   }
 
   toggleSelectedCategory(int index) {
-    if(selectedCategoryIndex.value == index){
+    if (selectedCategoryIndex.value == index) {
       selectedCategoryIndex.value = -1;
     } else {
       selectedCategoryIndex.value = index;
@@ -27,18 +27,18 @@ class BrandsController extends GetxController {
   }
 
   getBrandsList() async {
-    var rawData = await rootBundle.loadString("lib/services/brands_model.json");
-    var decodedData = brandsModelFromJson(rawData);
+    String rawData = await rootBundle.loadString("lib/services/brands_model.json");
+    BrandsModel decodedData = brandsModelFromJson(rawData);
     brandsList.value = decodedData.brands.toList();
   }
 
   getCarsList(title) async {
     subCat.value = [];
-    var data = await rootBundle.loadString("lib/services/brands_model.json");
-    var decodedData = brandsModelFromJson(data);
-    var s =
+    String data = await rootBundle.loadString("lib/services/brands_model.json");
+    BrandsModel decodedData = brandsModelFromJson(data);
+    List<Brand> brandList =
         decodedData.brands.where((element) => element.name == title).toList();
-    for (var e in s[0].categories) {
+    for (Category e in brandList[0].categories) {
       subCat.add(e);
     }
   }

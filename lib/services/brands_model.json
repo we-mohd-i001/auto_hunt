@@ -95,6 +95,22 @@
         "Nissan Skyline",
         "Nissan Terrano"
       ]
+    },
+    {
+      "name" : "Suzuki",
+      "logoUrl": "",
+      "categories": [
+        "Luxury",
+        "Sports",
+        "Sedan",
+        "Hatchback"
+      ],
+      "cars" : [
+        "Nissan GTR",
+        "Nissan Magnite",
+        "Nissan Skyline",
+        "Nissan Terrano"
+      ]
     }
   ]
 }

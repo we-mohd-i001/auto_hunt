@@ -24,9 +24,12 @@ class Strings {
   static const carOwner = 'Car Owner';
   static const carInfo = 'Car Information';
   static const viewDetail = 'View Detail';
-  static const electricRange = 'Electric Range';
+
+  static const carRange = 'Range';
   static const enginePower = 'Engine Power';
   static const maxTorque = 'Max Torque';
   static const carLocation = 'Car Location';
+  static const distance = '3.6 Km';
+  static const address = 'WebReinvent Technologies Pvt. Ltd., Pocket B, Sector 17 Dwarka, Dwarka, Delhi';
   static const rentThisCar = 'Rent This Car';
 }

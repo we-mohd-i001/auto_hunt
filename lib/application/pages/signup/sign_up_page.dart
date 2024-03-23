@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/application/pages/login/controller/auth_controller.dart';
-import 'package:yourtasks/constants/consts.dart';
-import 'package:yourtasks/vaahextendflutter/widgets/atoms/buttons.dart';
-import 'package:yourtasks/vaahextendflutter/widgets/atoms/input_text.dart';
 
+import '../../../constants/consts.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
+import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
+import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
+import '../login/controller/auth_controller.dart';
 import '../main_navigator/main_navigator.dart';
-
 
 class SignupPage extends StatefulWidget {
   static const String routePath = '/signup';
@@ -32,13 +31,13 @@ class _SignupPageState extends State<SignupPage> {
   bool isPasswordVisible = false;
   bool isRetypePasswordVisible = false;
   bool isCheck = false;
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _retypePasswordController =
       TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  var controller = Get.put(AuthController());
+  AuthController controller = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +155,9 @@ class _SignupPageState extends State<SignupPage> {
                       padding: const EdgeInsets.all(0),
                       items: const [
                         CheckboxItem(
-                            text: 'By checking this box you agree to the terms and conditions.', data: Text)
+                            text:
+                                'By checking this box you agree to the terms and conditions.',
+                            data: Text)
                       ],
                       onChanged: (items) {
                         setState(() {
@@ -165,51 +166,55 @@ class _SignupPageState extends State<SignupPage> {
                       }),
                   SizedBox(
                     width: double.infinity,
-                    child:
-                    Obx(() => controller.isLoading.value ? const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(
-                            Colors.green),
-                      ),) :
-                    ButtonElevated(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          if (isCheck != false) {
-                            try {
-                              controller.isLoading(true);
-                              await controller
-                                  .signUpMethod(_emailController.text,
-                                      _passwordController.text)
-                                  .then((value) {
-                                return controller.storeUserData(
-                                    _nameController.text,
-                                    _passwordController.text,
-                                    _emailController.text);
-                              }).then((value) {
-                                Get.snackbar('Success', 'SignUp Successful');
-                                Get.offAllNamed(MyHomePage.routePath);
-                              });
-                            } catch (e) {
-                              auth.signOut();
-                              Get.snackbar('Error', 'Something went wrong, ${e.toString()}');
-                              debugPrint('Signup Error');
-                            }
-                          }
-
-                          debugPrint('Name: ${_nameController.text}');
-                          debugPrint('Email: ${_emailController.text}');
-                          debugPrint('Password: ${_passwordController.text}');
-                        }
-                      },
-                      text: "Sign Up",
-                      fontSize: 17,
-                      buttonType:
-                          !isCheck ? ButtonType.secondary : ButtonType.success,
-                      foregroundColor: AppTheme.colors['white'],
-                      borderRadius: 8,
+                    child: Obx(
+                      () => controller.isLoading.value
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.green),
+                              ),
+                            )
+                          : ButtonElevated(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  if (isCheck != false) {
+                                    try {
+                                      controller.isLoading(true);
+                                      await controller
+                                          .signUpMethod(_emailController.text,
+                                              _passwordController.text)
+                                          .then((value) {
+                                        return controller.storeUserData(
+                                            _nameController.text,
+                                            _passwordController.text,
+                                            _emailController.text);
+                                      }).then((value) {
+                                        Get.snackbar(
+                                          'Success',
+                                          'SignUp Successful',
+                                        );
+                                        Get.offAllNamed(MyHomePage.routePath);
+                                      });
+                                    } catch (e) {
+                                      auth.signOut();
+                                      Get.snackbar(
+                                        'Error',
+                                        'Something went wrong, ${e.toString()}',
+                                      );
+                                    }
+                                  }
+                                }
+                              },
+                              text: "Sign Up",
+                              fontSize: 17,
+                              buttonType: !isCheck
+                                  ? ButtonType.secondary
+                                  : ButtonType.success,
+                              foregroundColor: AppTheme.colors['white'],
+                              borderRadius: 8,
+                            ),
                     ),
-                  ),
                   ),
                 ],
               ),

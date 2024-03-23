@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../constants/consts.dart';
@@ -8,10 +8,10 @@ import '../../../../vaahextendflutter/app_theme.dart';
 import '../../main_navigator/main_navigator.dart';
 
 class AuthController extends GetxController {
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
-  var isPasswordVisible = false.obs;
-  var isLoading = false.obs;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  RxBool isPasswordVisible = false.obs;
+  RxBool isLoading = false.obs;
 
   togglePasswordVisibilityLoginPage() {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -23,10 +23,8 @@ class AuthController extends GetxController {
     try {
       await auth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
-      Get.snackbar('Success',
-          'Logged in successfully.',
-          backgroundColor: AppTheme.colors['white'],
-          borderRadius: 6);
+      Get.snackbar('Success', 'Logged in successfully.',
+          backgroundColor: AppTheme.colors['white'], borderRadius: 6);
       Get.offAllNamed(MyHomePage.routePath);
     } on FirebaseAuthException catch (e) {
       Get.snackbar('Error', '',
@@ -51,15 +49,17 @@ class AuthController extends GetxController {
   storeUserData(name, password, email) async {
     DocumentReference store =
         await firestore.collection(usersCollection).doc(currentUser!.uid);
-    store.set({
-      'name': name,
-      'email': email,
-      'password': password,
-      'imageUrl': '',
-      'id': currentUser!.uid,
-      'liked_cars_count': "00",
-      'order_count': "00",
-    });
+    store.set(
+      {
+        'name': name,
+        'email': email,
+        'password': password,
+        'imageUrl': '',
+        'id': currentUser!.uid,
+        'liked_cars_count': "00",
+        'order_count': "00",
+      },
+    );
   }
 
   signOutMethod() async {
