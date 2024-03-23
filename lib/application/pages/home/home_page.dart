@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:yourtasks/application/pages/common_widgets/learn_more_with_title.dart';
-import 'package:yourtasks/application/pages/home/controllers/brands_controller.dart';
-import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
+
 import '../../../constants/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
+import '../../../vaahextendflutter/helpers/constants.dart';
+import '../common_widgets/learn_more_with_title.dart';
 import 'widgets/home_screen_options.dart';
 import 'widgets/location_and_profile.dart';
 import 'widgets/most_popular_cars.dart';
