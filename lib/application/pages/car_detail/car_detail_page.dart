@@ -23,6 +23,29 @@ class CarDetailPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     CarDetailController carDetailController = Get.put(CarDetailController());
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SizedBox(
+            height: 60,
+            width: double.infinity,
+            child: Hero(
+              tag: 'hero1',
+              child: ButtonElevated(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                onPressed: () {},
+                text: Strings.rentThisCar,
+                buttonType: ButtonType.primary,
+                fontSize: 17,
+                borderRadius: 8,
+                foregroundColor: AppTheme.colors['white'],
+              ),
+            ),
+          ),
+        ),
+      ),
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         leading: IconButton(
@@ -143,16 +166,16 @@ class CarDetailPage extends StatelessWidget {
             ),
             learnMoreWithTitle(Strings.carLocation,
                 changeLearnMore: Strings.distance),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: ContainerWithRoundedBorder(
                 child: Row(
                   children: [
-                    Icon(FontAwesomeIcons.locationCrosshairs),
+                    const Icon(FontAwesomeIcons.locationCrosshairs),
                     horizontalMargin4,
                     Flexible(
                       child: Text(
-                        Strings.address,
+                        data['car_location'],
                         softWrap: true,
                         maxLines: 3,
                         overflow: TextOverflow.visible,
@@ -163,25 +186,6 @@ class CarDetailPage extends StatelessWidget {
               ),
             ),
             Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                height: 60,
-                width: double.infinity,
-                child: Hero(
-                  tag: 'hero1',
-                  child: ButtonElevated(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    onPressed: () {},
-                    text: Strings.rentThisCar,
-                    buttonType: ButtonType.primary,
-                    fontSize: 17,
-                    borderRadius: 8,
-                    foregroundColor: AppTheme.colors['white'],
-                  ),
-                ),
-              ),
-            ),
             verticalMargin16
           ],
         ),
