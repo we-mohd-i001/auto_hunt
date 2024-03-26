@@ -127,7 +127,7 @@ class BrandsDetailPage extends StatelessWidget {
                               carIndex['car_rent_price_per_day'],
                               carIndex['car_seating_capacity'],
                               (){
-                                Get.to(CarDetailPage(data: data,));
+                                Get.to(CarDetailPage(data: data,),);
                               },
                             carIndex['car_name']
                           );
