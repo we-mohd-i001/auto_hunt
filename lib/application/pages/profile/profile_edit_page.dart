@@ -25,7 +25,7 @@ class ProfileEditPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var profileController = Get.find<ProfileController>();
+    ProfileController profileController = Get.find<ProfileController>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -68,7 +68,8 @@ class ProfileEditPage extends StatelessWidget {
                               File(profileController.profileImagePath.value)),
                           44.0,
                         ),
-                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ButtonOutlinedWithIcon(
                           onPressed: () {
@@ -76,27 +77,38 @@ class ProfileEditPage extends StatelessWidget {
                           },
                           text: 'Change Profile Photo',
                           iconData: Icons.person),
-                     horizontalMargin8,
-                      profileController.isImageLoading.value ? const SizedBox(
-                          height: 16,
-                          width: 16,
-                          child: CircularProgressIndicator()):
-                      ButtonIcon(onPressed: profileController.isDisabled.value ? (){
-                        Get.snackbar('Image not Selected', 'Please Select an Image first.', colorText:Colors.red,backgroundColor: Colors.white);
-                      } : () async{
-                        profileController.isImageLoading(true);
-                        if (profileController
-                            .profileImagePath.value.isNotEmpty) {
-                          await profileController.uploadProfileImage();
-                        } else {
-                          profileController.profileImageLink =
-                          data['imageUrl'];
-                        }
-                        profileController.updateProfileImage(profileController.profileImageLink);
-
-                      }, iconData: FontAwesomeIcons.check,
-                      buttonType: profileController.isDisabled.value ? ButtonType.secondary : ButtonType.primary,
-                      )
+                      horizontalMargin8,
+                      profileController.isImageLoading.value
+                          ? const SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator())
+                          : ButtonIcon(
+                              onPressed: profileController.isDisabled.value
+                                  ? () {
+                                      Get.snackbar('Image not Selected',
+                                          'Please Select an Image first.',
+                                          colorText: Colors.red,
+                                          backgroundColor: Colors.white);
+                                    }
+                                  : () async {
+                                      profileController.isImageLoading(true);
+                                      if (profileController
+                                          .profileImagePath.value.isNotEmpty) {
+                                        await profileController
+                                            .uploadProfileImage();
+                                      } else {
+                                        profileController.profileImageLink =
+                                            data['imageUrl'];
+                                      }
+                                      profileController.updateProfileImage(
+                                          profileController.profileImageLink);
+                                    },
+                              iconData: FontAwesomeIcons.check,
+                              buttonType: profileController.isDisabled.value
+                                  ? ButtonType.secondary
+                                  : ButtonType.primary,
+                            ),
                     ],
                   ),
                   Padding(
@@ -105,12 +117,14 @@ class ProfileEditPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Name',
-                              style:
-                                  TextStyle(color: AppTheme.colors['primary']),
-                            )),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Name',
+                            style: TextStyle(
+                              color: AppTheme.colors['primary'],
+                            ),
+                          ),
+                        ),
                         InputText(
                           controller: profileController.nameController,
                           label: 'Name',
@@ -127,21 +141,22 @@ class ProfileEditPage extends StatelessWidget {
                             alignment: Alignment.topLeft,
                             child: Text(
                               'Old Password',
-                              style:
-                                  TextStyle(color: AppTheme.colors['primary']),
+                              style: TextStyle(
+                                color: AppTheme.colors['primary'],
+                              ),
                             )),
                         InputText(
-                            isPassword:
-                                profileController.passwordVisibility.value,
-                            maxLines: 1,
-                            controller: profileController.oldPassController,
-                            label: 'Old Password',
-                            suffixIcon:
-                                profileController.passwordVisibility.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                            suffixOnTap: () =>
-                                profileController.togglePasswordVisibility()),
+                          isPassword:
+                              profileController.passwordVisibility.value,
+                          maxLines: 1,
+                          controller: profileController.oldPassController,
+                          label: 'Old Password',
+                          suffixIcon: profileController.passwordVisibility.value
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          suffixOnTap: () =>
+                              profileController.togglePasswordVisibility(),
+                        ),
                       ],
                     ),
                   ),
@@ -151,24 +166,26 @@ class ProfileEditPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'New Password',
-                              style:
-                                  TextStyle(color: AppTheme.colors['primary']),
-                            )),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'New Password',
+                            style: TextStyle(
+                              color: AppTheme.colors['primary'],
+                            ),
+                          ),
+                        ),
                         InputText(
-                            isPassword:
-                                profileController.passwordVisibility.value,
-                            maxLines: 1,
-                            controller: profileController.passwordController,
-                            label: 'New Password',
-                            suffixIcon:
-                                profileController.passwordVisibility.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                            suffixOnTap: () =>
-                                profileController.togglePasswordVisibility()),
+                          isPassword:
+                              profileController.passwordVisibility.value,
+                          maxLines: 1,
+                          controller: profileController.passwordController,
+                          label: 'New Password',
+                          suffixIcon: profileController.passwordVisibility.value
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          suffixOnTap: () =>
+                              profileController.togglePasswordVisibility(),
+                        ),
                       ],
                     ),
                   ),
@@ -186,14 +203,15 @@ class ProfileEditPage extends StatelessWidget {
                                   profileController.passwordController.text);
 
                               await profileController.updateProfile(
-                                  profileController.nameController.text,
-                                  profileController.passwordController.text,
-                                  );
-                              Get.snackbar(
-                                  'Success', 'Profile Update Complete', backgroundColor: Colors.white);
+                                profileController.nameController.text,
+                                profileController.passwordController.text,
+                              );
+                              Get.snackbar('Success', 'Profile Update Complete',
+                                  backgroundColor: Colors.white);
                             } else {
                               Get.snackbar('Password Incorrect',
-                                  'The old password is incorrect! Please reenter the correct password.',  backgroundColor: Colors.white);
+                                  'The old password is incorrect! Please reenter the correct password.',
+                                  backgroundColor: Colors.white);
                               profileController.isLoading(false);
                             }
                           },

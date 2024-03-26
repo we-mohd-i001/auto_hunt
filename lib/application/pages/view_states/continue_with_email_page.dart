@@ -35,7 +35,7 @@ class ContinueWithEmailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(AuthController());
+    AuthController controller = Get.put(AuthController());
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(

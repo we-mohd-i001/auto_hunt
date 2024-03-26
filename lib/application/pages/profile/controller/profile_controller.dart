@@ -11,18 +11,17 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../constants/consts.dart';
 
-
 class ProfileController extends GetxController {
-  var profileImagePath = ''.obs;
-  var passwordVisibility = true.obs;
-  var nameController = TextEditingController();
-  var passwordController = TextEditingController();
-  var oldPassController = TextEditingController();
+  RxString profileImagePath = ''.obs;
+  String profileImageLink = '';
+  RxBool passwordVisibility = true.obs;
+  RxBool isLoading = false.obs;
+  RxBool isImageLoading = false.obs;
+  RxBool isDisabled = true.obs;
 
-  var profileImageLink = '';
-  var isLoading = false.obs;
-  var isImageLoading = false.obs;
-  var isDisabled = true.obs;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController oldPassController = TextEditingController();
 
   togglePasswordVisibility() {
     passwordVisibility.value = !passwordVisibility.value;
@@ -30,7 +29,7 @@ class ProfileController extends GetxController {
 
   changeImage() async {
     try {
-      final img = await ImagePicker()
+      final XFile? img = await ImagePicker()
           .pickImage(source: ImageSource.gallery, imageQuality: 70);
 
       if (img == null) {
@@ -44,31 +43,21 @@ class ProfileController extends GetxController {
   }
 
   uploadProfileImage() async {
-    var fileName = basename(profileImagePath.value);
-    var destination = 'images/${currentUser!.uid}/$fileName';
+    String fileName = basename(profileImagePath.value);
+    String destination = 'images/${currentUser!.uid}/$fileName';
     Reference ref = FirebaseStorage.instance.ref().child(destination);
     await ref.putFile(File(profileImagePath.value));
     profileImageLink = await ref.getDownloadURL();
   }
 
-  updateProfile(name, password) async {
-    var store = firestore.collection(usersCollection).doc(currentUser!.uid);
-    await store.set(
-      {'name': name, 'password': password},
-      SetOptions(merge: true),
-    );
-    isLoading(false);
-  }
-  updateProfileImage(imageUrl) async{
-    final store = firestore.collection(usersCollection).doc(currentUser!.uid);
-    await store.set({
-      'imageUrl' : imageUrl
-    }, SetOptions(merge: true));
+  updateProfileImage(imageUrl) async {
+    final DocumentReference<Map<String, dynamic>> store =
+        firestore.collection(usersCollection).doc(currentUser!.uid);
+    await store.set({'imageUrl': imageUrl}, SetOptions(merge: true));
     isImageLoading(false);
     Get.snackbar(
       "Success",
       '',
-
       colorText: Colors.black,
       backgroundColor: Colors.white70,
       snackPosition: SnackPosition.BOTTOM,
@@ -77,12 +66,23 @@ class ProfileController extends GetxController {
     );
   }
 
-  authPasswordChange(email, password, newPassword)async{
-    final cred = EmailAuthProvider.credential(email: email, password: password);
+  authPasswordChange(email, password, newPassword) async {
+    final AuthCredential cred =
+        EmailAuthProvider.credential(email: email, password: password);
     await currentUser!.reauthenticateWithCredential(cred).then((value) {
-      currentUser!.updatePassword(newPassword).catchError((e){
+      currentUser!.updatePassword(newPassword).catchError((e) {
         debugPrint(e.toString());
       });
     });
+  }
+
+  updateProfile(name, password) async {
+    DocumentReference<Map<String, dynamic>> store =
+        firestore.collection(usersCollection).doc(currentUser!.uid);
+    await store.set(
+      {'name': name, 'password': password},
+      SetOptions(merge: true),
+    );
+    isLoading(false);
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
+
 import '../../../vaahextendflutter/app_theme.dart';
+import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../common_widgets/logo_with_name.dart';
@@ -23,22 +24,21 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return LayoutBuilder(builder: (_, constraints){
-      final screenWidth = constraints.maxWidth;
-      if(screenWidth <=600){
+    return LayoutBuilder(builder: (_, constraints) {
+      final double screenWidth = constraints.maxWidth;
+      if (screenWidth <= 600) {
         return buildMobile(context);
-      } else if(screenWidth <=840){
+      } else if (screenWidth <= 840) {
         return buildTablet();
-      } else{
+      } else {
         return buildTablet();
       }
     });
   }
 }
 
-Widget buildMobile(BuildContext context){
- return Scaffold(
+Widget buildMobile(BuildContext context) {
+  return Scaffold(
     body: Stack(
       children: [
         Container(
@@ -88,7 +88,8 @@ Widget buildMobile(BuildContext context){
                   child: ButtonElevated(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     onPressed: () {
-                      Navigator.pushNamed(context, ContinueWithEmailPage.routePath);
+                      Navigator.pushNamed(
+                          context, ContinueWithEmailPage.routePath);
                     },
                     text: "Continue with Email",
                     fontSize: 17,
@@ -108,7 +109,6 @@ Widget buildMobile(BuildContext context){
                     Get.offAllNamed(MyHomePage.routePath);
                   },
                   text: "Continue with Google",
-
 
                   // style:  ButtonStyle(
                   //   elevation: MaterialStatePropertyAll(20),
@@ -132,10 +132,8 @@ Widget buildMobile(BuildContext context){
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   fontSize: 17,
                   onPressed: () {},
-
                   text: "Continue with Apple",
                   buttonType: ButtonType.help,
-
                   borderRadius: 8,
                   iconData: Icons.apple,
                   iconSize: 20,
@@ -149,7 +147,7 @@ Widget buildMobile(BuildContext context){
   );
 }
 
-Widget buildTablet(){
+Widget buildTablet() {
   return Scaffold(
     body: Stack(
       children: [
@@ -173,7 +171,7 @@ Widget buildTablet(){
                     children: [
                       CircleAvatar(
                         backgroundImage:
-                        AssetImage('assets/images/auto_hunt_logo.png'),
+                            AssetImage('assets/images/auto_hunt_logo.png'),
                       ),
                       horizontalMargin12,
                       Text(
@@ -212,61 +210,60 @@ Widget buildTablet(){
                   ),
                 ],
               ),
-
               const Spacer(),
-              SizedBox(width: 350,
-
-                child: Column(children: [
-                  verticalMargin48,
-                  verticalMargin24,
-                  SizedBox(
-                    width: double.infinity,
-                    child: ButtonElevated(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      onPressed: () {},
-                      text: "Continue with Email",
-                      fontSize: 17,
-                      buttonType: ButtonType.white,
-                      foregroundColor: AppTheme.colors['black'],
-                      borderRadius: 8,
+              SizedBox(
+                width: 350,
+                child: Column(
+                  children: [
+                    verticalMargin48,
+                    verticalMargin24,
+                    SizedBox(
+                      width: double.infinity,
+                      child: ButtonElevated(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        onPressed: () {},
+                        text: "Continue with Email",
+                        fontSize: 17,
+                        buttonType: ButtonType.white,
+                        foregroundColor: AppTheme.colors['black'],
+                        borderRadius: 8,
+                      ),
                     ),
-                  ),
-                  verticalMargin16,
-                  Container(
-                    color: AppTheme.colors['black'],
-                    width: double.infinity,
-                    child: ButtonOutlinedWithIcon(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      fontSize: 17,
-                      onPressed: () {},
-                      foregroundColor: AppTheme.colors['white'],
-                      text: "Continue with Google",
-                      buttonType: ButtonType.secondary,
-                      borderRadius: 8,
-                      iconData: FontAwesomeIcons.google,
-                      iconSize: 19,
+                    verticalMargin16,
+                    Container(
+                      color: AppTheme.colors['black'],
+                      width: double.infinity,
+                      child: ButtonOutlinedWithIcon(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        fontSize: 17,
+                        onPressed: () {},
+                        foregroundColor: AppTheme.colors['white'],
+                        text: "Continue with Google",
+                        buttonType: ButtonType.secondary,
+                        borderRadius: 8,
+                        iconData: FontAwesomeIcons.google,
+                        iconSize: 19,
+                      ),
                     ),
-                  ),
-                  verticalMargin16,
-                  Container(
-                    color: AppTheme.colors['black'],
-                    width: double.infinity,
-                    child: ButtonOutlinedWithIcon(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      fontSize: 17,
-                      onPressed: () {},
-
-                      foregroundColor: AppTheme.colors['white'],
-                      text: "Continue with Apple",
-                      buttonType: ButtonType.secondary,
-                      borderRadius: 8,
-                      iconData: Icons.apple,
-                      iconSize: 20,
-                    ),
-                  )
-                ],),
+                    verticalMargin16,
+                    Container(
+                      color: AppTheme.colors['black'],
+                      width: double.infinity,
+                      child: ButtonOutlinedWithIcon(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        fontSize: 17,
+                        onPressed: () {},
+                        foregroundColor: AppTheme.colors['white'],
+                        text: "Continue with Apple",
+                        buttonType: ButtonType.secondary,
+                        borderRadius: 8,
+                        iconData: Icons.apple,
+                        iconSize: 20,
+                      ),
+                    )
+                  ],
+                ),
               ),
-
             ],
           ),
         ),
@@ -275,6 +272,6 @@ Widget buildTablet(){
   );
 }
 
-Widget buildDeskTop(){
+Widget buildDeskTop() {
   return const Text('We are not on Desktop.');
 }
