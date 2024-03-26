@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
@@ -36,167 +38,213 @@ class CarDetailPage extends StatelessWidget {
           title: Text(data!['car_name']),
         ),
         body: SafeArea(
-          child: Column(
-            children: [
-              verticalMargin8,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                  child: CarouselSlider.builder(
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      viewportFraction: 1,
-                      initialPage: 0,
-                    ),
-                    itemCount: data!['car_images'].length,
-                    itemBuilder: (BuildContext context, int itemIndex,
-                            int pageViewIndex) =>
-                        Hero(
-                      tag: data!['car_name'],
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12)),
-                          child: PhotoView(
-                            backgroundDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12)),
-                            imageProvider: NetworkImage(
-                              data!['car_images'][itemIndex],
+          child: Obx( () =>
+            Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      verticalMargin8,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: SizedBox(
+                          child: CarouselSlider.builder(
+                            options: CarouselOptions(
+                              autoPlay: true,
+                              viewportFraction: 1,
+                              initialPage: 0,
                             ),
-                            filterQuality: FilterQuality.medium,
+                            itemCount: data!['car_images'].length,
+                            itemBuilder: (BuildContext context, int itemIndex,
+                                    int pageViewIndex) =>
+                                Hero(
+                              tag: data!['car_name'],
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: PhotoView(
+                                    backgroundDecoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12)),
+                                    imageProvider: NetworkImage(
+                                      data!['car_images'][itemIndex],
+                                    ),
+                                    filterQuality: FilterQuality.medium,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          Strings.carOwner,
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12),
-                        ),
-                        verticalMargin4,
-                        Row(
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Image.network(
-                              data!['brand_logo'],
-                              height: 26,
-                              fit: BoxFit.contain,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  Strings.carOwner,
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12),
+                                ),
+                                verticalMargin4,
+                                Row(
+                                  children: [
+                                    Image.network(
+                                      data!['brand_logo'],
+                                      height: 26,
+                                      fit: BoxFit.contain,
+                                    ),
+                                    horizontalMargin4,
+                                    Text(
+                                      data!['car_brand'],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w800, fontSize: 16),
+                                    ),
+                                  ],
+                                )
+                              ],
                             ),
-                            horizontalMargin4,
-                            Text(
-                              data!['car_brand'],
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w800, fontSize: 16),
-                            ),
+                            ButtonIcon(
+                              onPressed: () {},
+                              iconData: Icons.chat_rounded,
+                              buttonType: ButtonType.primary,
+                            )
                           ],
-                        )
-                      ],
-                    ),
-                    ButtonIcon(
-                      onPressed: () {},
-                      iconData: Icons.chat_rounded,
-                      buttonType: ButtonType.primary,
-                    )
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: learnMoreWithTitle(Strings.carInfo,
-                    changeLearnMore: Strings.viewDetail),
-              ),
-              verticalMargin12,
-              Padding(
-                padding: const EdgeInsets.only(right: 20, left: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    carInformationWidget(
-                      FontAwesomeIcons.road,
-                      informationType: Strings.carRange,
-                      value: data!['car_range'],
-                      size: size.width - 30,
-                    ),
-                    carInformationWidget(FontAwesomeIcons.gear,
-                        informationType: Strings.enginePower,
-                        value: data!['car_engine_power'],
-                        size: size.width - 30),
-                    carInformationWidget(FontAwesomeIcons.gauge,
-                        informationType: Strings.maxTorque,
-                        value: data!['car_max_torque'],
-                        size: size.width - 30),
-                  ],
-                ),
-              ),
-              learnMoreWithTitle(Strings.carLocation,
-                  changeLearnMore: Strings.distance),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: ContainerWithRoundedBorder(
-                  child: Row(
-                    children: [
-                      const Icon(FontAwesomeIcons.locationCrosshairs),
-                      horizontalMargin4,
-                      Flexible(
-                        child: Text(
-                          data!['car_location'],
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
                         ),
                       ),
+                      GestureDetector(
+                        onTap: () {
+                          carDetailController.toggleAreExtraDetailsVisible();
+                        },
+                        child: learnMoreWithTitle(Strings.carInfo,
+                            changeLearnMore: Strings.viewDetail),
+                      ),
+                      verticalMargin12,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20, left: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            carInformationWidget(
+                              FontAwesomeIcons.road,
+                              informationType: Strings.carRange,
+                              value: data!['car_range'],
+                              size: size.width - 30,
+                            ),
+                            carInformationWidget(FontAwesomeIcons.gear,
+                                informationType: Strings.enginePower,
+                                value: data!['car_engine_power'],
+                                size: size.width - 30),
+                            carInformationWidget(FontAwesomeIcons.gauge,
+                                informationType: Strings.maxTorque,
+                                value: data!['car_max_torque'],
+                                size: size.width - 30),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                          visible: carDetailController.areExtraDetailsVisible.value,
+                          child: verticalMargin12),
+                      Visibility(
+                        visible: carDetailController.areExtraDetailsVisible.value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20, left: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              carInformationWidget(
+                                FontAwesomeIcons.gears,
+                                informationType: Strings.transmission,
+                                value: data!['car_transmission'],
+                                size: size.width - 30,
+                              ),
+                              carInformationWidget(FontAwesomeIcons.peopleGroup,
+                                  informationType: Strings.seatCapacity,
+                                  value: data!['car_seating_capacity'],
+                                  size: size.width - 30),
+                              carInformationWidget(FontAwesomeIcons.carRear,
+                                  informationType: Strings.wheelType,
+                                  value: data!['car_wheel_type'],
+                                  size: size.width - 30),
+                            ],
+                          ),
+                        ),
+                      ),
+                      learnMoreWithTitle(Strings.carLocation,
+                          changeLearnMore: Strings.distance),
+                      Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: ContainerWithRoundedBorder(
+                          child: Row(
+                            children: [
+                              const Icon(FontAwesomeIcons.locationCrosshairs),
+                              horizontalMargin4,
+                              Flexible(
+                                child: Text(
+                                  data!['car_location'],
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                          visible: carDetailController.areExtraDetailsVisible.value,
+                          child: const SizedBox(
+                        height: 84,
+                      ),),
+                  
                     ],
                   ),
                 ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                  height: 60,
-                  width: double.infinity,
-                  child: Hero(
-                    tag: 'hero1',
-                    child: ButtonElevated(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      onPressed: () {},
-                      text: Strings.rentThisCar,
-                      buttonType: ButtonType.primary,
-                      fontSize: 17,
-                      borderRadius: 8,
-                      foregroundColor: AppTheme.colors['white'],
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    child: SizedBox(
+                      height: 60,
+                      width: double.infinity,
+                      child: Hero(
+                        tag: 'hero1',
+                        child: ButtonElevated(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          onPressed: () {},
+                          text: Strings.rentThisCar,
+                          buttonType: ButtonType.primary,
+                          fontSize: 17,
+                          borderRadius: 8,
+                          foregroundColor: AppTheme.colors['white'],
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              verticalMargin16,
-            ],
+
+              ],
+            ),
           ),
         ),
       );
     } else {
       return Scaffold(
           body: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             const Text('No data found!'),
             ButtonTextWithIcon(
                 onPressed: () {
@@ -204,9 +252,9 @@ class CarDetailPage extends StatelessWidget {
                 },
                 text: 'Go back',
                 iconData: Icons.arrow_back_rounded)
-                    ],
-                  ),
-          ));
+          ],
+        ),
+      ));
     }
   }
 }

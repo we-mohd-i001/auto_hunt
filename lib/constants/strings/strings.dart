@@ -24,6 +24,9 @@ class Strings {
   static const carOwner = 'Car Owner';
   static const carInfo = 'Car Information';
   static const viewDetail = 'View Detail';
+  static const transmission = 'Transmission';
+  static const seatCapacity = 'Seat Capacity';
+  static const wheelType = 'Wheel Type';
 
   static const carRange = 'Range';
   static const enginePower = 'Engine Power';
