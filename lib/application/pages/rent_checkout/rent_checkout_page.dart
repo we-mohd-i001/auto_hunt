@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/constants.dart';
+import '../../../data/car/car_model.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../common_widgets/my_custom_button.dart';
 import 'controller/rent_checkout_controller.dart';
@@ -9,12 +10,13 @@ import 'widgets/car_bio_mini.dart';
 import 'widgets/rent_detail_form.dart';
 
 class RentCheckoutPage extends StatelessWidget {
-  const RentCheckoutPage({super.key});
+  CarModel carData;
+  RentCheckoutPage({super.key, required this.carData});
 
   @override
   Widget build(BuildContext context) {
     RentCheckoutController rentCheckoutController =
-        Get.put(RentCheckoutController());
+        Get.put(RentCheckoutController(carData: carData));
     return Scaffold(
       appBar: AppBar(
         title: const Text(Strings.rentDetail),
@@ -29,15 +31,26 @@ class RentCheckoutPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    carBioMini(),
+                    carBioMini(
+                        carIcon: '${carData.carIcon}',
+                        carName: '${carData.carName}',
+                        currentFuelCapacity: '${carData.carCurrentFuelCapacity}',
+                        carFuelType: '${carData.carFuelType}'),
                     verticalMargin8,
-                    Obx(() => rentDetailForm(rentCheckoutController))
+                    Obx(() => rentDetailForm())
                   ],
                 ),
               ),
             ),
             myCustomButton(
                 onPressed: () {}, tag: 'hero-1', text: Strings.rentCar),
+            Visibility(
+                visible: false,
+                child: Container(
+                  color: Colors.black.withOpacity(0.3),
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: const Center(child: CircularProgressIndicator()),))
           ],
         ),
       ),

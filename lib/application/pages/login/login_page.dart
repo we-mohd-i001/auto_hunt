@@ -8,7 +8,7 @@ import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../common_widgets/logo_with_name.dart';
 import '../main_navigator/main_navigator.dart';
-import '../view_states/continue_with_email_page.dart';
+import 'continue_with_email_page.dart';
 
 class LoginPage extends StatelessWidget {
   static const String routePath = '/login';

@@ -25,6 +25,12 @@ class ProfileController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController oldPassController = TextEditingController();
 
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
+
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }

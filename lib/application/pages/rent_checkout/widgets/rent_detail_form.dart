@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/application/pages/rent_checkout/controller/rent_checkout_controller.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/date_time.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';
@@ -12,7 +14,9 @@ import '../../common_widgets/learn_more_with_title.dart';
 import 'card_detail_input_form.dart';
 import 'price_detail_widget.dart';
 
-Widget rentDetailForm(rentCheckoutController) {
+Widget rentDetailForm() {
+  RentCheckoutController rentCheckoutController =
+      Get.find<RentCheckoutController>();
   return Form(
     key: rentCheckoutController.rentCheckoutFormKey,
     child: Column(
@@ -70,7 +74,12 @@ Widget rentDetailForm(rentCheckoutController) {
         verticalMargin16,
         learnMoreWithTitle(Strings.priceDetails, changeLearnMore: ''),
         verticalMargin16,
-        priceDetailWidget(),
+        priceDetailWidget(
+            rentPrice: rentCheckoutController.carData.carRentPricePerDay,
+            days: rentCheckoutController.rentDays,
+            tax: rentCheckoutController.carData.carRentTax,
+            total: rentCheckoutController.calculateTotal(rentCheckoutController.carData.carRentPricePerDay, rentCheckoutController.carData.carRentTax)
+        ),
         verticalMargin48,
         verticalMargin32,
         // verticalMargin4,

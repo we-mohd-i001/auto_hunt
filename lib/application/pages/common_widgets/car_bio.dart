@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 
-Widget carBio(String? name, String? fuelAndType, String? image, width, carRent,
+Widget carBio(String? name, String? fuelAndType, String? image, width, int carRent,
     seatCapacity, Function()? onPressed, String tag) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/enums.dart';
-import '../../../common_widgets/profile_picture_container.dart';
+import '../common_widgets/profile_picture_container.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/alerts.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';

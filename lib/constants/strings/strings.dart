@@ -41,6 +41,8 @@ class Strings {
   static const enterExpiryDateMessage = 'Please Enter Your Expiry Date';
   static const cvv = 'CVV';
   static const enterCvvMessage = 'Please enter your CVV';
+  static const anErrorOccurred = 'An Error Occurred!';
+
 
 
   static const carRange = 'Range';

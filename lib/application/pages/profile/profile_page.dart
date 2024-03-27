@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../common_widgets/profile_picture_container.dart';
+import '../common_widgets/profile_picture_container.dart';
 import '../../../constants/consts.dart';
 import '../../../services/firestore_services.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
