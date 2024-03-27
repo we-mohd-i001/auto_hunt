@@ -27,6 +27,21 @@ class Strings {
   static const transmission = 'Transmission';
   static const seatCapacity = 'Seat Capacity';
   static const wheelType = 'Wheel Type';
+  static const rentDetail = 'Rent Detail';
+  static const enterPickupLocation = 'Enter Pickup Location';
+  static const chooseStartDate = 'Choose Start Date';
+  static const enterCardDetails = 'Enter Card Details';
+  static const priceDetails = 'Price Details';
+  static const enterYourCardDetailsMessage = 'Please enter your card details.';
+  static const cardNumber = 'Card Number';
+  static const enterCardNumberMessage = 'Please enter card number';
+  static const cardHolder = 'Card Holder';
+  static const cardHolderMessage = 'Please enter card holder name';
+  static const enterExpiryDate = 'Enter Expiry Date';
+  static const enterExpiryDateMessage = 'Please Enter Your Expiry Date';
+  static const cvv = 'CVV';
+  static const enterCvvMessage = 'Please enter your CVV';
+
 
   static const carRange = 'Range';
   static const enginePower = 'Engine Power';

@@ -14,8 +14,8 @@ const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
 const String build = '2022030201'; // build no format 'YYYYMMDDNUMBER'
 
 final EnvironmentConfig defaultConfig = EnvironmentConfig(
-  appTitle: 'VaahFlutter',
-  appTitleShort: 'VaahFlutter',
+  appTitle: 'Auto.Hunt',
+  appTitleShort: 'Auto.Hunt',
   envType: 'default',
   version: version,
   build: build,
@@ -29,6 +29,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   internalNotificationsServiceType: InternalNotificationsServiceType.none,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
+  sentryConfig: const SentryConfig(dsn: 'https://67fb7037cd9c95f3680d0b5b48d4b394@o4506977107050496.ingest.us.sentry.io/4506977112424448')
 );
 
 // To add new configuration add new key, value pair in envConfigs

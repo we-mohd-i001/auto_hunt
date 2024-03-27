@@ -136,7 +136,7 @@ class ContinueWithEmailPage extends StatelessWidget {
                                           onPressed: () async {
                                             controller.isLoading(true);
                                             //_formKey.currentState?.validate();
-                                           UserCredential? userCredential =  await controller.loginMethod();
+                                           UserCredential? userCredential =  await controller.login();
                                             if(userCredential != null){
                                             } else {
                                               controller.isLoading(false);

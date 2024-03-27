@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/views/pages/home.dart';
+
 
 import '../../../data/models/brands/brands_model.dart';
 import '../../../services/firestore_services.dart';
@@ -85,8 +87,8 @@ class BrandsDetailPage extends StatelessWidget {
                                   onPressed: () {
                                     brandsController
                                         .toggleSelectedCategory(index);
-                                    print(brandsController
-                                        .selectedCategoryIndex.value);
+                                    //Todo: Remove this route this is only for testing
+                                    Get.to(const HomePage());
                                   },
                                   text: cat,
                                 ),

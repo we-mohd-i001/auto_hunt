@@ -1,18 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../../../constants/strings/strings.dart';
-import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../common_widgets/learn_more_with_title.dart';
+import '../common_widgets/my_custom_button.dart';
+import '../rent_checkout/rent_checkout_page.dart';
 import 'controller/car_detail_controller.dart';
 import 'widgets/car_information_widget.dart';
 
@@ -38,8 +37,8 @@ class CarDetailPage extends StatelessWidget {
           title: Text(data!['car_name']),
         ),
         body: SafeArea(
-          child: Obx( () =>
-            Stack(
+          child: Obx(
+            () => Stack(
               children: [
                 SingleChildScrollView(
                   child: Column(
@@ -66,7 +65,8 @@ class CarDetailPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(12)),
                                   child: PhotoView(
                                     backgroundDecoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12)),
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
                                     imageProvider: NetworkImage(
                                       data!['car_images'][itemIndex],
                                     ),
@@ -79,7 +79,8 @@ class CarDetailPage extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        padding:
+                            const EdgeInsets.only(top: 20, left: 20, right: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -106,7 +107,8 @@ class CarDetailPage extends StatelessWidget {
                                     Text(
                                       data!['car_brand'],
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.w800, fontSize: 16),
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 16),
                                     ),
                                   ],
                                 )
@@ -151,10 +153,12 @@ class CarDetailPage extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                          visible: carDetailController.areExtraDetailsVisible.value,
+                          visible:
+                              carDetailController.areExtraDetailsVisible.value,
                           child: verticalMargin12),
                       Visibility(
-                        visible: carDetailController.areExtraDetailsVisible.value,
+                        visible:
+                            carDetailController.areExtraDetailsVisible.value,
                         child: Padding(
                           padding: const EdgeInsets.only(right: 20, left: 20),
                           child: Row(
@@ -181,8 +185,8 @@ class CarDetailPage extends StatelessWidget {
                       learnMoreWithTitle(Strings.carLocation,
                           changeLearnMore: Strings.distance),
                       Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
                         child: ContainerWithRoundedBorder(
                           child: Row(
                             children: [
@@ -200,37 +204,21 @@ class CarDetailPage extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                          visible: carDetailController.areExtraDetailsVisible.value,
-                          child: const SizedBox(
-                        height: 84,
-                      ),),
-                  
+                        visible:
+                            carDetailController.areExtraDetailsVisible.value,
+                        child: const SizedBox(
+                          height: 84,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    child: SizedBox(
-                      height: 60,
-                      width: double.infinity,
-                      child: Hero(
-                        tag: 'hero1',
-                        child: ButtonElevated(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          onPressed: () {},
-                          text: Strings.rentThisCar,
-                          buttonType: ButtonType.primary,
-                          fontSize: 17,
-                          borderRadius: 8,
-                          foregroundColor: AppTheme.colors['white'],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
+                myCustomButton(
+                    tag: 'hero-1',
+                    onPressed: () {
+                      Get.to(const RentCheckoutPage());
+                    },
+                    text: Strings.rentThisCar)
               ],
             ),
           ),
