@@ -6,6 +6,7 @@ import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/enums.dart';
 import '../../../common_widgets/profile_picture_container.dart';
 import '../../../vaahextendflutter/app_theme.dart';
+import '../../../vaahextendflutter/helpers/alerts.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import 'controller/profile_controller.dart';
@@ -84,12 +85,11 @@ class ProfileEditPage extends StatelessWidget {
                               width: 16,
                               child: CircularProgressIndicator())
                           : ButtonIcon(
-                              onPressed: profileController.isDisabled.value
+                              onPressed: profileController
+                                      .isImageUploadButtonDisabled.value
                                   ? () {
-                                      Get.snackbar('Image not Selected',
-                                          'Please Select an Image first.',
-                                          colorText: Colors.red,
-                                          backgroundColor: Colors.white);
+                                      Alerts.showInfoToast!(
+                                          content: 'Please select an image.');
                                     }
                                   : () async {
                                       profileController.isImageLoading(true);
@@ -105,7 +105,8 @@ class ProfileEditPage extends StatelessWidget {
                                           profileController.profileImageLink);
                                     },
                               iconData: FontAwesomeIcons.check,
-                              buttonType: profileController.isDisabled.value
+                              buttonType: profileController
+                                      .isImageUploadButtonDisabled.value
                                   ? ButtonType.secondary
                                   : ButtonType.primary,
                             ),
@@ -126,7 +127,28 @@ class ProfileEditPage extends StatelessWidget {
                           ),
                         ),
                         InputText(
+                          suffixIconColor:
+                              profileController.isNameSuffixIconDisabled.value
+                                  ? AppTheme.colors['secondary']
+                                  : AppTheme.colors['primary'],
+                          suffixIcon: FontAwesomeIcons.check,
+                          suffixOnTap:
+                              profileController.isNameSuffixIconDisabled.value
+                                  ? () {
+                                      Alerts.showErrorToast!(
+                                          content:
+                                              'Please change your name to update name!');
+                                    }
+                                  : () async {
+                                      String name =
+                                          profileController.nameController.text;
+                                      await profileController.updateName(name);
+                                      Alerts.showSuccessToast!(
+                                          content:
+                                          'Name updated.');
+                                    },
                           controller: profileController.nameController,
+                          onChanged: (_){profileController.isNameSuffixIconDisabled(false);},
                           label: 'Name',
                         ),
                       ],
@@ -146,12 +168,11 @@ class ProfileEditPage extends StatelessWidget {
                               ),
                             )),
                         InputText(
-                          isPassword:
-                              profileController.passwordVisibility.value,
+                          isPassword: profileController.isPasswordVisible.value,
                           maxLines: 1,
                           controller: profileController.oldPassController,
                           label: 'Old Password',
-                          suffixIcon: profileController.passwordVisibility.value
+                          suffixIcon: profileController.isPasswordVisible.value
                               ? Icons.visibility
                               : Icons.visibility_off,
                           suffixOnTap: () =>
@@ -175,12 +196,11 @@ class ProfileEditPage extends StatelessWidget {
                           ),
                         ),
                         InputText(
-                          isPassword:
-                              profileController.passwordVisibility.value,
+                          isPassword: profileController.isPasswordVisible.value,
                           maxLines: 1,
                           controller: profileController.passwordController,
                           label: 'New Password',
-                          suffixIcon: profileController.passwordVisibility.value
+                          suffixIcon: profileController.isPasswordVisible.value
                               ? Icons.visibility
                               : Icons.visibility_off,
                           suffixOnTap: () =>
@@ -197,21 +217,19 @@ class ProfileEditPage extends StatelessWidget {
 
                             if (data['password'] ==
                                 profileController.oldPassController.text) {
-                              profileController.authPasswordChange(
+                              profileController.changeAuthPassword(
                                   data['email'],
                                   profileController.oldPassController.text,
                                   profileController.passwordController.text);
 
-                              await profileController.updateProfile(
-                                profileController.nameController.text,
+                              await profileController.updatePassword(
                                 profileController.passwordController.text,
                               );
-                              Get.snackbar('Success', 'Profile Update Complete',
-                                  backgroundColor: Colors.white);
+                              Alerts.showSuccessToast!(
+                                  content: 'Password updated.');
                             } else {
-                              Get.snackbar('Password Incorrect',
-                                  'The old password is incorrect! Please reenter the correct password.',
-                                  backgroundColor: Colors.white);
+                              Alerts.showErrorToast!(
+                                  content: 'Password Incorrect.');
                               profileController.isLoading(false);
                             }
                           },

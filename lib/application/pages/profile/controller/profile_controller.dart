@@ -10,24 +10,26 @@ import 'package:path/path.dart' show basename;
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../constants/consts.dart';
+import '../../../../vaahextendflutter/helpers/alerts.dart';
 
 class ProfileController extends GetxController {
   RxString profileImagePath = ''.obs;
   String profileImageLink = '';
-  RxBool passwordVisibility = true.obs;
+  RxBool isPasswordVisible = true.obs;
   RxBool isLoading = false.obs;
   RxBool isImageLoading = false.obs;
-  RxBool isDisabled = true.obs;
+  RxBool isImageUploadButtonDisabled = true.obs;
+  RxBool isNameSuffixIconDisabled = true.obs;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController oldPassController = TextEditingController();
 
-  togglePasswordVisibility() {
-    passwordVisibility.value = !passwordVisibility.value;
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  changeImage() async {
+  Future<void> changeImage() async {
     try {
       final XFile? img = await ImagePicker()
           .pickImage(source: ImageSource.gallery, imageQuality: 70);
@@ -35,14 +37,17 @@ class ProfileController extends GetxController {
       if (img == null) {
         return;
       }
-      isDisabled(false);
+      isImageUploadButtonDisabled(false);
       profileImagePath.value = img.path;
     } on PlatformException catch (e) {
-      Get.snackbar('Error', e.toString());
+      Alerts.showErrorDialog!(
+        title: 'Error',
+        messages: [(e.toString())],
+      );
     }
   }
 
-  uploadProfileImage() async {
+  Future<void> uploadProfileImage() async {
     String fileName = basename(profileImagePath.value);
     String destination = 'images/${currentUser!.uid}/$fileName';
     Reference ref = FirebaseStorage.instance.ref().child(destination);
@@ -50,23 +55,27 @@ class ProfileController extends GetxController {
     profileImageLink = await ref.getDownloadURL();
   }
 
-  updateProfileImage(imageUrl) async {
+  Future<void> updateName(String name) async {
+    DocumentReference<Map<String, dynamic>> store =
+    firestore.collection(usersCollection).doc(currentUser!.uid);
+    await store.set(
+      {'name': name},
+      SetOptions(merge: true),
+    );
+    isNameSuffixIconDisabled(true);
+  }
+
+  Future<void> updateProfileImage(String imageUrl) async {
     final DocumentReference<Map<String, dynamic>> store =
         firestore.collection(usersCollection).doc(currentUser!.uid);
     await store.set({'imageUrl': imageUrl}, SetOptions(merge: true));
     isImageLoading(false);
-    Get.snackbar(
-      "Success",
-      '',
-      colorText: Colors.black,
-      backgroundColor: Colors.white70,
-      snackPosition: SnackPosition.BOTTOM,
-      padding: const EdgeInsets.only(top: 20, left: 20),
-      margin: const EdgeInsets.only(bottom: 160, left: 20, right: 20),
-    );
+
+    Alerts.showSuccessToast!(content: 'Profile image updated.');
+    isImageUploadButtonDisabled(true);
   }
 
-  authPasswordChange(email, password, newPassword) async {
+  Future<void> changeAuthPassword(String email, String password, String newPassword) async {
     final AuthCredential cred =
         EmailAuthProvider.credential(email: email, password: password);
     await currentUser!.reauthenticateWithCredential(cred).then((value) {
@@ -76,11 +85,11 @@ class ProfileController extends GetxController {
     });
   }
 
-  updateProfile(name, password) async {
+  Future<void> updatePassword(String password) async {
     DocumentReference<Map<String, dynamic>> store =
         firestore.collection(usersCollection).doc(currentUser!.uid);
     await store.set(
-      {'name': name, 'password': password},
+      {'password': password},
       SetOptions(merge: true),
     );
     isLoading(false);

@@ -77,7 +77,7 @@ class ProfilePage extends StatelessWidget {
                             iconData: Icons.logout_rounded,
                             text: 'Log Out',
                             onPressed: () async {
-                              await authController.signOutMethod();
+                              await authController.logOut();
                               authController.isLoading(false);
                               Get.offAllNamed(LoginPage.routePath);
                             },

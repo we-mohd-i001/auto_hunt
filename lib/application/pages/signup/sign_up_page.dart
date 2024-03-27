@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/vaahextendflutter/helpers/alerts.dart';
 
 import '../../../constants/consts.dart';
 import '../../../vaahextendflutter/app_theme.dart';
@@ -182,7 +183,7 @@ class _SignupPageState extends State<SignupPage> {
                                     try {
                                       controller.isLoading(true);
                                       await controller
-                                          .signUpMethod(_emailController.text,
+                                          .signUp(_emailController.text,
                                               _passwordController.text)
                                           .then((value) {
                                         return controller.storeUserData(
@@ -190,18 +191,12 @@ class _SignupPageState extends State<SignupPage> {
                                             _passwordController.text,
                                             _emailController.text);
                                       }).then((value) {
-                                        Get.snackbar(
-                                          'Success',
-                                          'SignUp Successful',
-                                        );
+                                        Alerts.showSuccessToast!(content: 'SignUp Successful');
                                         Get.offAllNamed(MyHomePage.routePath);
                                       });
                                     } catch (e) {
                                       auth.signOut();
-                                      Get.snackbar(
-                                        'Error',
-                                        'Something went wrong, ${e.toString()}',
-                                      );
+                                      Alerts.showErrorToast!(content: 'Something went wrong!');
                                     }
                                   }
                                 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../constants/consts.dart';
-import '../../../../vaahextendflutter/app_theme.dart';
+import '../../../../vaahextendflutter/helpers/alerts.dart';
 import '../../main_navigator/main_navigator.dart';
 
 class AuthController extends GetxController {
@@ -13,42 +13,39 @@ class AuthController extends GetxController {
   RxBool isPasswordVisible = false.obs;
   RxBool isLoading = false.obs;
 
-  togglePasswordVisibilityLoginPage() {
+  void togglePasswordVisibilityLoginPage() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
   //login method
 
-  Future<UserCredential?> loginMethod() async {
-    UserCredential userCredential;
+  Future<UserCredential?> login() async {
+    //UserCredential userCredential;
     try {
       await auth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
-      Get.snackbar('Success', 'Logged in successfully.',
-          backgroundColor: AppTheme.colors['white'], borderRadius: 6);
+      Alerts.showSuccessToast!(content: 'Logged in successfully.');
       Get.offAllNamed(MyHomePage.routePath);
     } on FirebaseAuthException catch (e) {
-      Get.snackbar('Error', '',
-          backgroundColor: AppTheme.colors['white'],
-          messageText: Text('Login Unsuccessful ${e.toString()}'));
+      Alerts.showErrorToast!(content: 'Login unsuccessful');
     }
   }
 
   // signUp method
-  Future<UserCredential?> signUpMethod(email, password) async {
-    UserCredential userCredential;
+  Future<UserCredential?> signUp(String email, String password) async {
+    //UserCredential userCredential;
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      Get.snackbar('Error', 'SignUp Unsuccessful ${e.toString()}');
+      Alerts.showErrorToast!(content: 'SignUp unsuccessful!');
     }
   }
 
   //storing data to cloud
 
-  storeUserData(name, password, email) async {
+  Future<void> storeUserData(String name, String password, String email) async {
     DocumentReference store =
-        await firestore.collection(usersCollection).doc(currentUser!.uid);
+        firestore.collection(usersCollection).doc(currentUser!.uid);
     store.set(
       {
         'name': name,
@@ -62,11 +59,12 @@ class AuthController extends GetxController {
     );
   }
 
-  signOutMethod() async {
+  Future<void> logOut() async {
     try {
       await auth.signOut();
+      Alerts.showSuccessToast!(content: 'Logged out successfully.');
     } catch (e) {
-      Get.snackbar('Error', 'Sign out Unsuccessful ${e.toString()}');
+      Alerts.showErrorToast!(content: 'LogOut unsuccessful');
     }
   }
 }
