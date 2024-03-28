@@ -9,7 +9,7 @@ import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
-import '../login/controller/auth_controller.dart';
+import '../../../controllers/auth_controller.dart';
 import '../main_navigator/main_navigator.dart';
 
 class SignupPage extends StatefulWidget {

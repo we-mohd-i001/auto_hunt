@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/application/pages/rent_checkout/controller/rent_checkout_controller.dart';
-import 'package:yourtasks/vaahextendflutter/helpers/date_time.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';
+import '../../../../vaahextendflutter/helpers/date_time.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_date_time.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_slider.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../../views/pages/ui/components/commons.dart';
 import '../../common_widgets/learn_more_with_title.dart';
+import '../../../../controllers/rent_checkout_controller.dart';
 import 'card_detail_input_form.dart';
 import 'price_detail_widget.dart';
 
@@ -22,20 +22,40 @@ Widget rentDetailForm() {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const InputText(
-          label: Strings.enterPickupLocation,
+        InputText(
+          validator: (value) {
+            if (value != null && value.isEmpty) {
+              return Strings.enterPickupAddress;
+            }
+            return null;
+          },
+          label: Strings.enterPickupAddress,
+          onChanged: (value) {
+            rentCheckoutController.addPickupLocation(value);
+          },
         ),
         verticalMargin12,
         InputDateTime(
-          label: Strings.chooseStartDate,
-          pickerType: PickerType.dateOnly,
-          callback: (data) {},
+          validator: (value) {
+            if (value != null && value.isEmpty) {
+              return Strings.chooseStartDateAndTime;
+            }
+            return null;
+          },
+          firstDate: DateTime.now(),
+          label: Strings.chooseStartDateAndTime,
+          pickerType: PickerType.dateAndTime,
+          callback: (data) {
+            rentCheckoutController.updateStartDate(data);
+            rentCheckoutController.userDateAndTime.value =
+                rentCheckoutController.startDate.value.toFullDateTimeString;
+          },
         ),
         verticalMargin12,
         Row(
           children: [
             Text(
-              'Select days',
+              'Select days from the below slider.',
               style: normal,
             ),
             horizontalMargin8,
@@ -62,8 +82,15 @@ Widget rentDetailForm() {
           step: 1,
           onChanged: (value) => rentCheckoutController.rentDays.value = value,
         ),
-
         InputText(
+            validator: (value) {
+              if (value != null && value.isEmpty) {
+                return Strings.enterYourCardDetailsMessage;
+              }
+              return null;
+            },
+            controller: TextEditingController(
+                text: rentCheckoutController.cardDetails.value),
             suffixIcon: FontAwesomeIcons.pencil,
             suffixOnTap: () {
               Get.bottomSheet(
@@ -78,11 +105,11 @@ Widget rentDetailForm() {
             rentPrice: rentCheckoutController.carData.carRentPricePerDay,
             days: rentCheckoutController.rentDays,
             tax: rentCheckoutController.carData.carRentTax,
-            total: rentCheckoutController.calculateTotal(rentCheckoutController.carData.carRentPricePerDay, rentCheckoutController.carData.carRentTax)
-        ),
+            total: rentCheckoutController.calculateTotal(
+                rentCheckoutController.carData.carRentPricePerDay,
+                rentCheckoutController.carData.carRentTax)),
         verticalMargin48,
         verticalMargin32,
-        // verticalMargin4,
       ],
     ),
   );

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../constants/others/other_consts.dart';
 import '../../brands_detail/brands_detail_page.dart';
-import '../controllers/brands_controller.dart';
+import '../../../../controllers/brands_controller.dart';
 
 Widget searchByBrands() {
   BrandsController brandsController = Get.find<BrandsController>();

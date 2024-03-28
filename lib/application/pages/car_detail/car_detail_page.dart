@@ -10,10 +10,11 @@ import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
+import '../../../views/pages/ui/components/commons.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import '../common_widgets/my_custom_button.dart';
 import '../rent_checkout/rent_checkout_page.dart';
-import 'controller/car_detail_controller.dart';
+import '../../../controllers/car_detail_controller.dart';
 import 'widgets/car_information_widget.dart';
 
 class CarDetailPage extends StatelessWidget {
@@ -50,32 +51,45 @@ class CarDetailPage extends StatelessWidget {
                         child: SizedBox(
                           child: CarouselSlider.builder(
                             options: CarouselOptions(
-                              autoPlay: true,
+                              autoPlay: false,
                               viewportFraction: 1,
                               initialPage: 0,
                             ),
                             itemCount: data.carImages.length,
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
-                                Hero(
-                              tag: '${data.carName}',
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: PhotoView(
-                                    backgroundDecoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    imageProvider: NetworkImage(
-                                      data.carImages[itemIndex],
-                                    ),
-                                    filterQuality: FilterQuality.medium,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Stack(
+                                    children: [
+                                      Hero(
+                                        tag: '${data.carName}',
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(12)),
+                                          child: PhotoView(
+                                            backgroundDecoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            imageProvider: NetworkImage(
+                                              data.carImages[itemIndex],
+                                            ),
+                                            filterQuality: FilterQuality.medium,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: ContainerWithRoundedBorder(
+                                          color: Colors.white.withOpacity(0.5),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                          borderRadius: 6,
+                                          child: Text('${itemIndex+1}', style: normal,),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ),
                           ),
                         ),
                       ),
@@ -215,6 +229,7 @@ class CarDetailPage extends StatelessWidget {
                   ),
                 ),
                 myCustomButton(
+                  type: ButtonType.primary,
                     tag: 'hero-1',
                     onPressed: () {
                       Get.to(RentCheckoutPage(carData: data,));

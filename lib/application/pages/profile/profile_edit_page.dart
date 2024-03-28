@@ -9,7 +9,7 @@ import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/alerts.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
-import 'controller/profile_controller.dart';
+import '../../../controllers/profile_controller.dart';
 
 class ProfileEditPage extends StatelessWidget {
   final dynamic data;

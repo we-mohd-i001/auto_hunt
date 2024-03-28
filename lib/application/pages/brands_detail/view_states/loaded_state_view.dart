@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../data/car/car_model.dart';
 import '../../car_detail/car_detail_page.dart';
 import '../../common_widgets/car_bio.dart';
-import '../../home/controllers/brands_controller.dart';
+import '../../../../controllers/brands_controller.dart';
 import '../../../../controllers/brand_detail_controller.dart';
 import '../widgets/category_list.dart';
 

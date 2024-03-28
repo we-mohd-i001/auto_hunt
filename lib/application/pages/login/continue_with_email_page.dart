@@ -8,7 +8,7 @@ import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../common_widgets/logo_with_name.dart';
-import 'controller/auth_controller.dart';
+import '../../../controllers/auth_controller.dart';
 import '../signup/sign_up_page.dart';
 
 class Junk extends StatelessWidget {

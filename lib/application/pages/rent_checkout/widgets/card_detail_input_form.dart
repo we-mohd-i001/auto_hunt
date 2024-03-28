@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';
+import '../../../../vaahextendflutter/helpers/enums.dart';
 import '../../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
+import '../../../../views/pages/ui/components/commons.dart';
 
 Widget cardDetailInputForm(rentCheckoutController) {
   return Container(
@@ -14,18 +17,24 @@ Widget cardDetailInputForm(rentCheckoutController) {
     child: Padding(
       padding: const EdgeInsets.all(20.0),
       child: Form(
-        key: rentCheckoutController.carDetailFormKey,
+        key: rentCheckoutController.cardDetailFormKey,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(Strings.enterYourCardDetailsMessage),
+              Text(
+                Strings.enterYourCardDetailsMessage,
+                style: normal,
+              ),
               verticalMargin8,
               InputText(
+                keyboardType: TextInputType.number,
                 label: Strings.cardNumber,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return Strings.enterCardNumberMessage;
+                  } else if (value.length != 16) {
+                    return Strings.mustBe16Digits;
                   }
                   return null;
                 },
@@ -35,10 +44,13 @@ Widget cardDetailInputForm(rentCheckoutController) {
               ),
               verticalMargin8,
               InputText(
+                keyboardType: TextInputType.name,
                 label: Strings.cardHolder,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return Strings.cardHolderMessage;
+                  } else if (value.length > 24) {
+                    return Strings.nameTooLong;
                   }
                   return null;
                 },
@@ -55,6 +67,8 @@ Widget cardDetailInputForm(rentCheckoutController) {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return Strings.enterExpiryDateMessage;
+                        } else if (value.length != 4) {
+                          Strings.invalidDate;
                         }
                         return null;
                       },
@@ -66,10 +80,14 @@ Widget cardDetailInputForm(rentCheckoutController) {
                   horizontalMargin8,
                   Expanded(
                     child: InputText(
+                      isPassword: true,
+                      maxLines: 1,
                       label: Strings.cvv,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return Strings.enterCvvMessage;
+                        } else if (value.length != 3) {
+                          return Strings.mustBe3Digits;
                         }
                         return null;
                       },
@@ -81,12 +99,30 @@ Widget cardDetailInputForm(rentCheckoutController) {
                 ],
               ),
               verticalMargin16,
-              ButtonElevated(
-                onPressed: () {
-                  if (rentCheckoutController.carDetailFormKey.currentState!
-                      .validate()) {}
-                },
-                text: 'Submit',
+              Row(
+                children: [
+                  ButtonOutlined(
+                    borderRadius: 8,
+                    buttonType: ButtonType.success,
+                    onPressed: () {
+                      if (rentCheckoutController.cardDetailFormKey.currentState!
+                          .validate()) {
+                        rentCheckoutController.addCardDetails();
+                        Get.back();
+                      }
+                    },
+                    text: 'Submit',
+                  ),
+                  horizontalMargin8,
+                  ButtonOutlined(
+                    borderRadius: 8,
+                    buttonType: ButtonType.danger,
+                    onPressed: () {
+                      Get.back();
+                    },
+                    text: 'Back',
+                  ),
+                ],
               ),
             ],
           ),

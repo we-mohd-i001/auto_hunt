@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../../data/models/brands/brands_model.dart';
+import '../data/models/brands/brands_model.dart';
 
 class BrandsController extends GetxController {
   RxList<dynamic> subCat = [].obs;

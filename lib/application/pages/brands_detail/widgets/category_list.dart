@@ -6,7 +6,7 @@ import '../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../vaahextendflutter/helpers/enums.dart';
 import '../../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../../views/pages/home.dart';
-import '../../home/controllers/brands_controller.dart';
+import '../../../../controllers/brands_controller.dart';
 
 Widget categoryList({
   required BrandsController brandsController,
