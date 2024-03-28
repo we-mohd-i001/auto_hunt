@@ -28,8 +28,8 @@ class Strings {
   static const seatCapacity = 'Seat Capacity';
   static const wheelType = 'Wheel Type';
   static const rentDetail = 'Rent Detail';
-  static const enterPickupLocation = 'Enter Pickup Location';
-  static const chooseStartDate = 'Choose Start Date';
+  static const enterPickupAddress = 'Enter Pickup Address';
+  static const chooseStartDateAndTime = 'Select Date & Time';
   static const enterCardDetails = 'Enter Card Details';
   static const priceDetails = 'Price Details';
   static const enterYourCardDetailsMessage = 'Please enter your card details.';
@@ -41,6 +41,11 @@ class Strings {
   static const enterExpiryDateMessage = 'Please Enter Your Expiry Date';
   static const cvv = 'CVV';
   static const enterCvvMessage = 'Please enter your CVV';
+  static const anErrorOccurred = 'An Error Occurred!';
+  static const mustBe16Digits = 'Card Number must have 16 digits!';
+  static const nameTooLong = 'Name too long!';
+  static const invalidDate = 'Invalid Date!';
+  static const mustBe3Digits = 'CVV must have 3 digits!';
 
 
   static const carRange = 'Range';

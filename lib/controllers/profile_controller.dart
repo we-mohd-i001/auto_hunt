@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 import 'package:path/path.dart' show basename;
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../constants/consts.dart';
-import '../../../../vaahextendflutter/helpers/alerts.dart';
+import '../constants/consts.dart';
+import '../vaahextendflutter/helpers/alerts.dart';
 
 class ProfileController extends GetxController {
   RxString profileImagePath = ''.obs;
@@ -24,6 +24,12 @@ class ProfileController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController oldPassController = TextEditingController();
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;

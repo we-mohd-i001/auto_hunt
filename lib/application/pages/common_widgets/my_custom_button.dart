@@ -7,7 +7,8 @@ import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 Widget myCustomButton({
   void Function()? onPressed,
   required String tag,
-  String? text
+  String? text,
+  required ButtonType type,
 }) {
   return Align(
     alignment: Alignment.bottomCenter,
@@ -22,7 +23,7 @@ Widget myCustomButton({
             padding: const EdgeInsets.symmetric(vertical: 16),
             onPressed: onPressed,
             text: text ?? 'Press',
-            buttonType: ButtonType.primary,
+            buttonType: type,
             fontSize: 17,
             borderRadius: 8,
             foregroundColor: AppTheme.colors['white'],

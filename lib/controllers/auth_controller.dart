@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../constants/consts.dart';
-import '../../../../vaahextendflutter/helpers/alerts.dart';
-import '../../main_navigator/main_navigator.dart';
+import '../constants/consts.dart';
+import '../vaahextendflutter/helpers/alerts.dart';
+import '../application/pages/main_navigator/main_navigator.dart';
 
 class AuthController extends GetxController {
   TextEditingController emailController = TextEditingController();

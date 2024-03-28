@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../constants/others/other_consts.dart';
+import '../../../../data/car/car_model.dart';
+import '../../car_detail/car_detail_page.dart';
 import '../../common_widgets/car_bio.dart';
 
-Widget mostPopularCars() {
-  return SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
+Widget mostPopularCars({required List<CarModel> carList, required Size size}) {
+  return SizedBox(
+    height: 280,
+    width: double.infinity,
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          carBio('BMW M8 : M - Competition', 'Paid - Diesel Car',
-              OtherConsts.carBMWM8, 220.0, 3000, 4, () {},''),
-          carBio('Name', 'Type', OtherConsts.carBMW, 220.0, 3000, 4, () {},'-'),
-          carBio('Name', 'type', OtherConsts.carBMW, 220.0, 3000, 4, () {},'20')
-        ],
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: carList.length,
+        itemBuilder: (BuildContext context, int index) {
+          CarModel carIndex = carList[index];
+          return carBio(
+            carIndex.carName,
+            carIndex.carFuelType,
+            carIndex.carImages[0],
+            200.0,
+            carIndex.carRentPricePerDay,
+            carIndex.carSeatingCapacity,
+                () {
+              Get.to(
+                CarDetailPage(
+                  data: carIndex,
+                ),
+              );
+            },
+            '${carIndex.carName}',
+          );
+        },
       ),
     ),
   );

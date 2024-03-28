@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../../data/models/brands/brands_model.dart';
+import '../data/models/brands/brands_model.dart';
 
 class BrandsController extends GetxController {
   RxList<dynamic> subCat = [].obs;
@@ -18,7 +18,7 @@ class BrandsController extends GetxController {
     getBrandsList();
   }
 
-  toggleSelectedCategory(int index) {
+  void toggleSelectedCategory(int index) {
     if (selectedCategoryIndex.value == index) {
       selectedCategoryIndex.value = -1;
     } else {
@@ -26,13 +26,13 @@ class BrandsController extends GetxController {
     }
   }
 
-  getBrandsList() async {
+  void getBrandsList() async {
     String rawData = await rootBundle.loadString("lib/services/brands_model.json");
     BrandsModel decodedData = brandsModelFromJson(rawData);
     brandsList.value = decodedData.brands.toList();
   }
 
-  getCarsList(title) async {
+  void getCarsList(title) async {
     subCat.value = [];
     String data = await rootBundle.loadString("lib/services/brands_model.json");
     BrandsModel decodedData = brandsModelFromJson(data);

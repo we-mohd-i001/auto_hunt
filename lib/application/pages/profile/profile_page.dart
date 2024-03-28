@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../common_widgets/profile_picture_container.dart';
+import '../common_widgets/profile_picture_container.dart';
 import '../../../constants/consts.dart';
 import '../../../services/firestore_services.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
-import '../login/controller/auth_controller.dart';
+import '../../../controllers/auth_controller.dart';
 import '../login/login_page.dart';
-import 'controller/profile_controller.dart';
+import '../../../controllers/profile_controller.dart';
 import 'profile_edit_page.dart';
 import 'widgets/edit_profile_button.dart';
 import 'widgets/liked_and_ordered_cars.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../vaahextendflutter/app_theme.dart';
-import '../home/controllers/brands_controller.dart';
+import '../../../controllers/brands_controller.dart';
 import '../home/home_page.dart';
-import '../login/controller/auth_controller.dart';
+import '../../../controllers/auth_controller.dart';
 import '../profile/profile_page.dart';
-import 'controller/main_navigator_controller.dart';
+import '../../../controllers/main_navigator_controller.dart';
 
 class MyHomePage extends StatelessWidget {
   static const String routePath = '/home';

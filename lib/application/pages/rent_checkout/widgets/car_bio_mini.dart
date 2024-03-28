@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 
-Widget carBioMini() {
+Widget carBioMini(
+    {required String carIcon,
+    required String carName,
+    required String currentFuelCapacity,
+    required String carFuelType}) {
   return ContainerWithRoundedBorder(
     padding: allPadding16,
     borderRadius: 8,
@@ -16,18 +20,18 @@ Widget carBioMini() {
               height: 60,
               width: 60,
               child: Image.network(
-                'https://imgd.aeplcdn.com/1056x594/n/cw/ec/26742/swift-exterior-front-view.jpeg?q=80&wm=1',
+                carIcon,
                 fit: BoxFit.cover,
               )),
         ),
         horizontalMargin8,
         horizontalMargin8,
-        const Column(
+        Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Car Name'),
-            Text('Current Fuel Capacity - Engine Type'),
+            Text(carName),
+            Text('$currentFuelCapacity - $carFuelType'),
           ],
         )
       ],

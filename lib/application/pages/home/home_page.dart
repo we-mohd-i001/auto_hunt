@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
+import '../../../controllers/home_controller.dart';
+import '../brands_detail/view_states/error_state_view.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import 'widgets/home_screen_options.dart';
 import 'widgets/location_and_profile.dart';
@@ -15,6 +18,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomeController homeController = Get.put(HomeController());
     Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.grey.shade100,
@@ -47,7 +51,20 @@ class HomePage extends StatelessWidget {
                 learnMoreWithTitle(Strings.searchByBrand),
                 searchByBrands(),
                 learnMoreWithTitle(Strings.mostPopularCars),
-                mostPopularCars(),
+                Obx(() {
+                  if (homeController.isLoading.value) {
+                    return const SizedBox(
+                        height: 280,
+                        width: double.infinity,
+                        child: Center(child: CircularProgressIndicator()));
+                  } else if (homeController.isError.value) {
+                    return const ErrorStateView();
+                  } else if (homeController.carList.isEmpty) {
+                    return emptyWidget;
+                  }
+                  return mostPopularCars(
+                      carList: homeController.carList.value, size: size);
+                }),
               ]),
             ),
           ],

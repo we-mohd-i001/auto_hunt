@@ -5,18 +5,20 @@ import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../../../constants/strings/strings.dart';
+import '../../../data/car/car_model.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
+import '../../../views/pages/ui/components/commons.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import '../common_widgets/my_custom_button.dart';
 import '../rent_checkout/rent_checkout_page.dart';
-import 'controller/car_detail_controller.dart';
+import '../../../controllers/car_detail_controller.dart';
 import 'widgets/car_information_widget.dart';
 
 class CarDetailPage extends StatelessWidget {
-  final Map<String, dynamic>? data;
+  final CarModel data;
   const CarDetailPage({super.key, required this.data});
 
   @override
@@ -34,7 +36,7 @@ class CarDetailPage extends StatelessWidget {
               carDetailController.isImageOpened(false);
             },
           ),
-          title: Text(data!['car_name']),
+          title: Text('${data.carName}'),
         ),
         body: SafeArea(
           child: Obx(
@@ -49,32 +51,45 @@ class CarDetailPage extends StatelessWidget {
                         child: SizedBox(
                           child: CarouselSlider.builder(
                             options: CarouselOptions(
-                              autoPlay: true,
+                              autoPlay: false,
                               viewportFraction: 1,
                               initialPage: 0,
                             ),
-                            itemCount: data!['car_images'].length,
+                            itemCount: data.carImages.length,
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
-                                Hero(
-                              tag: data!['car_name'],
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: PhotoView(
-                                    backgroundDecoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    imageProvider: NetworkImage(
-                                      data!['car_images'][itemIndex],
-                                    ),
-                                    filterQuality: FilterQuality.medium,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Stack(
+                                    children: [
+                                      Hero(
+                                        tag: '${data.carName}',
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(12)),
+                                          child: PhotoView(
+                                            backgroundDecoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            imageProvider: NetworkImage(
+                                              data.carImages[itemIndex],
+                                            ),
+                                            filterQuality: FilterQuality.medium,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: ContainerWithRoundedBorder(
+                                          color: Colors.white.withOpacity(0.5),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                          borderRadius: 6,
+                                          child: Text('${itemIndex+1}', style: normal,),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ),
                           ),
                         ),
                       ),
@@ -99,13 +114,13 @@ class CarDetailPage extends StatelessWidget {
                                 Row(
                                   children: [
                                     Image.network(
-                                      data!['brand_logo'],
+                                      data.brandLogo.toString(),
                                       height: 26,
                                       fit: BoxFit.contain,
                                     ),
                                     horizontalMargin4,
                                     Text(
-                                      data!['car_brand'],
+                                      '${data.carBrand}',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w800,
                                           fontSize: 16),
@@ -138,16 +153,16 @@ class CarDetailPage extends StatelessWidget {
                             carInformationWidget(
                               FontAwesomeIcons.road,
                               informationType: Strings.carRange,
-                              value: data!['car_range'],
+                              value: '${data.carRange}',
                               size: size.width - 30,
                             ),
                             carInformationWidget(FontAwesomeIcons.gear,
                                 informationType: Strings.enginePower,
-                                value: data!['car_engine_power'],
+                                value : '${data.carEnginePower}',
                                 size: size.width - 30),
                             carInformationWidget(FontAwesomeIcons.gauge,
                                 informationType: Strings.maxTorque,
-                                value: data!['car_max_torque'],
+                                value: '${data.carMaxTorque}',
                                 size: size.width - 30),
                           ],
                         ),
@@ -167,16 +182,16 @@ class CarDetailPage extends StatelessWidget {
                               carInformationWidget(
                                 FontAwesomeIcons.gears,
                                 informationType: Strings.transmission,
-                                value: data!['car_transmission'],
+                                value: '${data.carTransmission}',
                                 size: size.width - 30,
                               ),
                               carInformationWidget(FontAwesomeIcons.peopleGroup,
                                   informationType: Strings.seatCapacity,
-                                  value: data!['car_seating_capacity'],
+                                  value: '${data.carSeatingCapacity}',
                                   size: size.width - 30),
                               carInformationWidget(FontAwesomeIcons.carRear,
                                   informationType: Strings.wheelType,
-                                  value: data!['car_wheel_type'],
+                                  value: '${data.carWheelType}',
                                   size: size.width - 30),
                             ],
                           ),
@@ -194,7 +209,7 @@ class CarDetailPage extends StatelessWidget {
                               horizontalMargin4,
                               Flexible(
                                 child: Text(
-                                  data!['car_location'],
+                                  '${data.carLocation}',
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -214,9 +229,10 @@ class CarDetailPage extends StatelessWidget {
                   ),
                 ),
                 myCustomButton(
+                  type: ButtonType.primary,
                     tag: 'hero-1',
                     onPressed: () {
-                      Get.to(const RentCheckoutPage());
+                      Get.to(RentCheckoutPage(carData: data,));
                     },
                     text: Strings.rentThisCar)
               ],
