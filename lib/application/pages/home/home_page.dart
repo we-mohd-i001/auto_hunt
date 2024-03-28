@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
             SliverList(
               delegate: SliverChildListDelegate([
                 learnMoreWithTitle(Strings.searchByBrand),
-                searchByBrands(),
+                searchByBrands(size: size),
                 learnMoreWithTitle(Strings.mostPopularCars),
                 Obx(() {
                   if (homeController.isLoading.value) {

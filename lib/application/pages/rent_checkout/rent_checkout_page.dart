@@ -6,8 +6,11 @@ import '../../../data/car/car_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
+import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
+import '../../../views/pages/ui/components/commons.dart';
 import '../common_widgets/my_custom_button.dart';
 import '../../../controllers/rent_checkout_controller.dart';
+import '../main_navigator/main_navigator.dart';
 import 'widgets/car_bio_mini.dart';
 import 'widgets/rent_detail_form.dart';
 
@@ -21,11 +24,13 @@ class RentCheckoutPage extends StatelessWidget {
         Get.put(RentCheckoutController(carData: carData));
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){
-          rentCheckoutController.rentCarButtonEnableCount(0);
-          Get.back();
-
-        },icon: const Icon(Icons.arrow_back_rounded),),
+        leading: IconButton(
+          onPressed: () {
+            rentCheckoutController.rentCarButtonEnableCount(0);
+            Get.back();
+          },
+          icon: const Icon(Icons.arrow_back_rounded),
+        ),
         title: const Text(Strings.rentDetail),
       ),
       body: SafeArea(
@@ -52,30 +57,41 @@ class RentCheckoutPage extends StatelessWidget {
                 ),
               ),
               myCustomButton(
-                  type: rentCheckoutController.isRentCarButtonDisabled.value
-                      ? ButtonType.secondary
-                      : ButtonType.primary,
-                  onPressed:
-                      rentCheckoutController.isRentCarButtonDisabled.value
-                          ? () {
-                              rentCheckoutController
-                                  .rentCheckoutFormKey.currentState!
-                                  .validate();
-                            }
-                          : () {
-                              if (rentCheckoutController
-                                  .rentCheckoutFormKey.currentState!
-                                  .validate()) {}
-                            },
+                  type: ButtonType.primary,
+                  onPressed: () async {
+                    if (rentCheckoutController.rentCheckoutFormKey.currentState!
+                        .validate()) {
+                      await rentCheckoutController.loadCarBookedDialog();
+                      Get.defaultDialog(
+                          barrierDismissible: false,
+                          title: Strings.carBookedSuccessfully,
+                          titleStyle: subheading,
+
+                          middleText: '${Strings.yourCarIsBookedFor} ${rentCheckoutController.rentDays} ${Strings.days}, you can expect your car on ${rentCheckoutController.userDateAndTime}. ${Strings.totalRentPrice} is ${rentCheckoutController.totalPrice}',
+                          middleTextStyle: normal,
+                          radius: 12,
+                          actions: [
+                            ButtonOutlined(
+                                buttonType: ButtonType.success,
+                                onPressed: () {
+                                  Get.offAllNamed(MyHomePage.routePath);
+                                },
+                                text: Strings.ok)
+                          ]);
+                    }
+                  },
                   tag: 'hero-1',
                   text: Strings.rentCar),
               Visibility(
-                visible: rentCheckoutController.isPageLoading.value,
+                visible: rentCheckoutController.isPageLoading.value ||
+                    rentCheckoutController.isCarBookingInProgress.value,
                 child: Container(
                   color: Colors.black.withOpacity(0.3),
                   height: double.infinity,
                   width: double.infinity,
-                  child: Center(child: CircularProgressIndicator(color: AppTheme.colors['primary'])),
+                  child: Center(
+                      child: CircularProgressIndicator(
+                          color: AppTheme.colors['primary'])),
                 ),
               ),
             ],

@@ -46,6 +46,13 @@ class Strings {
   static const nameTooLong = 'Name too long!';
   static const invalidDate = 'Invalid Date!';
   static const mustBe3Digits = 'CVV must have 3 digits!';
+  static const carBookedSuccessfully = 'Car booked successfully';
+  static const bookingDetails = 'Booking Details';
+  static const date = 'Date';
+  static const yourCarIsBookedFor = 'You have booked the car for';
+  static const days = 'days';
+  static const ok = 'OK';
+  static const totalRentPrice = 'Total rent price';
 
 
   static const carRange = 'Range';

@@ -31,6 +31,7 @@ Widget rentDetailForm() {
           },
           label: Strings.enterPickupAddress,
           onChanged: (value) {
+            rentCheckoutController.rentCheckoutFormKey.currentState!.validate();
             rentCheckoutController.addPickupLocation(value);
           },
         ),
@@ -46,6 +47,7 @@ Widget rentDetailForm() {
           label: Strings.chooseStartDateAndTime,
           pickerType: PickerType.dateAndTime,
           callback: (data) {
+            rentCheckoutController.rentCheckoutFormKey.currentState!.validate();
             rentCheckoutController.updateStartDate(data);
             rentCheckoutController.userDateAndTime.value =
                 rentCheckoutController.startDate.value.toFullDateTimeString;
@@ -83,11 +85,16 @@ Widget rentDetailForm() {
           onChanged: (value) => rentCheckoutController.rentDays.value = value,
         ),
         InputText(
+            readOnly: true,
             validator: (value) {
               if (value != null && value.isEmpty) {
                 return Strings.enterYourCardDetailsMessage;
               }
               return null;
+            },
+            onChanged: (_) {
+              rentCheckoutController.rentCheckoutFormKey.currentState!
+                  .validate();
             },
             controller: TextEditingController(
                 text: rentCheckoutController.cardDetails.value),
