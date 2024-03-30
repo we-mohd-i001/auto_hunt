@@ -27,6 +27,7 @@ class InputText extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
   final bool isPassword;
+  final bool readOnly;
 
   const InputText({
     super.key,
@@ -50,11 +51,13 @@ class InputText extends StatelessWidget {
     this.minLines,
     this.maxLines,
     this.isPassword = false,
+    this.readOnly = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly,
       obscureText: isPassword,
       decoration: InputDecoration(
         contentPadding: padding,

@@ -5,9 +5,9 @@ import '../../../../constants/others/other_consts.dart';
 import '../../brands_detail/brands_detail_page.dart';
 import '../../../../controllers/brands_controller.dart';
 
-Widget searchByBrands() {
+Widget searchByBrands({required Size size}) {
   BrandsController brandsController = Get.find<BrandsController>();
-  Size size = MediaQuery.of(brandsController.context).size;
+
   return SizedBox(
     height: 80,
     width: size.width,
@@ -23,8 +23,8 @@ Widget searchByBrands() {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0)),
               onPressed: () {
-                brandsController.getCarsList(
-                    brandsController.brandsList.value[index].name);
+                brandsController
+                    .getCarsList(brandsController.brandsList.value[index].name);
                 Get.to(
                   () => BrandsDetailPage(
                     data: brandsController.brandsList.value[index],

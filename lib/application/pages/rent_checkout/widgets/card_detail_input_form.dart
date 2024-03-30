@@ -39,6 +39,7 @@ Widget cardDetailInputForm(rentCheckoutController) {
                   return null;
                 },
                 onChanged: (value) {
+                  rentCheckoutController.cardDetailFormKey.currentState!.validate();
                   rentCheckoutController.addCardNumber(value);
                 },
               ),
@@ -55,6 +56,7 @@ Widget cardDetailInputForm(rentCheckoutController) {
                   return null;
                 },
                 onChanged: (value) {
+                  rentCheckoutController.cardDetailFormKey.currentState!.validate();
                   rentCheckoutController.addCardHolder(value);
                 },
               ),
@@ -73,6 +75,7 @@ Widget cardDetailInputForm(rentCheckoutController) {
                         return null;
                       },
                       onChanged: (value) {
+                        rentCheckoutController.cardDetailFormKey.currentState!.validate();
                         rentCheckoutController.addExpiryDate(value);
                       },
                     ),
@@ -92,6 +95,7 @@ Widget cardDetailInputForm(rentCheckoutController) {
                         return null;
                       },
                       onChanged: (value) {
+                        rentCheckoutController.cardDetailFormKey.currentState!.validate();
                         rentCheckoutController.addCvv(value);
                       },
                     ),
@@ -108,6 +112,7 @@ Widget cardDetailInputForm(rentCheckoutController) {
                       if (rentCheckoutController.cardDetailFormKey.currentState!
                           .validate()) {
                         rentCheckoutController.addCardDetails();
+                        rentCheckoutController.rentCheckoutFormKey.currentState!.validate();
                         Get.back();
                       }
                     },

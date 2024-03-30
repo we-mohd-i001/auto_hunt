@@ -9,7 +9,6 @@ class RentCheckoutController extends GetxController {
   RentCheckoutController({required this.carData});
 
   TextEditingController pickupLocationController = TextEditingController();
-  TextEditingController rentDaysController = TextEditingController();
 
   Rx<DateTime> startDate = DateTime.now().obs;
   RxString userDateAndTime = ''.obs;
@@ -21,16 +20,23 @@ class RentCheckoutController extends GetxController {
   RxString expiryDate = ''.obs;
   RxString cvv = ''.obs;
   RxBool isPageLoading = false.obs;
+  RxBool isCarBookingInProgress = false.obs;
+
   RxString totalPrice = '0'.obs;
 
   RxInt rentCarButtonEnableCount = 0.obs;
-  RxBool isRentCarButtonDisabled = true.obs;
+  RxBool isRentCarButtonDisabled = false.obs;
 
   void enableRentCarButton() {
     print(rentCarButtonEnableCount.value);
     if (rentCarButtonEnableCount.value == pickupLocation.value.length + 2) {
       isRentCarButtonDisabled(false);
     }
+  }
+
+  Future<void> loadCarBookedDialog() async {
+    isCarBookingInProgress(true);
+    await Future.delayed(const Duration(seconds: 2), () => isCarBookingInProgress(false));
   }
 
   final GlobalKey<FormState> rentCheckoutFormKey = GlobalKey<FormState>();
