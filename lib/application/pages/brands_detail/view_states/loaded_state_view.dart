@@ -9,9 +9,9 @@ import '../../../../controllers/brand_detail_controller.dart';
 import '../widgets/category_list.dart';
 
 class LoadedStateView extends StatelessWidget {
-  List<CarModel> carList;
-  String carBrand;
-  LoadedStateView({
+  final List<CarModel> carList;
+  final String carBrand;
+  const LoadedStateView({
     super.key,
     required this.carList,
     required this.carBrand,
@@ -41,10 +41,10 @@ class LoadedStateView extends StatelessWidget {
           children: [
             categoryList(brandsController: brandsController, size: size),
             SizedBox(
-              height: size.height * 0.82,
+              height: size.height * 0.8,
               width: size.width,
               child: ListView.builder(
-                itemCount: brandDetailController.carList.value.length,
+                itemCount: brandDetailController.carList.length,
                 itemBuilder: (BuildContext context, int index) {
                   CarModel carIndex = carList[index];
                   return carBio(

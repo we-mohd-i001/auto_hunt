@@ -54,7 +54,7 @@ Widget buildMobile(BuildContext context) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const LogoWithName(),
+              LogoWithName(),
               verticalMargin16,
               verticalMargin4,
               const Text(

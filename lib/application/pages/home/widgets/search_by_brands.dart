@@ -24,10 +24,10 @@ Widget searchByBrands({required Size size}) {
                   borderRadius: BorderRadius.circular(8.0)),
               onPressed: () {
                 brandsController
-                    .getCarsList(brandsController.brandsList.value[index].name);
+                    .getCarsList(brandsController.brandsList[index].name);
                 Get.to(
                   () => BrandsDetailPage(
-                    data: brandsController.brandsList.value[index],
+                    data: brandsController.brandsList[index],
                   ),
                 );
               },
@@ -43,7 +43,7 @@ Widget searchByBrands({required Size size}) {
                         )),
                   ),
                   Text(
-                    '${brandsController.brandsList.value[index].name}',
+                    '${brandsController.brandsList[index].name}',
                     style: const TextStyle(color: Colors.black),
                   ),
                 ],

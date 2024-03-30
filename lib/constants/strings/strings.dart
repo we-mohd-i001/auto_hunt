@@ -53,6 +53,7 @@ class Strings {
   static const days = 'days';
   static const ok = 'OK';
   static const totalRentPrice = 'Total rent price';
+  static const autoHunt = 'Auto.Hunt';
 
 
   static const carRange = 'Range';

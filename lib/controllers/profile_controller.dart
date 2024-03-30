@@ -13,6 +13,9 @@ import '../constants/consts.dart';
 import '../vaahextendflutter/helpers/alerts.dart';
 
 class ProfileController extends GetxController {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  late User? currentUser;
+  RxString profileImageUrl = ''.obs;
   RxString profileImagePath = ''.obs;
   String profileImageLink = '';
   RxBool isPasswordVisible = true.obs;
@@ -27,8 +30,17 @@ class ProfileController extends GetxController {
 
   @override
   void onInit() {
+    currentUser = auth.currentUser;
     // TODO: implement onInit
     super.onInit();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> updateUiImageUrl() {
+    Stream<QuerySnapshot<Map<String, dynamic>>> data = firestore
+        .collection(usersCollection)
+        .where('id', isEqualTo: currentUser!.uid)
+        .snapshots();
+    return data;
   }
 
   void togglePasswordVisibility() {
@@ -63,7 +75,7 @@ class ProfileController extends GetxController {
 
   Future<void> updateName(String name) async {
     DocumentReference<Map<String, dynamic>> store =
-    firestore.collection(usersCollection).doc(currentUser!.uid);
+        firestore.collection(usersCollection).doc(currentUser!.uid);
     await store.set(
       {'name': name},
       SetOptions(merge: true),
@@ -81,7 +93,8 @@ class ProfileController extends GetxController {
     isImageUploadButtonDisabled(true);
   }
 
-  Future<void> changeAuthPassword(String email, String password, String newPassword) async {
+  Future<void> changeAuthPassword(
+      String email, String password, String newPassword) async {
     final AuthCredential cred =
         EmailAuthProvider.credential(email: email, password: password);
     await currentUser!.reauthenticateWithCredential(cred).then((value) {

@@ -53,7 +53,8 @@ class ContinueWithEmailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const LogoWithName(
+                  LogoWithName(
+                    
                     size: 15,
                   ),
                   const SizedBox(height: 12),

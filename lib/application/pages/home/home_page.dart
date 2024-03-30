@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/controllers/profile_controller.dart';
 
 import '../../../constants/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
@@ -19,6 +21,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomeController homeController = Get.put(HomeController());
+    ProfileController profileController = Get.find<ProfileController>();
     Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.grey.shade100,
@@ -34,13 +37,18 @@ class HomePage extends StatelessWidget {
               flexibleSpace: FlexibleSpaceBar(
                 background: Container(
                   color: AppTheme.colors['black'],
-                  child: Column(
-                    children: [
-                      locationAndProfile(),
-                      searchWidget(),
-                      verticalMargin8,
-                      Expanded(child: homeScreenOptions()),
-                    ],
+                  child: StreamBuilder(
+                    stream: profileController.updateUiImageUrl(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      return Column(
+                        children: [
+                          locationAndProfile(image:!snapshot.hasData ? '' :snapshot.data!.docs[0]['imageUrl'] ),
+                          searchWidget(),
+                          verticalMargin8,
+                          Expanded(child: homeScreenOptions()),
+                        ],
+                      );
+                    }
                   ),
                 ),
               ),
@@ -63,7 +71,7 @@ class HomePage extends StatelessWidget {
                     return emptyWidget;
                   }
                   return mostPopularCars(
-                      carList: homeController.carList.value, size: size);
+                      carList: homeController.carList, size: size);
                 }),
               ]),
             ),

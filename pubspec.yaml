@@ -63,6 +63,9 @@ dev_dependencies:
   build_runner: ^2.4.6
   flutter_native_splash: ^2.3.10
 
+flutter_native_splash:
+  image: assets/images/auto_hunt_logo.png
+
 flutter:
   # below line allows you use Material Icons in application
   uses-material-design: true
