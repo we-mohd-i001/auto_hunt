@@ -21,10 +21,10 @@ Widget categoryList({
         scrollDirection: Axis.horizontal,
         child: Row(
           children: List.generate(
-            brandsController.subCat.value.length,
+            brandsController.subCat.length,
                 (index) {
               String cat = '';
-              Category category = brandsController.subCat.value[index];
+              Category category = brandsController.subCat[index];
               if (category == Category.HATCHBACK) {
                 cat = 'Hatchback';
               } else if (category == Category.LUXURY) {

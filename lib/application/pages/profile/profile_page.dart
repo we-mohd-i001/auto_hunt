@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../common_widgets/profile_picture_container.dart';
 import '../../../constants/consts.dart';
-import '../../../services/firestore_services.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../controllers/auth_controller.dart';
@@ -22,13 +22,18 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileController profileController = Get.put(ProfileController());
+    FirebaseAuth auth = FirebaseAuth.instance;
+  User? theUser = auth.currentUser!;
+    ProfileController profileController = Get.find<ProfileController>();
     AuthController authController = Get.find<AuthController>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       body: StreamBuilder(
-        stream: FireStoreServices.getUser(currentUser!.uid),
+        stream: firestore
+            .collection(usersCollection)
+            .where('id', isEqualTo: theUser.uid)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -36,6 +41,7 @@ class ProfilePage extends StatelessWidget {
             );
           } else {
             QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
+            profileController.profileImageUrl(data['imageUrl']); 
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -78,8 +84,7 @@ class ProfilePage extends StatelessWidget {
                             text: 'Log Out',
                             onPressed: () async {
                               await authController.logOut();
-                              authController.isLoading(false);
-                              Get.offAllNamed(LoginPage.routePath);
+                              Get.offAll(LoginPage());
                             },
                           ),
                         ],

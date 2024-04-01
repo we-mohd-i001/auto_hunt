@@ -8,7 +8,7 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     child: Container(
-      height: 240,
+      height: 260,
       width: width,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -25,17 +25,26 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
       child: MaterialButton(
         onPressed: onPressed,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                name ?? '',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                  Expanded(
+                    child: Text(
+                      name ?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                 
+                  IconButton(onPressed: (){}, icon: const Icon(Icons.favorite, size: 16, color: Colors.red, fill: 1,))
+                ],
               ),
               verticalMargin4,
               verticalMargin2,
@@ -74,7 +83,7 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
                       size: 16,
                       color: AppTheme.colors['primary'],
                     ),
-                    verticalMargin4,
+                    horizontalMargin4,
                     Text('$seatCapacity'),
                     verticalMargin8,
                     Icon(
@@ -82,13 +91,14 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
                       size: 16,
                       color: AppTheme.colors['primary'],
                     ),
-                    verticalMargin4,
+                    horizontalMargin4,
                     const Text('AM'),
                     const Spacer(),
                     Text('₹$carRent/day')
                   ],
                 ),
-              ))
+
+              )),
             ],
           ),
         ),

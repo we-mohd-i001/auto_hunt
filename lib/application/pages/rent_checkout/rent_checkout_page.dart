@@ -15,8 +15,8 @@ import 'widgets/car_bio_mini.dart';
 import 'widgets/rent_detail_form.dart';
 
 class RentCheckoutPage extends StatelessWidget {
-  CarModel carData;
-  RentCheckoutPage({super.key, required this.carData});
+  final CarModel carData;
+  const RentCheckoutPage({super.key, required this.carData});
 
   @override
   Widget build(BuildContext context) {

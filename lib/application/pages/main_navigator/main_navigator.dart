@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../controllers/main_navigator_controller.dart';
+import '../../../controllers/profile_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../controllers/brands_controller.dart';
 import '../home/home_page.dart';
 import '../../../controllers/auth_controller.dart';
 import '../profile/profile_page.dart';
-import '../../../controllers/main_navigator_controller.dart';
 
 class MyHomePage extends StatelessWidget {
   static const String routePath = '/home';
@@ -24,6 +26,7 @@ class MyHomePage extends StatelessWidget {
     BrandsController brandsController =
         Get.put(BrandsController(context: context));
     AuthController authController = Get.put(AuthController());
+    ProfileController profileController = Get.put(ProfileController());
     MyHomeController controller = Get.put(MyHomeController());
 
     List<BottomNavigationBarItem> navBarItems = [
