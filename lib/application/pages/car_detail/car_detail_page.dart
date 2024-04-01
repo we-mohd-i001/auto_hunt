@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:yourtasks/application/pages/chat/chat_page.dart';
 
 import '../../../constants/strings/strings.dart';
 import '../../../data/car/car_model.dart';
@@ -58,37 +59,42 @@ class CarDetailPage extends StatelessWidget {
                           itemBuilder: (BuildContext context, int itemIndex,
                                   int pageViewIndex) =>
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Stack(
-                                  children: [
-                                    Hero(
-                                      tag: '${data.carName}',
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(12)),
-                                        child: PhotoView(
-                                          backgroundDecoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12)),
-                                          imageProvider: NetworkImage(
-                                            data.carImages[itemIndex],
-                                          ),
-                                          filterQuality: FilterQuality.medium,
-                                        ),
+                            borderRadius: BorderRadius.circular(6),
+                            child: Stack(
+                              children: [
+                                Hero(
+                                  tag: '${data.carName}',
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: PhotoView(
+                                      backgroundDecoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      imageProvider: NetworkImage(
+                                        data.carImages[itemIndex],
                                       ),
+                                      filterQuality: FilterQuality.medium,
                                     ),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: ContainerWithRoundedBorder(
-                                        color: Colors.white.withOpacity(0.5),
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                                        borderRadius: 6,
-                                        child: Text('${itemIndex+1}', style: normal,),
-                                      ),
-                                    )
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: ContainerWithRoundedBorder(
+                                    color: Colors.white.withOpacity(0.5),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 4),
+                                    borderRadius: 6,
+                                    child: Text(
+                                      '${itemIndex + 1}',
+                                      style: normal,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -129,7 +135,10 @@ class CarDetailPage extends StatelessWidget {
                             ],
                           ),
                           ButtonIcon(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => const ChatPage(),
+                                  arguments: [data.carOwner, data.carOwnerId]);
+                            },
                             iconData: Icons.chat_rounded,
                             buttonType: ButtonType.primary,
                           )
@@ -157,7 +166,7 @@ class CarDetailPage extends StatelessWidget {
                           ),
                           carInformationWidget(FontAwesomeIcons.gear,
                               informationType: Strings.enginePower,
-                              value : '${data.carEnginePower}',
+                              value: '${data.carEnginePower}',
                               size: size.width - 30),
                           carInformationWidget(FontAwesomeIcons.gauge,
                               informationType: Strings.maxTorque,
@@ -171,8 +180,7 @@ class CarDetailPage extends StatelessWidget {
                             carDetailController.areExtraDetailsVisible.value,
                         child: verticalMargin12),
                     Visibility(
-                      visible:
-                          carDetailController.areExtraDetailsVisible.value,
+                      visible: carDetailController.areExtraDetailsVisible.value,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 20, left: 20),
                         child: Row(
@@ -218,8 +226,7 @@ class CarDetailPage extends StatelessWidget {
                       ),
                     ),
                     Visibility(
-                      visible:
-                          carDetailController.areExtraDetailsVisible.value,
+                      visible: carDetailController.areExtraDetailsVisible.value,
                       child: const SizedBox(
                         height: 84,
                       ),
@@ -228,10 +235,12 @@ class CarDetailPage extends StatelessWidget {
                 ),
               ),
               myCustomButton(
-                type: ButtonType.primary,
+                  type: ButtonType.primary,
                   tag: 'hero-1',
                   onPressed: () {
-                    Get.to(RentCheckoutPage(carData: data,));
+                    Get.to(RentCheckoutPage(
+                      carData: data,
+                    ));
                   },
                   text: Strings.rentThisCar)
             ],
@@ -239,5 +248,5 @@ class CarDetailPage extends StatelessWidget {
         ),
       ),
     );
-    }
+  }
 }

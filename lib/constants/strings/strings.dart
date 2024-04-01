@@ -54,13 +54,14 @@ class Strings {
   static const ok = 'OK';
   static const totalRentPrice = 'Total rent price';
   static const autoHunt = 'Auto.Hunt';
-
+  static const chatWith = 'Chat with';
 
   static const carRange = 'Range';
   static const enginePower = 'Engine Power';
   static const maxTorque = 'Max Torque';
   static const carLocation = 'Car Location';
   static const distance = '3.6 Km';
-  static const address = 'WebReinvent Technologies Pvt. Ltd., Pocket B, Sector 17 Dwarka, Dwarka, Delhi';
+  static const address =
+      'WebReinvent Technologies Pvt. Ltd., Pocket B, Sector 17 Dwarka, Dwarka, Delhi';
   static const rentThisCar = 'Rent This Car';
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../controllers/chat_controller.dart';
 import '../../../controllers/main_navigator_controller.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../controllers/brands_controller.dart';
+import '../chat/chat_page.dart';
 import '../home/home_page.dart';
 import '../../../controllers/auth_controller.dart';
 import '../profile/profile_page.dart';
@@ -27,7 +29,9 @@ class MyHomePage extends StatelessWidget {
         Get.put(BrandsController(context: context));
     AuthController authController = Get.put(AuthController());
     ProfileController profileController = Get.put(ProfileController());
-    MyHomeController controller = Get.put(MyHomeController());
+    MainNavigatorController mainNavigatorController =
+        Get.put(MainNavigatorController());
+    //ChatController chatController = Get.put(ChatController());
 
     List<BottomNavigationBarItem> navBarItems = [
       const BottomNavigationBarItem(
@@ -43,7 +47,9 @@ class MyHomePage extends StatelessWidget {
     List<Widget> pages = [
       const HomePage(),
       Container(color: Colors.amber),
-      Container(color: Colors.purpleAccent),
+      Container(
+        color: Colors.teal,
+      ),
       const ProfilePage(),
     ];
     return Scaffold(
@@ -52,14 +58,15 @@ class MyHomePage extends StatelessWidget {
         children: [
           Obx(
             () => Expanded(
-              child: pages.elementAt(controller.currentNavIndex.value),
+              child: pages
+                  .elementAt(mainNavigatorController.currentNavIndex.value),
             ),
           ),
         ],
       ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
-          currentIndex: controller.currentNavIndex.value,
+          currentIndex: mainNavigatorController.currentNavIndex.value,
           items: navBarItems,
           selectedItemColor: AppTheme.colors['primary'],
           unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700),
@@ -67,7 +74,7 @@ class MyHomePage extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
           onTap: (value) {
-            controller.currentNavIndex.value = value;
+            mainNavigatorController.currentNavIndex.value = value;
           },
         ),
       ),

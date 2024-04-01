@@ -14,7 +14,7 @@ import '../vaahextendflutter/helpers/alerts.dart';
 
 class ProfileController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
-  late User? currentUser;
+  User? currentUser;
   RxString profileImageUrl = ''.obs;
   RxString profileImagePath = ''.obs;
   String profileImageLink = '';
@@ -31,7 +31,6 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     currentUser = auth.currentUser;
-    // TODO: implement onInit
     super.onInit();
   }
 
@@ -42,7 +41,7 @@ class ProfileController extends GetxController {
         .snapshots();
     return data;
   }
-
+  
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
