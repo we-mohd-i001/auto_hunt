@@ -1,12 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:yourtasks/controllers/profile_controller.dart';
 
 import '../../../constants/constants.dart';
+import '../../../controllers/home_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
-import '../../../controllers/home_controller.dart';
 import '../brands_detail/view_states/error_state_view.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import 'widgets/home_screen_options.dart';
@@ -16,12 +19,17 @@ import 'widgets/search_by_brands.dart';
 import 'widgets/search_widget.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final ProfileController profileController;
+  final User? theUser;
+  const HomePage({
+    Key? key,
+    required this.profileController,
+    required this.theUser,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     HomeController homeController = Get.put(HomeController());
-    ProfileController profileController = Get.find<ProfileController>();
     Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.grey.shade100,
@@ -38,18 +46,21 @@ class HomePage extends StatelessWidget {
                 background: Container(
                   color: AppTheme.colors['black'],
                   child: StreamBuilder(
-                    stream: profileController.updateUiImageUrl(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      return Column(
-                        children: [
-                          locationAndProfile(image:!snapshot.hasData ? '' :snapshot.data!.docs[0]['imageUrl'] ),
-                          searchWidget(),
-                          verticalMargin8,
-                          Expanded(child: homeScreenOptions()),
-                        ],
-                      );
-                    }
-                  ),
+                      stream: profileController.updateUiImageUrl(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        return Column(
+                          children: [
+                            locationAndProfile(
+                                image: !snapshot.hasData
+                                    ? ''
+                                    : snapshot.data!.docs[0]['imageUrl']),
+                            searchWidget(),
+                            verticalMargin8,
+                            Expanded(child: homeScreenOptions()),
+                          ],
+                        );
+                      }),
                 ),
               ),
               expandedHeight: 230,
@@ -57,7 +68,7 @@ class HomePage extends StatelessWidget {
             SliverList(
               delegate: SliverChildListDelegate([
                 learnMoreWithTitle(Strings.searchByBrand),
-                searchByBrands(size: size),
+                searchByBrands(size: size, theUser: theUser),
                 learnMoreWithTitle(Strings.mostPopularCars),
                 Obx(() {
                   if (homeController.isLoading.value) {
@@ -71,7 +82,9 @@ class HomePage extends StatelessWidget {
                     return emptyWidget;
                   }
                   return mostPopularCars(
-                      carList: homeController.carList, size: size);
+                      carList: homeController.carList,
+                      size: size,
+                      theUser: theUser);
                 }),
               ]),
             ),

@@ -19,6 +19,7 @@ class CarModel {
   String? carSeatingCapacity;
   String? carTransmission;
   String? carOwnerId;
+  String id;
   int carRentPricePerDay;
   int carRentTax;
 
@@ -45,5 +46,6 @@ class CarModel {
     required this.carRentPricePerDay,
     required this.carRentTax,
     required this.carOwnerId,
+    required this.id,
   });
 }

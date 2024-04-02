@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,11 +11,13 @@ import '../widgets/category_list.dart';
 
 class LoadedStateView extends StatelessWidget {
   final List<CarModel> carList;
+  final User? theUser;
   final String carBrand;
   const LoadedStateView({
     super.key,
     required this.carList,
     required this.carBrand,
+    required this.theUser,
   });
 
   @override
@@ -56,8 +59,9 @@ class LoadedStateView extends StatelessWidget {
                     carIndex.carSeatingCapacity,
                     () {
                       Get.to(
-                        CarDetailPage(
+                        () => CarDetailPage(
                           data: carIndex,
+                          theUser: theUser,
                         ),
                       );
                     },

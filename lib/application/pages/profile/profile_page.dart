@@ -23,7 +23,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
-  User? theUser = auth.currentUser!;
+    User? theUser = auth.currentUser!;
     ProfileController profileController = Get.find<ProfileController>();
     AuthController authController = Get.find<AuthController>();
     return Scaffold(
@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
             );
           } else {
             QueryDocumentSnapshot<Object?> data = snapshot.data!.docs[0];
-            profileController.profileImageUrl(data['imageUrl']); 
+            profileController.profileImageUrl(data['imageUrl']);
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -84,7 +84,7 @@ class ProfilePage extends StatelessWidget {
                             text: 'Log Out',
                             onPressed: () async {
                               await authController.logOut();
-                              Get.offAll(LoginPage());
+                              Get.offAllNamed(LoginPage.routePath);
                             },
                           ),
                         ],

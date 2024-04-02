@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 
-Widget carBio(String? name, String? fuelAndType, String? image, width, int carRent,
-    seatCapacity, Function()? onPressed, String tag) {
+Widget carBio(
+  String? name,
+  String? fuelAndType,
+  String? image,
+  width,
+  int carRent,
+  seatCapacity,
+  Function()? onPressed,
+  String tag,
+) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     child: Container(
@@ -32,7 +40,7 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: [
+                children: [
                   Expanded(
                     child: Text(
                       name ?? '',
@@ -42,8 +50,6 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
                       ),
                     ),
                   ),
-                 
-                  IconButton(onPressed: (){}, icon: const Icon(Icons.favorite, size: 16, color: Colors.red, fill: 1,))
                 ],
               ),
               verticalMargin4,
@@ -56,10 +62,13 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
                     color: AppTheme.colors['secondary']),
               ),
               image == null
-                  ? SizedBox(height: 140, width: width,)
+                  ? SizedBox(
+                      height: 140,
+                      width: width,
+                    )
                   : Hero(
-                    tag: tag,
-                    child: Container(
+                      tag: tag,
+                      child: Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: NetworkImage(
@@ -72,7 +81,7 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
                           width: width,
                         ),
                       ),
-                  ),
+                    ),
               Expanded(
                   child: SizedBox(
                 width: double.infinity,
@@ -97,7 +106,6 @@ Widget carBio(String? name, String? fuelAndType, String? image, width, int carRe
                     Text('₹$carRent/day')
                   ],
                 ),
-
               )),
             ],
           ),

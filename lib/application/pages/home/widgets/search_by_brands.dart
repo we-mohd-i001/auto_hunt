@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -5,7 +6,7 @@ import '../../../../constants/others/other_consts.dart';
 import '../../brands_detail/brands_detail_page.dart';
 import '../../../../controllers/brands_controller.dart';
 
-Widget searchByBrands({required Size size}) {
+Widget searchByBrands({required Size size, required User? theUser}) {
   BrandsController brandsController = Get.find<BrandsController>();
 
   return SizedBox(
@@ -28,6 +29,7 @@ Widget searchByBrands({required Size size}) {
                 Get.to(
                   () => BrandsDetailPage(
                     data: brandsController.brandsList[index],
+                    theUser: theUser,
                   ),
                 );
               },
