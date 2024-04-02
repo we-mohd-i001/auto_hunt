@@ -18,29 +18,32 @@ class CarModel {
   String? carCurrentFuelCapacity;
   String? carSeatingCapacity;
   String? carTransmission;
+  String? carOwnerId;
   int carRentPricePerDay;
   int carRentTax;
 
-  CarModel(
-      {required this.brandLogo,
-      required this.carBrand,
-      required this.carEnginePower,
-      required this.carFuelTankCapacity,
-      required this.carFuelType,
-      required this.carIcon,
-      required this.carImages,
-      required this.carLiked,
-      required this.carLocation,
-      required this.carMaxTorque,
-      required this.carName,
-      required this.carOwner,
-      required this.carPrice,
-      required this.carRange,
-      required this.carRating,
-      required this.carWheelType,
-      required this.carCurrentFuelCapacity,
-      required this.carSeatingCapacity,
-      required this.carTransmission,
-      required this.carRentPricePerDay,
-      required this.carRentTax});
+  CarModel({
+    required this.brandLogo,
+    required this.carBrand,
+    required this.carEnginePower,
+    required this.carFuelTankCapacity,
+    required this.carFuelType,
+    required this.carIcon,
+    required this.carImages,
+    required this.carLiked,
+    required this.carLocation,
+    required this.carMaxTorque,
+    required this.carName,
+    required this.carOwner,
+    required this.carPrice,
+    required this.carRange,
+    required this.carRating,
+    required this.carWheelType,
+    required this.carCurrentFuelCapacity,
+    required this.carSeatingCapacity,
+    required this.carTransmission,
+    required this.carRentPricePerDay,
+    required this.carRentTax,
+    required this.carOwnerId,
+  });
 }

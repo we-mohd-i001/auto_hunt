@@ -49,7 +49,8 @@ class HomeController extends GetxController {
                   carRentPricePerDay: doc['car_rent_price_per_day'],
                   carRentTax: doc['car_rent_tax'],
                   carSeatingCapacity: doc['car_seating_capacity'],
-                  carTransmission: doc['car_transmission']),
+                  carTransmission: doc['car_transmission'],
+                  carOwnerId: doc['car_owner_id']),
             )
             .toList(),
       );

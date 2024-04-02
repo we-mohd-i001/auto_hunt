@@ -16,4 +16,14 @@ class FireStoreServices {
         .where('car_brand', isEqualTo: brand)
         .snapshots();
   }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getChatMessages(
+      {required String docId}) {
+    return firestore
+        .collection(chatsCollection)
+        .doc(docId)
+        .collection(messagesCollection)
+        .orderBy('created_on', descending: false)
+        .snapshots();
+  }
 }

@@ -8,3 +8,5 @@ User? currentUser = auth.currentUser;
 //Collections
 const usersCollection = 'users';
 const carsCollection = 'brands';
+const chatsCollection = 'chats';
+const messagesCollection = 'messages';
