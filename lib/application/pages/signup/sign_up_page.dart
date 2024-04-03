@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/alerts.dart';
 
-import '../../../constants/consts.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
@@ -191,12 +190,14 @@ class _SignupPageState extends State<SignupPage> {
                                             _passwordController.text,
                                             _emailController.text);
                                       }).then((value) {
-                                        Alerts.showSuccessToast!(content: 'SignUp Successful');
+                                        Alerts.showSuccessToast!(
+                                            content: 'SignUp Successful');
                                         Get.offAllNamed(MyHomePage.routePath);
                                       });
                                     } catch (e) {
-                                      auth.signOut();
-                                      Alerts.showErrorToast!(content: 'Something went wrong!');
+                                      controller.auth.signOut();
+                                      Alerts.showErrorToast!(
+                                          content: 'Something went wrong!');
                                     }
                                   }
                                 }

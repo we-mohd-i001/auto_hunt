@@ -12,6 +12,7 @@ class AuthController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   RxBool isPasswordVisible = false.obs;
   RxBool isLoading = false.obs;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   void togglePasswordVisibilityLoginPage() {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -45,14 +46,14 @@ class AuthController extends GetxController {
 
   Future<void> storeUserData(String name, String password, String email) async {
     DocumentReference store =
-        firestore.collection(usersCollection).doc(currentUser!.uid);
+        firestore.collection(usersCollection).doc(auth.currentUser!.uid);
     store.set(
       {
         'name': name,
         'email': email,
         'password': password,
         'imageUrl': '',
-        'id': currentUser!.uid,
+        'id': auth.currentUser!.uid,
         'liked_cars_count': "00",
         'order_count': "00",
       },

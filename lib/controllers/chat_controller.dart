@@ -9,7 +9,7 @@ import 'profile_controller.dart';
 
 class ChatController extends GetxController {
   CollectionReference<Map<String, dynamic>> chats =
-      FirebaseFirestore.instance.collection(chatsCollection);
+      firestore.collection(chatsCollection);
   User? currentUser = Get.find<ProfileController>().currentUserFire;
   String friendName = Get.arguments[0];
   String friendId = Get.arguments[1];
@@ -38,6 +38,7 @@ class ChatController extends GetxController {
                   'users': {friendId: null, currentId: null},
                   'to_id': '',
                   'from_id': '',
+                  'last_message_created_time': null,
                   'friend_name': friendName,
                   'sender_name': senderName,
                 },
@@ -55,6 +56,7 @@ class ChatController extends GetxController {
       chats.doc(chatDocId).update({
         'created_on': FieldValue.serverTimestamp(),
         'last_message': message,
+        'last_message_created_time': FieldValue.serverTimestamp(),
         'to_id': friendId,
         'from_id': currentId,
       });

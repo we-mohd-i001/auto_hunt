@@ -6,6 +6,7 @@ import '../../../controllers/main_navigator_controller.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../controllers/brands_controller.dart';
+import '../chat_list/chat_list_page.dart';
 import '../home/home_page.dart';
 import '../../../controllers/auth_controller.dart';
 import '../profile/profile_page.dart';
@@ -51,9 +52,7 @@ class MyHomePage extends StatelessWidget {
         theUser: theUser,
       ),
       Container(color: Colors.amber),
-      Container(
-        color: Colors.teal,
-      ),
+      const ChatListPage(),
       const ProfilePage(),
     ];
     return Scaffold(

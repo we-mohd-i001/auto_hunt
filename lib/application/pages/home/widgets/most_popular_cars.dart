@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/controllers/brand_detail_controller.dart';
 
+import '../../../../controllers/brand_detail_controller.dart';
 import '../../../../data/car/car_model.dart';
 import '../../car_detail/car_detail_page.dart';
 import '../../common_widgets/car_bio.dart';

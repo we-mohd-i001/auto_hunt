@@ -63,8 +63,10 @@ class CarModel {
       carFuelTankCapacity: data?['car_fuel_tank_capacity'],
       carFuelType: data?['car_fuel_type'],
       carIcon: data?['car_icon'],
-      carImages: data?['car_images'],
-      carLiked: data?['car_liked'],
+      carImages:
+          data?['car_images'] is Iterable ? List.from(data?['car_images']) : [],
+      carLiked:
+          data?['car_liked'] is Iterable ? List.from(data?['car_liked']) : [],
       carLocation: data?['car_location'],
       carMaxTorque: data?['car_max_torque'],
       carName: data?['car_name'],
