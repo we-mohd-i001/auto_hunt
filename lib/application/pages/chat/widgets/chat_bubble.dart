@@ -12,8 +12,8 @@ Widget chatBubble({required DocumentSnapshot data, required bool isSender}) {
   String messageTimeString = messageTime.toHMaa;
   return Padding(
     padding: isSender
-        ? const EdgeInsets.only(top: 0, bottom: 8, left: 32, right: 8)
-        : const EdgeInsets.only(top: 0, bottom: 8, left: 8, right: 32),
+        ? const EdgeInsets.only(top: 0, bottom: 8, left: 40, right: 8)
+        : const EdgeInsets.only(top: 0, bottom: 8, left: 8, right: 40),
     child: Container(
       padding: allPadding8,
       decoration: BoxDecoration(
@@ -32,7 +32,7 @@ Widget chatBubble({required DocumentSnapshot data, required bool isSender}) {
       child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
         Text(
           data['message'],
-          textAlign: TextAlign.end,
+          textAlign: TextAlign.start,
           style: normal,
         ),
         Text(

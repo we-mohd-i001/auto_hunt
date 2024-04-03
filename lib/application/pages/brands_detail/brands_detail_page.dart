@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,9 +13,11 @@ import 'view_states/loading_state_view.dart';
 
 class BrandsDetailPage extends StatelessWidget {
   final Brand data;
+  final User? theUser;
   const BrandsDetailPage({
     super.key,
     required this.data,
+    required this.theUser,
   });
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,7 @@ class BrandsDetailPage extends StatelessWidget {
           );
         }
         return LoadedStateView(
+          theUser: theUser,
           carList: carList,
           carBrand: data.name,
         );

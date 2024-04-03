@@ -13,8 +13,8 @@ import '../constants/consts.dart';
 import '../vaahextendflutter/helpers/alerts.dart';
 
 class ProfileController extends GetxController {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? currentUser;
+  FirebaseAuth fireAuth = FirebaseAuth.instance;
+  User? currentUserFire;
   RxString profileImageUrl = ''.obs;
   RxString profileImagePath = ''.obs;
   String profileImageLink = '';
@@ -30,18 +30,18 @@ class ProfileController extends GetxController {
 
   @override
   void onInit() {
-    currentUser = auth.currentUser;
+    currentUserFire = fireAuth.currentUser;
     super.onInit();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> updateUiImageUrl() {
     Stream<QuerySnapshot<Map<String, dynamic>>> data = firestore
         .collection(usersCollection)
-        .where('id', isEqualTo: currentUser!.uid)
+        .where('id', isEqualTo: currentUserFire!.uid)
         .snapshots();
     return data;
   }
-  
+
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
@@ -66,7 +66,7 @@ class ProfileController extends GetxController {
 
   Future<void> uploadProfileImage() async {
     String fileName = basename(profileImagePath.value);
-    String destination = 'images/${currentUser!.uid}/$fileName';
+    String destination = 'images/${currentUserFire!.uid}/$fileName';
     Reference ref = FirebaseStorage.instance.ref().child(destination);
     await ref.putFile(File(profileImagePath.value));
     profileImageLink = await ref.getDownloadURL();
@@ -74,7 +74,7 @@ class ProfileController extends GetxController {
 
   Future<void> updateName(String name) async {
     DocumentReference<Map<String, dynamic>> store =
-        firestore.collection(usersCollection).doc(currentUser!.uid);
+        firestore.collection(usersCollection).doc(currentUserFire!.uid);
     await store.set(
       {'name': name},
       SetOptions(merge: true),
@@ -84,7 +84,7 @@ class ProfileController extends GetxController {
 
   Future<void> updateProfileImage(String imageUrl) async {
     final DocumentReference<Map<String, dynamic>> store =
-        firestore.collection(usersCollection).doc(currentUser!.uid);
+        firestore.collection(usersCollection).doc(currentUserFire!.uid);
     await store.set({'imageUrl': imageUrl}, SetOptions(merge: true));
     isImageLoading(false);
 
@@ -96,8 +96,8 @@ class ProfileController extends GetxController {
       String email, String password, String newPassword) async {
     final AuthCredential cred =
         EmailAuthProvider.credential(email: email, password: password);
-    await currentUser!.reauthenticateWithCredential(cred).then((value) {
-      currentUser!.updatePassword(newPassword).catchError((e) {
+    await currentUserFire!.reauthenticateWithCredential(cred).then((value) {
+      currentUserFire!.updatePassword(newPassword).catchError((e) {
         debugPrint(e.toString());
       });
     });
@@ -105,7 +105,7 @@ class ProfileController extends GetxController {
 
   Future<void> updatePassword(String password) async {
     DocumentReference<Map<String, dynamic>> store =
-        firestore.collection(usersCollection).doc(currentUser!.uid);
+        firestore.collection(usersCollection).doc(currentUserFire!.uid);
     await store.set(
       {'password': password},
       SetOptions(merge: true),

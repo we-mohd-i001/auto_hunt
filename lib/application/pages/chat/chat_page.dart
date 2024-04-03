@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:yourtasks/services/firestore_services.dart';
 
@@ -17,7 +17,11 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? theUser = auth.currentUser!;
+
     ChatController chatController = Get.put(ChatController());
+    chatController.getChatId(theUser!.uid);
     return Scaffold(
       appBar: AppBar(
         title: Text('${Strings.chatWith} ${chatController.friendName}',
@@ -57,14 +61,14 @@ class ChatPage extends StatelessWidget {
                                         DocumentSnapshot data =
                                             snapshot.data!.docs[index];
                                         return Align(
-                                            alignment: data['uid'] ==
-                                                    chatController.currentId
-                                                ? Alignment.centerRight
-                                                : Alignment.centerLeft,
+                                            alignment:
+                                                data['uid'] == theUser.uid
+                                                    ? Alignment.centerRight
+                                                    : Alignment.centerLeft,
                                             child: chatBubble(
                                                 data: data,
                                                 isSender: data['uid'] ==
-                                                    chatController.currentId));
+                                                    theUser.uid));
                                       }));
                                 }
                               }),
@@ -88,6 +92,7 @@ class ChatPage extends StatelessWidget {
                     suffixIcon: Icons.send_rounded,
                     suffixOnTap: () {
                       chatController.sendMessage(
+                          currentId: theUser.uid,
                           message: chatController.messageController.text);
                       chatController.messageController.clear();
                     },

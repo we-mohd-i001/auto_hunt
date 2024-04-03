@@ -2,18 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/controllers/main_navigator_controller.dart';
 
 import '../constants/consts.dart';
+import 'main_navigator_controller.dart';
 import 'profile_controller.dart';
 
 class ChatController extends GetxController {
   CollectionReference<Map<String, dynamic>> chats =
-      firestore.collection(chatsCollection);
-  User? currentUser = Get.find<ProfileController>().currentUser;
+      FirebaseFirestore.instance.collection(chatsCollection);
+  User? currentUser = Get.find<ProfileController>().currentUserFire;
   String friendName = Get.arguments[0];
   String friendId = Get.arguments[1];
-  String currentId = Get.find<ProfileController>().currentUser!.uid;
   String? userName = '';
   String? senderName = Get.find<MainNavigatorController>().userName;
   RxBool areChatsLoading = false.obs;
@@ -21,13 +20,7 @@ class ChatController extends GetxController {
 
   dynamic chatDocId;
 
-  @override
-  void onInit() {
-    getChatId();
-    super.onInit();
-  }
-
-  Future<void> getChatId() async {
+  Future<void> getChatId(String currentId) async {
     areChatsLoading(true);
     await chats
         .where('users', isEqualTo: {friendId: null, currentId: null})
@@ -57,7 +50,7 @@ class ChatController extends GetxController {
     areChatsLoading(false);
   }
 
-  void sendMessage({required String message}) async {
+  void sendMessage({required String message, required String currentId}) async {
     if (message.trim().isNotEmpty) {
       chats.doc(chatDocId).update({
         'created_on': FieldValue.serverTimestamp(),

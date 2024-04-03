@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:yourtasks/application/pages/chat/chat_page.dart';
 
 import '../../../constants/strings/strings.dart';
 import '../../../data/car/car_model.dart';
@@ -12,6 +12,7 @@ import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../views/pages/ui/components/commons.dart';
+import '../chat/chat_page.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import '../common_widgets/my_custom_button.dart';
 import '../rent_checkout/rent_checkout_page.dart';
@@ -19,13 +20,15 @@ import '../../../controllers/car_detail_controller.dart';
 import 'widgets/car_information_widget.dart';
 
 class CarDetailPage extends StatelessWidget {
+  final User? theUser;
   final CarModel data;
-  const CarDetailPage({super.key, required this.data});
+  const CarDetailPage({super.key, required this.data, required this.theUser});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    CarDetailController carDetailController = Get.put(CarDetailController());
+    CarDetailController carDetailController = Get.put(
+        CarDetailController(carLikedList: data.carLiked, user: theUser));
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -36,6 +39,29 @@ class CarDetailPage extends StatelessWidget {
             carDetailController.isImageOpened(false);
           },
         ),
+        actions: [
+          Obx(() => IconButton(
+                icon: Icon(
+                  carDetailController.isCarLiked.value
+                      ? Icons.favorite
+                      : Icons.favorite_outline_rounded,
+                  color: carDetailController.isCarLiked.value
+                      ? Colors.red
+                      : Colors.black,
+                ),
+                onPressed: carDetailController.isCarLiked.value
+                    ? () {
+                        carDetailController.isCarLiked(false);
+                        carDetailController.removeFromLikedCarsList(
+                            carId: data.id, currentId: theUser!.uid);
+                      }
+                    : () {
+                        carDetailController.isCarLiked(true);
+                        carDetailController.addToLikedCarsList(
+                            carId: data.id, currentId: theUser!.uid);
+                      },
+              ))
+        ],
         title: Text('${data.carName}'),
       ),
       body: SafeArea(

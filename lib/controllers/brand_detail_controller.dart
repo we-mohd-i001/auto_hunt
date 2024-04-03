@@ -12,6 +12,7 @@ class BrandDetailController extends GetxController {
   RxList<CarModel> carList = <CarModel>[].obs;
   RxBool isLoading = true.obs;
   RxBool isError = false.obs;
+  RxBool isCarLiked = false.obs;
 
   BrandDetailController({required this.brand});
 
@@ -54,6 +55,7 @@ class BrandDetailController extends GetxController {
                 carSeatingCapacity: doc['car_seating_capacity'],
                 carTransmission: doc['car_transmission'],
                 carOwnerId: doc['car_owner_id'],
+                id: doc['id'],
               ),
             )
             .toList(),
