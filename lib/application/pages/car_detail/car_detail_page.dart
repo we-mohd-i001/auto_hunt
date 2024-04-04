@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:yourtasks/controllers/brand_detail_controller.dart';
 
 import '../../../constants/strings/strings.dart';
 import '../../../data/car/car_model.dart';
@@ -36,6 +37,8 @@ class CarDetailPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Get.back();
+            Get.find<BrandDetailController>()
+                .fetchCarList(data.carBrand.toString());
             carDetailController.isImageOpened(false);
           },
         ),

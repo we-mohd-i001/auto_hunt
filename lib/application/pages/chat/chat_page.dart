@@ -21,7 +21,7 @@ class ChatPage extends StatelessWidget {
     User? theUser = auth.currentUser!;
 
     ChatController chatController = Get.put(ChatController());
-    chatController.getChatId(theUser!.uid);
+    chatController.getChatId(theUser.uid);
     return Scaffold(
       appBar: AppBar(
         title: Text('${Strings.chatWith} ${chatController.friendName}',

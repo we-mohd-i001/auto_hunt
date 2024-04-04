@@ -7,7 +7,7 @@ import '../../car_detail/car_detail_page.dart';
 import '../../common_widgets/car_bio.dart';
 import '../../../../controllers/brands_controller.dart';
 import '../../../../controllers/brand_detail_controller.dart';
-import '../widgets/category_list.dart';
+import '../../common_widgets/category_list.dart';
 
 class LoadedStateView extends StatelessWidget {
   final List<CarModel> carList;
@@ -26,12 +26,14 @@ class LoadedStateView extends StatelessWidget {
     BrandsController brandsController = Get.find<BrandsController>();
     BrandDetailController brandDetailController =
         Get.put(BrandDetailController(brand: carBrand));
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             brandsController.selectedCategoryIndex(-1);
+            brandDetailController.dispose();
             Get.back();
           },
         ),

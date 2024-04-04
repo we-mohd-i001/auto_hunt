@@ -10,6 +10,7 @@ import '../../../constants/consts.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../controllers/auth_controller.dart';
+import '../liked_cars_list/liked_car_list_page.dart';
 import '../login/login_page.dart';
 import '../../../controllers/profile_controller.dart';
 import 'profile_edit_page.dart';
@@ -95,7 +96,9 @@ class ProfilePage extends StatelessWidget {
                           '${data['order_count']}'),
                       verticalMargin24,
                       verticalMargin2,
-                      navigatorWidgetToOrdersAndLiked()
+                      navigatorWidgetToOrdersAndLiked(() {}, () {
+                        Get.to(() => LikedCarListpage(theUser: theUser));
+                      }, () {})
                     ],
                   ),
                 ),

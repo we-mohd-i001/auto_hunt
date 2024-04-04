@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../data/models/brands/brands_model.dart';
-import '../../../../vaahextendflutter/helpers/constants.dart';
-import '../../../../vaahextendflutter/helpers/enums.dart';
-import '../../../../vaahextendflutter/widgets/atoms/buttons.dart';
-import '../../../../views/pages/home.dart';
-import '../../../../controllers/brands_controller.dart';
+import '../../../data/models/brands/brands_model.dart';
+import '../../../vaahextendflutter/helpers/constants.dart';
+import '../../../vaahextendflutter/helpers/enums.dart';
+import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
+import '../../../views/pages/home.dart';
+import '../../../controllers/brands_controller.dart';
 
 Widget categoryList({
   required BrandsController brandsController,
@@ -17,12 +17,12 @@ Widget categoryList({
     width: size.width,
     height: size.height * 0.07,
     child: Obx(
-          () => SingleChildScrollView(
+      () => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: List.generate(
             brandsController.subCat.length,
-                (index) {
+            (index) {
               String cat = '';
               Category category = brandsController.subCat[index];
               if (category == Category.HATCHBACK) {
@@ -41,9 +41,9 @@ Widget categoryList({
                 child: ButtonOutlined(
                   borderRadius: 8,
                   buttonType:
-                  index == brandsController.selectedCategoryIndex.value
-                      ? ButtonType.primary
-                      : ButtonType.secondary,
+                      index == brandsController.selectedCategoryIndex.value
+                          ? ButtonType.primary
+                          : ButtonType.secondary,
                   onPressed: () {
                     brandsController.toggleSelectedCategory(index);
                     //Todo: Remove this route this is only for testing
