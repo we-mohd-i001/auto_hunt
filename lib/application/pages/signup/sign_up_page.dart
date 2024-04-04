@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/alerts.dart';
 
+import '../../../constants/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
@@ -46,6 +47,7 @@ class _SignupPageState extends State<SignupPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: IconButton(
+          tooltip: Strings.back,
           icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,

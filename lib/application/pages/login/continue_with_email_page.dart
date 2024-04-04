@@ -53,8 +53,7 @@ class ContinueWithEmailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  LogoWithName(
-                    
+                  const LogoWithName(
                     size: 15,
                   ),
                   const SizedBox(height: 12),
@@ -136,8 +135,9 @@ class ContinueWithEmailPage extends StatelessWidget {
                                           onPressed: () async {
                                             controller.isLoading(true);
                                             //_formKey.currentState?.validate();
-                                           UserCredential? userCredential =  await controller.login();
-                                            if(userCredential != null){
+                                            UserCredential? userCredential =
+                                                await controller.login();
+                                            if (userCredential != null) {
                                             } else {
                                               controller.isLoading(false);
                                             }

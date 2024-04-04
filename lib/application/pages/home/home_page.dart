@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:yourtasks/controllers/profile_controller.dart';
 
 import '../../../constants/constants.dart';
+import '../../../constants/others/other_consts.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
@@ -53,7 +54,7 @@ class HomePage extends StatelessWidget {
                           children: [
                             locationAndProfile(
                                 image: !snapshot.hasData
-                                    ? ''
+                                    ? OtherConsts.profilePlaceHolder
                                     : snapshot.data!.docs[0]['imageUrl']),
                             searchWidget(),
                             verticalMargin8,

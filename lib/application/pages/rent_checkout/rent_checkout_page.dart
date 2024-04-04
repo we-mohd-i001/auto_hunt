@@ -25,6 +25,7 @@ class RentCheckoutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          tooltip: Strings.back,
           onPressed: () {
             rentCheckoutController.rentCarButtonEnableCount(0);
             Get.back();
@@ -66,8 +67,8 @@ class RentCheckoutPage extends StatelessWidget {
                           barrierDismissible: false,
                           title: Strings.carBookedSuccessfully,
                           titleStyle: subheading,
-
-                          middleText: '${Strings.yourCarIsBookedFor} ${rentCheckoutController.rentDays} ${Strings.days}, you can expect your car on ${rentCheckoutController.userDateAndTime}. ${Strings.totalRentPrice} is ${rentCheckoutController.totalPrice}',
+                          middleText:
+                              '${Strings.yourCarIsBookedFor} ${rentCheckoutController.rentDays} ${Strings.days}, you can expect your car on ${rentCheckoutController.userDateAndTime}. ${Strings.totalRentPrice} is ${rentCheckoutController.totalPrice}',
                           middleTextStyle: normal,
                           radius: 12,
                           actions: [

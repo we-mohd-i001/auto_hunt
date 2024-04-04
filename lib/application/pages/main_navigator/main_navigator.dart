@@ -52,7 +52,9 @@ class MyHomePage extends StatelessWidget {
         theUser: theUser,
       ),
       Container(color: Colors.amber),
-      const ChatListPage(),
+      ChatListPage(
+        theUser: theUser,
+      ),
       const ProfilePage(),
     ];
     return Scaffold(

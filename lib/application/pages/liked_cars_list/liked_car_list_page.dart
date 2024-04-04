@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/constants/others/other_consts.dart';
 
-import '../../../controllers/brands_controller.dart';
+import '../../../constants/constants.dart';
+import '../../../controllers/liked_cars_controller.dart';
+import '../../../data/car/car_model.dart';
+import '../car_detail/car_detail_page.dart';
 import '../common_widgets/car_bio.dart';
-import '../common_widgets/category_list.dart';
 
 class LikedCarListpage extends StatelessWidget {
   final User? theUser;
@@ -15,44 +17,57 @@ class LikedCarListpage extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    LikedCarsController likedCarsController = Get.put(LikedCarsController());
     Size size = MediaQuery.of(context).size;
-    BrandsController brandsController = Get.find<BrandsController>();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          tooltip: Strings.back,
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Get.back();
           },
         ),
         surfaceTintColor: Colors.transparent,
-        // backgroundColor: Colors.transparent,
         title: const Text('Liked Cars'),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            categoryList(brandsController: brandsController, size: size),
-            SizedBox(
-              height: size.height * 0.8,
-              width: size.width,
-              child: ListView.builder(
-                itemCount: 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return carBio(
-                    'carIndex.carName',
-                    'carIndex.carFuelType',
-                    OtherConsts.audiLogo,
-                    size.width,
-                    9000,
-                    6,
-                    () {},
-                    'Name',
+        child: SizedBox(
+          height: size.height * 0.87,
+          width: size.width,
+          child: StreamBuilder(
+              stream: likedCarsController.getLikedCarsList(theUser!.uid),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<CarModel>> snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                },
-              ),
-            ),
-          ],
+                }
+                return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    CarModel carIndex = snapshot.data!.docs[index].data.call();
+                    return carBio(
+                      carIndex.carName,
+                      carIndex.carFuelType,
+                      carIndex.carImages[0],
+                      size.width,
+                      carIndex.carRentPricePerDay,
+                      carIndex.carSeatingCapacity,
+                      () {
+                        Get.to(
+                          () => CarDetailPage(
+                            data: carIndex,
+                            theUser: theUser,
+                          ),
+                        );
+                      },
+                      '${carIndex.carName}',
+                    );
+                  },
+                );
+              }),
         ),
       ),
     );

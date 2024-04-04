@@ -17,8 +17,18 @@ class ChatController extends GetxController {
   String? senderName = Get.find<MainNavigatorController>().userName;
   RxBool areChatsLoading = false.obs;
   TextEditingController messageController = TextEditingController();
-
+  ScrollController scrollController = ScrollController();
   dynamic chatDocId;
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getChatMessages(
+      {required String docId}) {
+    return firestore
+        .collection(chatsCollection)
+        .doc(docId)
+        .collection(messagesCollection)
+        .orderBy('created_on', descending: true)
+        .snapshots();
+  }
 
   Future<void> getChatId(String currentId) async {
     areChatsLoading(true);
