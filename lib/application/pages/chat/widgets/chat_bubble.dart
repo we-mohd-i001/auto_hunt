@@ -15,20 +15,25 @@ Widget chatBubble({required DocumentSnapshot data, required bool isSender}) {
         ? const EdgeInsets.only(top: 0, bottom: 8, left: 40, right: 8)
         : const EdgeInsets.only(top: 0, bottom: 8, left: 8, right: 40),
     child: Container(
-      padding: allPadding8,
+      padding: allPadding12,
       decoration: BoxDecoration(
-          color: AppTheme.colors['warning'] as MaterialColor,
+          color: isSender
+              ? AppTheme.colors['warning']![100]
+              : AppTheme.colors['white']![50],
           borderRadius: isSender
               ? const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                  bottomLeft: Radius.circular(12),
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                  bottomLeft: Radius.circular(24),
                 )
               : const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                )),
+                  topLeft: Radius.circular(0),
+                  topRight: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                  bottomLeft: Radius.circular(24),
+                ),
+          border:
+              Border.all(color: AppTheme.colors['secondary']![300] as Color)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
         Text(
           data['message'],

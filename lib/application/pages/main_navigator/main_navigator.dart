@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/application/pages/search/search_page.dart';
 
 import '../../../controllers/main_navigator_controller.dart';
 import '../../../controllers/profile_controller.dart';
+import '../../../controllers/search_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../controllers/brands_controller.dart';
 import '../chat_list/chat_list_page.dart';
@@ -31,6 +33,7 @@ class MyHomePage extends StatelessWidget {
     ProfileController profileController = Get.put(ProfileController());
     MainNavigatorController mainNavigatorController =
         Get.put(MainNavigatorController());
+    SearchCarsController searchCarsController = Get.put(SearchCarsController());
     FirebaseAuth auth = FirebaseAuth.instance;
     User? theUser = auth.currentUser!;
     //ChatController chatController = Get.put(ChatController());
@@ -39,7 +42,7 @@ class MyHomePage extends StatelessWidget {
       const BottomNavigationBarItem(
           icon: Icon(Icons.home_rounded, size: 26), label: 'Home'),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.category_rounded, size: 26), label: 'Brands'),
+          icon: Icon(Icons.search_rounded, size: 26), label: 'Search'),
       const BottomNavigationBarItem(
           icon: Icon(Icons.message_rounded, size: 26), label: 'Messages'),
       const BottomNavigationBarItem(
@@ -51,7 +54,9 @@ class MyHomePage extends StatelessWidget {
         profileController: profileController,
         theUser: theUser,
       ),
-      Container(color: Colors.amber),
+      SearchPage(
+        theUser: theUser,
+      ),
       ChatListPage(
         theUser: theUser,
       ),

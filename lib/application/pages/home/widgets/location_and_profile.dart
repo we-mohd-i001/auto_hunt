@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../constants/strings/strings.dart';
 
-Widget locationAndProfile({required String image}){
+Widget locationAndProfile({required String image}) {
   return Padding(
-    padding:
-    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -25,8 +24,9 @@ Widget locationAndProfile({required String image}){
           ],
         ),
         CircleAvatar(
-          radius: 18,
-          backgroundImage: NetworkImage(image),),
+          radius: 32,
+          backgroundImage: NetworkImage(image),
+        ),
       ],
     ),
   );
