@@ -1,14 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/others/other_consts.dart';
+import '../../../controllers/chat_list_controller.dart';
+import '../../../data/chat/chat_model.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../views/pages/ui/components/commons.dart';
+import '../chat/chat_page.dart';
 
 class ChatListPage extends StatelessWidget {
-  const ChatListPage({super.key});
+  final User? theUser;
+  const ChatListPage({super.key, required this.theUser});
 
   @override
   Widget build(BuildContext context) {
+    ChatListController chatListController = Get.put(ChatListController());
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
@@ -17,36 +25,50 @@ class ChatListPage extends StatelessWidget {
           style: subheading,
         ),
       ),
-      body: const SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-              ChatListElement(),
-            ],
-          ),
-        ),
+      body: SafeArea(
+        child: StreamBuilder(
+            stream: chatListController.getChatList(theUser!.uid),
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot<ChatModel>> snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    ChatModel chatModel =
+                        snapshot.data!.docs[index].data.call();
+                    return ChatListElement(
+                      name: chatModel.friendName.toString(),
+                      lastMessage: chatModel.lastMessage.toString(),
+                      onPressed: () {
+                        Get.to(() => const ChatPage(),
+                            arguments: [chatModel.friendName, chatModel.toId]);
+                      },
+                    );
+                  });
+            }),
       ),
     );
   }
 }
 
 class ChatListElement extends StatelessWidget {
-  const ChatListElement({super.key});
+  final String name;
+  final String lastMessage;
+  final Function() onPressed;
+  const ChatListElement(
+      {super.key,
+      required this.name,
+      required this.lastMessage,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: onPressed,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         decoration: const BoxDecoration(
@@ -64,19 +86,27 @@ class ChatListElement extends StatelessWidget {
               ),
             ),
             horizontalMargin12,
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Name',
-                  style: subheading,
-                ),
-                Text(
-                  'Last Message',
-                  style: normal,
-                )
-              ],
+            SizedBox(
+              height: 40,
+              width: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: subheading,
+                  ),
+                  Expanded(
+                    child: Text(
+                      lastMessage,
+                      style: normal,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ],
+              ),
             ),
           ],
         ),

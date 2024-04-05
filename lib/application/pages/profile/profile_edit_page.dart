@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
 import 'package:yourtasks/vaahextendflutter/helpers/enums.dart';
+import '../../../constants/constants.dart';
 import '../common_widgets/profile_picture_container.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/alerts.dart';
@@ -34,6 +35,7 @@ class ProfileEditPage extends StatelessWidget {
         backgroundColor: Colors.black,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          tooltip: Strings.back,
           color: Colors.white,
           onPressed: () {
             Get.back();
@@ -144,11 +146,12 @@ class ProfileEditPage extends StatelessWidget {
                                           profileController.nameController.text;
                                       await profileController.updateName(name);
                                       Alerts.showSuccessToast!(
-                                          content:
-                                          'Name updated.');
+                                          content: 'Name updated.');
                                     },
                           controller: profileController.nameController,
-                          onChanged: (_){profileController.isNameSuffixIconDisabled(false);},
+                          onChanged: (_) {
+                            profileController.isNameSuffixIconDisabled(false);
+                          },
                           label: 'Name',
                         ),
                       ],

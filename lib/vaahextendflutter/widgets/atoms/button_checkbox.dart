@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../app_theme.dart';
 import '../../helpers/constants.dart';
 
 class CheckboxItem<T> {
@@ -7,12 +6,10 @@ class CheckboxItem<T> {
   final bool initialValue;
   final T data;
 
-
-  const CheckboxItem( {
+  const CheckboxItem({
     required this.text,
     this.initialValue = false,
     required this.data,
-
   });
 }
 
@@ -68,7 +65,6 @@ class _ButtonCheckBoxState<T> extends State<ButtonCheckBox<T>> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Checkbox(
-
                     value: _values[index],
                     onChanged: (value) {
                       if (value == null) return;

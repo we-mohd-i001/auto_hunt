@@ -55,6 +55,9 @@ class Strings {
   static const totalRentPrice = 'Total rent price';
   static const autoHunt = 'Auto.Hunt';
   static const chatWith = 'Chat with';
+  static const back = 'Back';
+  static const unlike = 'Unlike';
+  static const like = 'Like';
 
   static const carRange = 'Range';
   static const enginePower = 'Engine Power';

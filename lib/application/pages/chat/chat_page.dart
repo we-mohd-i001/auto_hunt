@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/services/firestore_services.dart';
 
 import '../../../constants/constants.dart';
 import '../../../controllers/chat_controller.dart';
@@ -41,37 +40,41 @@ class ChatPage extends StatelessWidget {
                         )
                       : Expanded(
                           child: StreamBuilder(
-                              stream: FireStoreServices.getChatMessages(
-                                  docId: chatController.chatDocId.toString()),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (!snapshot.hasData) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (snapshot.data!.docs.isEmpty) {
-                                  return Text(
-                                    'Send a message...',
-                                    style: normal,
-                                  );
-                                } else {
-                                  return ListView.builder(
-                                      itemCount: snapshot.data!.docs.length,
-                                      itemBuilder: ((context, index) {
-                                        DocumentSnapshot data =
-                                            snapshot.data!.docs[index];
-                                        return Align(
-                                            alignment:
-                                                data['uid'] == theUser.uid
-                                                    ? Alignment.centerRight
-                                                    : Alignment.centerLeft,
-                                            child: chatBubble(
-                                                data: data,
-                                                isSender: data['uid'] ==
-                                                    theUser.uid));
-                                      }));
-                                }
-                              }),
+                            stream: chatController.getChatMessages(
+                                docId: chatController.chatDocId.toString()),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.data!.docs.isEmpty) {
+                                return Text(
+                                  'Send a message...',
+                                  style: normal,
+                                );
+                              } else {
+                                return ListView.builder(
+                                  reverse: true,
+                                  shrinkWrap: true,
+                                  controller: chatController.scrollController,
+                                  itemCount: snapshot.data!.docs.length,
+                                  itemBuilder: ((context, index) {
+                                    DocumentSnapshot data =
+                                        snapshot.data!.docs[index];
+                                    return Align(
+                                        alignment: data['uid'] == theUser.uid
+                                            ? Alignment.centerRight
+                                            : Alignment.centerLeft,
+                                        child: chatBubble(
+                                            data: data,
+                                            isSender:
+                                                data['uid'] == theUser.uid));
+                                  }),
+                                );
+                              }
+                            },
+                          ),
                         ),
                 ),
                 verticalMargin48,

@@ -7,6 +7,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:yourtasks/controllers/brand_detail_controller.dart';
 
 import '../../../constants/strings/strings.dart';
+import '../../../controllers/home_controller.dart';
 import '../../../data/car/car_model.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
@@ -35,8 +36,10 @@ class CarDetailPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          tooltip: Strings.back,
           onPressed: () {
             Get.back();
+            Get.find<HomeController>().fetchMostPopularCarList();
             Get.find<BrandDetailController>()
                 .fetchCarList(data.carBrand.toString());
             carDetailController.isImageOpened(false);
@@ -44,6 +47,9 @@ class CarDetailPage extends StatelessWidget {
         ),
         actions: [
           Obx(() => IconButton(
+                tooltip: carDetailController.isCarLiked.value
+                    ? Strings.unlike
+                    : Strings.like,
                 icon: Icon(
                   carDetailController.isCarLiked.value
                       ? Icons.favorite
