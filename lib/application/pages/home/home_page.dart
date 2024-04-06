@@ -4,20 +4,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:yourtasks/controllers/profile_controller.dart';
-
 import '../../../constants/constants.dart';
 import '../../../constants/others/other_consts.dart';
 import '../../../controllers/home_controller.dart';
+import '../../../controllers/profile_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
+import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../brands_detail/view_states/error_state_view.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import 'widgets/home_screen_options.dart';
 import 'widgets/location_and_profile.dart';
 import 'widgets/most_popular_cars.dart';
 import 'widgets/search_by_brands.dart';
-import 'widgets/search_widget.dart';
 
 class HomePage extends StatelessWidget {
   final ProfileController profileController;
@@ -56,7 +55,12 @@ class HomePage extends StatelessWidget {
                                 image: !snapshot.hasData
                                     ? OtherConsts.profilePlaceHolder
                                     : snapshot.data!.docs[0]['imageUrl']),
-                            searchWidget(),
+                            // const SizedBox(
+                            //   width: 300,
+                            //   child: InputText(
+                            //     label: 'Search cars...',
+                            //   ),
+                            // ),
                             verticalMargin8,
                             Expanded(child: homeScreenOptions()),
                           ],

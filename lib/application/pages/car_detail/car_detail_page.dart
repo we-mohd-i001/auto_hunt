@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:yourtasks/controllers/brand_detail_controller.dart';
 
 import '../../../constants/strings/strings.dart';
+import '../../../controllers/brand_detail_controller.dart';
 import '../../../controllers/home_controller.dart';
+import '../../../controllers/search_controller.dart';
 import '../../../data/car/car_model.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
@@ -42,6 +43,10 @@ class CarDetailPage extends StatelessWidget {
             Get.find<HomeController>().fetchMostPopularCarList();
             Get.find<BrandDetailController>()
                 .fetchCarList(data.carBrand.toString());
+            SearchCarsController searchCarsController =
+                Get.find<SearchCarsController>();
+            searchCarsController.getCarList(
+                keyword: searchCarsController.searchTextController.text);
             carDetailController.isImageOpened(false);
           },
         ),
@@ -133,6 +138,10 @@ class CarDetailPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Visibility(
+                        visible:
+                            !carDetailController.areExtraDetailsVisible.value,
+                        child: verticalMargin24),
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -180,6 +189,10 @@ class CarDetailPage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    Visibility(
+                        visible:
+                            !carDetailController.areExtraDetailsVisible.value,
+                        child: verticalMargin24),
                     GestureDetector(
                       onTap: () {
                         carDetailController.toggleAreExtraDetailsVisible();
@@ -239,6 +252,10 @@ class CarDetailPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Visibility(
+                        visible:
+                            !carDetailController.areExtraDetailsVisible.value,
+                        child: verticalMargin24),
                     learnMoreWithTitle(Strings.carLocation,
                         changeLearnMore: Strings.distance),
                     Padding(

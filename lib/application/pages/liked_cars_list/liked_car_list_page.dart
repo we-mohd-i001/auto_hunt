@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../constants/constants.dart';
 import '../../../controllers/liked_cars_controller.dart';
 import '../../../data/car/car_model.dart';
+import '../../../views/pages/ui/components/commons.dart';
 import '../car_detail/car_detail_page.dart';
 import '../common_widgets/car_bio.dart';
 
@@ -42,6 +43,10 @@ class LikedCarListpage extends StatelessWidget {
                 if (!snapshot.hasData) {
                   return const Center(
                     child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.data!.docs.isEmpty) {
+                  return Center(
+                    child: Text('Liked cars will appear here!', style: normal),
                   );
                 }
                 return ListView.builder(
