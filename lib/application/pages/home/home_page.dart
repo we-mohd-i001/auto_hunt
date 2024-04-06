@@ -8,9 +8,9 @@ import '../../../constants/constants.dart';
 import '../../../constants/others/other_consts.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../controllers/profile_controller.dart';
+import '../../../controllers/user_location_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
-import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../brands_detail/view_states/error_state_view.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import 'widgets/home_screen_options.dart';
@@ -29,6 +29,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserLocationController userLocationController =
+        Get.put(UserLocationController());
     HomeController homeController = Get.put(HomeController());
     Size size = MediaQuery.of(context).size;
     return Container(
@@ -51,10 +53,17 @@ class HomePage extends StatelessWidget {
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         return Column(
                           children: [
-                            locationAndProfile(
-                                image: !snapshot.hasData
-                                    ? OtherConsts.profilePlaceHolder
-                                    : snapshot.data!.docs[0]['imageUrl']),
+                            Obx(
+                              () => locationAndProfile(
+                                  image: !snapshot.hasData
+                                      ? OtherConsts.profilePlaceHolder
+                                      : snapshot.data!.docs[0]['imageUrl'],
+                                  location: userLocationController
+                                      .currentLocation.value,
+                                  onPressedRefreshIcon: () {
+                                    userLocationController.update();
+                                  }),
+                            ),
                             // const SizedBox(
                             //   width: 300,
                             //   child: InputText(
