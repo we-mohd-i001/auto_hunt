@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constants/consts.dart';
-import '../data/car/car_model.dart';
+import '../helpers/constants/consts.dart';
+import '../models/car/car_model.dart';
 
 class BrandDetailController extends GetxController {
   final String brand;
@@ -13,11 +13,6 @@ class BrandDetailController extends GetxController {
   RxBool isLoading = true.obs;
   RxBool isError = false.obs;
   RxBool isCarLiked = false.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void fetchCarList(String brand, {bool condition = true}) async {
     if (condition == true) {

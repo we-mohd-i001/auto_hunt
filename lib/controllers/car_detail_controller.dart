@@ -2,14 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-import '../constants/consts.dart';
+import '../helpers/constants/consts.dart';
+import '../vaahextendflutter/helpers/alerts.dart';
 
 class CarDetailController extends GetxController {
+  CarDetailController({
+    required this.carLikedList,
+    required this.user,
+  });
+
   final List<dynamic> carLikedList;
   final User? user;
 
   RxBool isImageOpened = false.obs;
-  RxBool is360Loading = false.obs;
   RxBool areExtraDetailsVisible = false.obs;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   RxBool isCarLiked = false.obs;
@@ -20,31 +25,30 @@ class CarDetailController extends GetxController {
     super.onInit();
   }
 
-  CarDetailController({required this.carLikedList, required this.user});
-
-  toggleAreExtraDetailsVisible() {
+  void toggleAreExtraDetailsVisible() {
     areExtraDetailsVisible.value = !areExtraDetailsVisible.value;
-  }
-
-  load360() async {
-    is360Loading(true);
-    await Future.delayed(const Duration(milliseconds: 1500), () {
-      is360Loading(false);
-    });
   }
 
   void addToLikedCarsList(
       {required String carId, required String currentId}) async {
-    await _firestore.collection(carsCollection).doc(carId).set({
-      'car_liked': FieldValue.arrayUnion([currentId])
-    }, SetOptions(merge: true));
+    try {
+      await _firestore.collection(carsCollection).doc(carId).set({
+        'car_liked': FieldValue.arrayUnion([currentId])
+      }, SetOptions(merge: true));
+    } on Exception catch (_) {
+      Alerts.showErrorToast!(content: 'Something went wrong!');
+    }
   }
 
   void removeFromLikedCarsList(
       {required String carId, required String currentId}) async {
-    await _firestore.collection(carsCollection).doc(carId).set({
-      'car_liked': FieldValue.arrayRemove([currentId])
-    }, SetOptions(merge: true));
+    try {
+      await _firestore.collection(carsCollection).doc(carId).set({
+        'car_liked': FieldValue.arrayRemove([currentId])
+      }, SetOptions(merge: true));
+    } on Exception catch (_) {
+      Alerts.showErrorToast!(content: 'Something went wrong!');
+    }
   }
 
   void checkIfLiked() async {
