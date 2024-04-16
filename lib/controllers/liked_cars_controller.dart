@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import '../constants/consts.dart';
-import '../data/car/car_model.dart';
+import '../helpers/constants/consts.dart';
+import '../models/car/car_model.dart';
 
 class LikedCarsController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isError = false.obs;
-  RxList<CarModel> chatList = <CarModel>[].obs;
+  RxList<CarModel> carList = <CarModel>[].obs;
+  RxBool isLikedCarEmpty = true.obs;
 
   Stream<QuerySnapshot<CarModel>> getLikedCarsList(String currentId) {
     isLoading(true);
@@ -19,6 +20,7 @@ class LikedCarsController extends GetxController {
         .where('car_liked', arrayContains: currentId)
         .snapshots();
     isLoading(false);
+    isLikedCarEmpty(false);
     return data;
   }
 }

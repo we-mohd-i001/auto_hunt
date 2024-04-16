@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import '../constants/consts.dart';
-import '../data/chat/chat_model.dart';
+import '../helpers/constants/consts.dart';
+import '../models/chat/chat_model.dart';
 
 class ChatListController extends GetxController {
   RxBool isLoading = false.obs;

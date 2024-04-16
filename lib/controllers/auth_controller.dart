@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constants/consts.dart';
+import '../helpers/constants/consts.dart';
 import '../vaahextendflutter/helpers/alerts.dart';
-import '../application/pages/main_navigator/main_navigator.dart';
+import '../views/pages/main_navigator/main_navigator.dart';
 
 class AuthController extends GetxController {
   TextEditingController emailController = TextEditingController();
@@ -26,7 +26,7 @@ class AuthController extends GetxController {
           email: emailController.text, password: passwordController.text);
       Alerts.showSuccessToast!(content: 'Logged in successfully.');
       Get.offAllNamed(MyHomePage.routePath);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       Alerts.showErrorToast!(content: 'Login unsuccessful');
     }
   }
@@ -37,7 +37,7 @@ class AuthController extends GetxController {
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       Alerts.showErrorToast!(content: 'SignUp unsuccessful!');
     }
   }

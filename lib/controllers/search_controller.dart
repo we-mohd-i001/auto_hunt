@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constants/consts.dart';
-import '../data/car/car_model.dart';
+import '../helpers/constants/consts.dart';
+import '../models/car/car_model.dart';
 
 class SearchCarsController extends GetxController {
   RxBool isLoading = false.obs;

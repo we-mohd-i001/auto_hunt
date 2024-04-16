@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../data/car/car_model.dart';
+import '../models/car/car_model.dart';
 
 class RentCheckoutController extends GetxController {
-  CarModel carData;
-  RentCheckoutController({required this.carData});
+  CarModel carModel;
+  RentCheckoutController({required this.carModel});
 
   TextEditingController pickupLocationController = TextEditingController();
 
@@ -36,13 +36,14 @@ class RentCheckoutController extends GetxController {
 
   Future<void> loadCarBookedDialog() async {
     isCarBookingInProgress(true);
-    await Future.delayed(const Duration(seconds: 2), () => isCarBookingInProgress(false));
+    await Future.delayed(
+        const Duration(seconds: 2), () => isCarBookingInProgress(false));
   }
 
   final GlobalKey<FormState> rentCheckoutFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> cardDetailFormKey = GlobalKey<FormState>();
 
-  String calculateTotal(int rentPrice, int carRentTax) {
+  String totalRentPrice(int rentPrice, int carRentTax) {
     double total = (rentPrice * rentDays.value) + carRentTax;
     totalPrice('$total');
     return '$total';
@@ -63,7 +64,7 @@ class RentCheckoutController extends GetxController {
     cardNumber(userCardNumber);
   }
 
-  void addCardHolder(String userCardHolder) {
+  void addCardHolderName(String userCardHolder) {
     cardHolder(userCardHolder);
   }
 
@@ -80,12 +81,7 @@ class RentCheckoutController extends GetxController {
     await Future.delayed(const Duration(seconds: 2), () {
       isPageLoading(false);
     });
-    print('Address - $pickupLocation');
-    print('Date - $userDateAndTime');
-    print('Days - $rentDays');
-    print('Total Price - $totalPrice');
     rentCarButtonEnableCount + 1 + pickupLocation.value.length;
-
     enableRentCarButton();
     cardDetails('');
     String text =

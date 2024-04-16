@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-import '../application/pages/login/login_page.dart';
-import '../application/pages/main_navigator/main_navigator.dart';
+import '../views/pages/login/login_page.dart';
+import '../views/pages/main_navigator/main_navigator.dart';
 
 class SplashController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;

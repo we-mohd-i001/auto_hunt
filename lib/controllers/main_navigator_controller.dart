@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../constants/consts.dart';
+import '../helpers/constants/consts.dart';
 
 class MainNavigatorController extends GetxController {
   RxInt currentNavIndex = 0.obs;

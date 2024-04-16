@@ -9,20 +9,20 @@ import 'package:get/get.dart';
 import 'package:path/path.dart' show basename;
 import 'package:image_picker/image_picker.dart';
 
-import '../constants/consts.dart';
+import '../helpers/constants/consts.dart';
 import '../vaahextendflutter/helpers/alerts.dart';
 
 class ProfileController extends GetxController {
   FirebaseAuth fireAuth = FirebaseAuth.instance;
-  User? currentUserFire;
+  User? currentFirebaseUser;
   RxString profileImageUrl = ''.obs;
   RxString profileImagePath = ''.obs;
-  String profileImageLink = '';
+  String profileImageLinkFromFirebaseStorage = '';
   RxBool isPasswordVisible = true.obs;
   RxBool isLoading = false.obs;
   RxBool isImageLoading = false.obs;
   RxBool isImageUploadButtonDisabled = true.obs;
-  RxBool isNameSuffixIconDisabled = true.obs;
+  RxBool isNameTextFieldIconButtonDisabled = true.obs;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -30,14 +30,14 @@ class ProfileController extends GetxController {
 
   @override
   void onInit() {
-    currentUserFire = fireAuth.currentUser;
+    currentFirebaseUser = fireAuth.currentUser;
     super.onInit();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> updateUiImageUrl() {
     Stream<QuerySnapshot<Map<String, dynamic>>> data = firestore
         .collection(usersCollection)
-        .where('id', isEqualTo: currentUserFire!.uid)
+        .where('id', isEqualTo: currentFirebaseUser!.uid)
         .snapshots();
     return data;
   }
@@ -66,25 +66,25 @@ class ProfileController extends GetxController {
 
   Future<void> uploadProfileImage() async {
     String fileName = basename(profileImagePath.value);
-    String destination = 'images/${currentUserFire!.uid}/$fileName';
+    String destination = 'images/${currentFirebaseUser!.uid}/$fileName';
     Reference ref = FirebaseStorage.instance.ref().child(destination);
     await ref.putFile(File(profileImagePath.value));
-    profileImageLink = await ref.getDownloadURL();
+    profileImageLinkFromFirebaseStorage = await ref.getDownloadURL();
   }
 
   Future<void> updateName(String name) async {
     DocumentReference<Map<String, dynamic>> store =
-        firestore.collection(usersCollection).doc(currentUserFire!.uid);
+        firestore.collection(usersCollection).doc(currentFirebaseUser!.uid);
     await store.set(
       {'name': name},
       SetOptions(merge: true),
     );
-    isNameSuffixIconDisabled(true);
+    isNameTextFieldIconButtonDisabled(true);
   }
 
   Future<void> updateProfileImage(String imageUrl) async {
     final DocumentReference<Map<String, dynamic>> store =
-        firestore.collection(usersCollection).doc(currentUserFire!.uid);
+        firestore.collection(usersCollection).doc(currentFirebaseUser!.uid);
     await store.set({'imageUrl': imageUrl}, SetOptions(merge: true));
     isImageLoading(false);
 
@@ -96,20 +96,24 @@ class ProfileController extends GetxController {
       String email, String password, String newPassword) async {
     final AuthCredential cred =
         EmailAuthProvider.credential(email: email, password: password);
-    await currentUserFire!.reauthenticateWithCredential(cred).then((value) {
-      currentUserFire!.updatePassword(newPassword).catchError((e) {
+    await currentFirebaseUser!.reauthenticateWithCredential(cred).then((value) {
+      currentFirebaseUser!.updatePassword(newPassword).catchError((e) {
         debugPrint(e.toString());
       });
     });
   }
 
   Future<void> updatePassword(String password) async {
-    DocumentReference<Map<String, dynamic>> store =
-        firestore.collection(usersCollection).doc(currentUserFire!.uid);
-    await store.set(
-      {'password': password},
-      SetOptions(merge: true),
-    );
-    isLoading(false);
+    try {
+      DocumentReference<Map<String, dynamic>> store =
+          firestore.collection(usersCollection).doc(currentFirebaseUser!.uid);
+      await store.set(
+        {'password': password},
+        SetOptions(merge: true),
+      );
+      isLoading(false);
+    } on Exception catch (_) {
+      Alerts.showErrorToast!(content: 'Something went wrong!');
+    }
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../data/models/brands/brands_model.dart';
+import '../models/brands/brands_model.dart';
 
 class BrandsController extends GetxController {
   RxList<dynamic> subCat = [].obs;
@@ -27,17 +27,20 @@ class BrandsController extends GetxController {
   }
 
   void getBrandsList() async {
-    String rawData = await rootBundle.loadString("lib/services/brands_model.json");
+    String rawData =
+        await rootBundle.loadString("lib/helpers/services/brands_model.json");
     BrandsModel decodedData = brandsModelFromJson(rawData);
     brandsList.value = decodedData.brands.toList();
   }
 
-  void getCarsList(title) async {
+  void getCarsList(brandName) async {
     subCat.value = [];
-    String data = await rootBundle.loadString("lib/services/brands_model.json");
+    String data =
+        await rootBundle.loadString("lib/helpers/services/brands_model.json");
     BrandsModel decodedData = brandsModelFromJson(data);
-    List<Brand> brandList =
-        decodedData.brands.where((element) => element.name == title).toList();
+    List<Brand> brandList = decodedData.brands
+        .where((element) => element.name == brandName)
+        .toList();
     for (Category e in brandList[0].categories) {
       subCat.add(e);
     }
