@@ -4,7 +4,7 @@ import '../../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../../vaahextendflutter/helpers/styles.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../code_preview.dart';
-import '../commons.dart';
+import '../../../../../helpers/commons.dart';
 
 class InputTextPreview extends StatelessWidget {
   const InputTextPreview({Key? key}) : super(key: key);
@@ -51,7 +51,8 @@ class InputTextCode extends StatelessWidget {
         verticalMargin8,
         Text('Disabled', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const InputText(label: 'Disabled', isEnabled: false),"]),
+        const CodePreview(
+            code: ["const InputText(label: 'Disabled', isEnabled: false),"]),
         verticalMargin8,
         Text('Invalid', style: TextStyles.regular2),
         verticalMargin4,

@@ -8,7 +8,7 @@ import '../../../../vaahextendflutter/helpers/date_time.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_date_time.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_slider.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
-import '../../ui/components/commons.dart';
+import '../../../../helpers/commons.dart';
 import '../../common_widgets/learn_more_with_title.dart';
 import '../../../../controllers/rent_checkout_controller.dart';
 import 'card_detail_input_form.dart';
@@ -101,7 +101,7 @@ Widget rentDetailForm() {
             suffixIcon: FontAwesomeIcons.pencil,
             suffixOnTap: () {
               Get.bottomSheet(
-                cardDetailInputForm(rentCheckoutController),
+                carDetailInputForm(rentCheckoutController),
               );
             },
             label: Strings.enterCardDetails),

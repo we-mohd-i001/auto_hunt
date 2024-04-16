@@ -7,7 +7,7 @@ import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
-import '../ui/components/commons.dart';
+import '../../../helpers/commons.dart';
 import '../common_widgets/my_custom_button.dart';
 import '../../../controllers/rent_checkout_controller.dart';
 import '../main_navigator/main_navigator.dart';
@@ -38,7 +38,10 @@ class RentCheckoutPage extends StatelessWidget {
     RentCheckoutController rentCheckoutController =
         Get.find<RentCheckoutController>();
     return Scaffold(
+      backgroundColor: AppTheme.colors['secondary']![100],
       appBar: AppBar(
+        backgroundColor: AppTheme.colors['secondary']![100],
+        surfaceTintColor: AppTheme.colors['secondary']![100],
         leading: IconButton(
           tooltip: Strings.back,
           onPressed: () {
@@ -48,7 +51,10 @@ class RentCheckoutPage extends StatelessWidget {
           },
           icon: const Icon(Icons.arrow_back_rounded),
         ),
-        title: const Text(Strings.rentDetail),
+        title: Text(
+          Strings.rentDetail,
+          style: heading,
+        ),
       ),
       body: SafeArea(
         child: Obx(
@@ -103,7 +109,7 @@ class RentCheckoutPage extends StatelessWidget {
                 visible: rentCheckoutController.isPageLoading.value ||
                     rentCheckoutController.isCarBookingInProgress.value,
                 child: Container(
-                  color: Colors.black.withOpacity(0.3),
+                  color: AppTheme.colors['black']!.withOpacity(0.2),
                   height: double.infinity,
                   width: double.infinity,
                   child: Center(

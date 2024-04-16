@@ -10,11 +10,12 @@ import '../../../controllers/brand_detail_controller.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../controllers/search_controller.dart';
 import '../../../models/car/car_model.dart';
+import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
-import '../ui/components/commons.dart';
+import '../../../helpers/commons.dart';
 import '../chat/chat_page.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import '../common_widgets/my_custom_button.dart';
@@ -54,8 +55,10 @@ class CarDetailPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     CarDetailController carDetailController = Get.find<CarDetailController>();
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: AppTheme.colors['secondary']![100],
       appBar: AppBar(
+        backgroundColor: AppTheme.colors['secondary']![100],
+        surfaceTintColor: AppTheme.colors['secondary']![100],
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: Strings.back,
@@ -78,13 +81,12 @@ class CarDetailPage extends StatelessWidget {
                     ? Strings.unlike
                     : Strings.like,
                 icon: Icon(
-                  carDetailController.isCarLiked.value
-                      ? Icons.favorite
-                      : Icons.favorite_outline_rounded,
-                  color: carDetailController.isCarLiked.value
-                      ? Colors.red
-                      : Colors.black,
-                ),
+                    carDetailController.isCarLiked.value
+                        ? Icons.favorite
+                        : Icons.favorite_outline_rounded,
+                    color: carDetailController.isCarLiked.value
+                        ? AppTheme.colors['danger']
+                        : AppTheme.colors['black']),
                 onPressed: carDetailController.isCarLiked.value
                     ? () {
                         carDetailController.isCarLiked(false);
@@ -98,7 +100,10 @@ class CarDetailPage extends StatelessWidget {
                       },
               ))
         ],
-        title: Text('${carModel.carName}'),
+        title: Text(
+          '${carModel.carName}',
+          style: heading,
+        ),
       ),
       body: SafeArea(
         child: Obx(
@@ -144,7 +149,8 @@ class CarDetailPage extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.bottomRight,
                                   child: ContainerWithRoundedBorder(
-                                    color: Colors.white.withOpacity(0.5),
+                                    color: AppTheme.colors['secondary']![50]
+                                        as Color,
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 4),
                                     borderRadius: 6,
@@ -174,13 +180,7 @@ class CarDetailPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                Strings.carOwner,
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12),
-                              ),
+                              Text(Strings.carOwner, style: small),
                               verticalMargin4,
                               Row(
                                 children: [
@@ -192,9 +192,7 @@ class CarDetailPage extends StatelessWidget {
                                   horizontalMargin4,
                                   Text(
                                     '${carModel.carBrand}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 16),
+                                    style: subheadingBlack,
                                   ),
                                 ],
                               )
@@ -293,6 +291,7 @@ class CarDetailPage extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 '${carModel.carLocation}',
+                                style: normal,
                                 softWrap: true,
                                 overflow: TextOverflow.visible,
                               ),

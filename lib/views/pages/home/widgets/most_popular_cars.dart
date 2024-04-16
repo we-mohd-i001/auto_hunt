@@ -10,7 +10,7 @@ import '../../common_widgets/car_bio.dart';
 Widget mostPopularCars(
     {required List<CarModel> carList,
     required Size size,
-    required User? theUser}) {
+    required User? user}) {
   BrandDetailController brandDetailController =
       Get.put(BrandDetailController(brand: '${carList[0].carBrand}'));
   return SizedBox(
@@ -22,17 +22,16 @@ Widget mostPopularCars(
         scrollDirection: Axis.horizontal,
         itemCount: carList.length,
         itemBuilder: (BuildContext context, int index) {
-          CarModel carIndex = carList[index];
+          CarModel carModel = carList[index];
           return carDetailWidget(
-            carIndex.carName,
-            carIndex.carFuelType,
-            carIndex.carImages[0],
+            carModel.carName,
+            carModel.carFuelType,
+            carModel.carImages[0],
             200.0,
-            carIndex.carRentPricePerDay,
-            carIndex.carSeatingCapacity,
-            () =>
-                Navigator.push(context, CarDetailPage.route(theUser, carIndex)),
-            '${carIndex.carName}',
+            carModel.carRentPricePerDay,
+            carModel.carSeatingCapacity,
+            () => Navigator.push(context, CarDetailPage.route(user, carModel)),
+            '${carModel.carName}',
           );
         },
       ),

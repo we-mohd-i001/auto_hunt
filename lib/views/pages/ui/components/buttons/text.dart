@@ -5,7 +5,7 @@ import '../../../../../vaahextendflutter/helpers/enums.dart';
 import '../../../../../vaahextendflutter/helpers/styles.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../code_preview.dart';
-import '../commons.dart';
+import '../../../../../helpers/commons.dart';
 
 class ButtonTextPreview extends StatelessWidget {
   const ButtonTextPreview({Key? key}) : super(key: key);

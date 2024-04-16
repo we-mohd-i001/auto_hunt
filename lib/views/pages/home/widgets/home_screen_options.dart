@@ -16,8 +16,8 @@ Widget homeScreenOptions() {
             flex: 0,
             child:
                 optionsHomeScreen(Icons.car_rental_rounded, Strings.rentCar)),
-        const VerticalDivider(
-          color: Colors.grey,
+        VerticalDivider(
+          color: AppTheme.colors['secondary']![400],
           indent: 10,
           thickness: 1,
           endIndent: 10,
@@ -25,8 +25,8 @@ Widget homeScreenOptions() {
         Expanded(
             flex: 0,
             child: optionsHomeScreen(Icons.car_repair_rounded, Strings.buyCar)),
-        const VerticalDivider(
-          color: Colors.grey,
+        VerticalDivider(
+          color: AppTheme.colors['secondary']![400],
           indent: 10,
           thickness: 1,
           endIndent: 10,

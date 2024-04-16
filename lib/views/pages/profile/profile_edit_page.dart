@@ -10,6 +10,7 @@ import '../../../vaahextendflutter/helpers/alerts.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../controllers/profile_controller.dart';
+import '../../../helpers/commons.dart';
 
 class ProfileEditPage extends StatelessWidget {
   final dynamic data;
@@ -29,30 +30,30 @@ class ProfileEditPage extends StatelessWidget {
     ProfileController profileController = Get.find<ProfileController>();
 
     return Scaffold(
+      backgroundColor: AppTheme.colors['secondary']![100],
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppTheme.colors['secondary']![100],
+        surfaceTintColor: AppTheme.colors['secondary']![100],
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          color: Colors.white,
           onPressed: () {
             Get.back();
           },
         ),
-        title: const Text(
+        title: Text(
           'Edit Profile',
-          style: TextStyle(color: Colors.white),
+          style: heading,
         ),
       ),
-      backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Container(
             width: double.infinity,
-            height: 460,
+            height: 520,
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: AppTheme.colors['white'],
               borderRadius: BorderRadius.circular(12),
             ),
             child: Obx(
@@ -121,11 +122,13 @@ class ProfileEditPage extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
+                          child: Text('Change Name', style: subheading),
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
                           child: Text(
                             'Name',
-                            style: TextStyle(
-                              color: AppTheme.colors['primary'],
-                            ),
+                            style: normalPrimary,
                           ),
                         ),
                         InputText(
@@ -164,13 +167,12 @@ class ProfileEditPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Align(
+                          alignment: Alignment.topLeft,
+                          child: Text('Change Password', style: subheading),
+                        ),
+                        Align(
                             alignment: Alignment.topLeft,
-                            child: Text(
-                              'Old Password',
-                              style: TextStyle(
-                                color: AppTheme.colors['primary'],
-                              ),
-                            )),
+                            child: Text('Old Password', style: normalPrimary)),
                         InputText(
                           isPassword: profileController.isPasswordVisible.value,
                           maxLines: 1,
@@ -192,12 +194,7 @@ class ProfileEditPage extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
-                          child: Text(
-                            'New Password',
-                            style: TextStyle(
-                              color: AppTheme.colors['primary'],
-                            ),
-                          ),
+                          child: Text('New Password', style: normalPrimary),
                         ),
                         InputText(
                           isPassword: profileController.isPasswordVisible.value,
@@ -237,7 +234,7 @@ class ProfileEditPage extends StatelessWidget {
                               profileController.isLoading(false);
                             }
                           },
-                          text: 'Save',
+                          text: 'Update Password',
                           foregroundColor: AppTheme.colors['primary'],
                         ),
                 ],

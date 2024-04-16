@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../helpers/commons.dart';
+import '../../../../vaahextendflutter/app_theme.dart';
+
 Widget optionsHomeScreen(icon, text) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -8,13 +11,9 @@ Widget optionsHomeScreen(icon, text) {
       Icon(
         icon,
         size: 40,
-        color: Colors.white,
+        color: AppTheme.colors['white'],
       ),
-      Text(
-        text,
-        style: const TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-      )
+      Text(text, style: normalWhite)
     ],
   );
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/vaahextendflutter/helpers/alerts.dart';
 
 import '../../../helpers/constants/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
+import '../../../vaahextendflutter/helpers/alerts.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
@@ -11,6 +11,7 @@ import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.d
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../controllers/auth_controller.dart';
 import '../main_navigator/main_navigator.dart';
+import '../../../helpers/commons.dart';
 
 class SignupPage extends StatefulWidget {
   static const String routePath = '/signup';
@@ -43,24 +44,21 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppTheme.colors['secondary']![50],
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: IconButton(
           tooltip: Strings.back,
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back,
-            color: Colors.white,
+            color: AppTheme.colors['white'],
           ),
           onPressed: () {
             Get.back();
           },
         ),
-        backgroundColor: Colors.transparent,
-        title: const Text(
-          'Sign Up',
-          style: TextStyle(color: Colors.white),
-        ),
+        backgroundColor: AppTheme.colors['secondary']![50],
+        title: Text('Sign Up', style: heading),
       ),
       body: Center(
         child: Padding(
@@ -170,10 +168,11 @@ class _SignupPageState extends State<SignupPage> {
                     width: double.infinity,
                     child: Obx(
                       () => controller.isLoading.value
-                          ? const Center(
+                          ? Center(
                               child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.green),
+                                valueColor: AlwaysStoppedAnimation(
+                                  AppTheme.colors['success'],
+                                ),
                               ),
                             )
                           : ButtonElevated(

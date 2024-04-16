@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../vaahextendflutter/app_theme.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
-import '../../ui/components/commons.dart';
+import '../../../../helpers/commons.dart';
 import 'price_details_content.dart';
 
 Widget priceDetailWidget(
@@ -11,7 +12,7 @@ Widget priceDetailWidget(
       padding: allPadding0,
       borderRadius: 8,
       width: double.infinity,
-      color: Colors.grey.shade200,
+      color: AppTheme.colors['white'] as Color,
       child: Column(
         children: [
           verticalMargin8,
@@ -25,7 +26,7 @@ Widget priceDetailWidget(
           verticalMargin16,
           Container(
               decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: AppTheme.colors['white'],
                   borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(8),
                       bottomRight: Radius.circular(8))),

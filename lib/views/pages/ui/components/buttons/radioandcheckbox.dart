@@ -5,7 +5,7 @@ import '../../../../../vaahextendflutter/helpers/styles.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/button_checkbox.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/button_radio.dart';
 import '../code_preview.dart';
-import '../commons.dart';
+import '../../../../../helpers/commons.dart';
 
 class ButtonRadioAndCheckboxPreview extends StatelessWidget {
   const ButtonRadioAndCheckboxPreview({Key? key}) : super(key: key);
@@ -22,14 +22,17 @@ class ButtonRadioAndCheckboxPreview extends StatelessWidget {
         verticalMargin12,
         ButtonRadio<Language>(
           initialValue: items.last,
-          items: items.map((e) => RadioItem(text: e.language, data: e)).toList(),
+          items:
+              items.map((e) => RadioItem(text: e.language, data: e)).toList(),
           onChanged: (_) {},
         ),
         verticalMargin12,
         Text('Checkbox Buttons', style: normal),
         verticalMargin12,
         ButtonCheckBox<Language>(
-          items: items.map((e) => CheckboxItem(text: e.language, data: e)).toList(),
+          items: items
+              .map((e) => CheckboxItem(text: e.language, data: e))
+              .toList(),
           onChanged: (_) {},
         ),
       ],

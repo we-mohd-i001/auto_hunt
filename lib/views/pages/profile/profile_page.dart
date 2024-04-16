@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../vaahextendflutter/app_theme.dart';
 import '../common_widgets/profile_picture_container.dart';
 import '../../../helpers/constants/consts.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
@@ -13,7 +14,7 @@ import '../../../controllers/auth_controller.dart';
 import '../liked_cars_list/liked_car_list_page.dart';
 import '../login/login_page.dart';
 import '../../../controllers/profile_controller.dart';
-import '../ui/components/commons.dart';
+import '../../../helpers/commons.dart';
 import 'profile_edit_page.dart';
 import 'widgets/edit_profile_button.dart';
 import 'widgets/liked_and_ordered_cars.dart';
@@ -30,7 +31,7 @@ class ProfilePage extends StatelessWidget {
     AuthController authController = Get.find<AuthController>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.black,
+      backgroundColor: AppTheme.colors['secondary']![100],
       body: StreamBuilder(
         stream: firestore
             .collection(usersCollection)
@@ -74,14 +75,8 @@ class ProfilePage extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${data['name']}',
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                              Text(
-                                '${data['email']}',
-                                style: const TextStyle(color: Colors.white),
-                              ),
+                              Text('${data['name']}', style: subheadingBlack),
+                              Text('${data['email']}', style: normal),
                             ],
                           ),
                           const Spacer(),

@@ -8,6 +8,7 @@ import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../common_widgets/logo_with_name.dart';
 import '../main_navigator/main_navigator.dart';
+import '../../../helpers/commons.dart';
 import 'continue_with_email_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -39,6 +40,7 @@ class LoginPage extends StatelessWidget {
 
 Widget buildMobile(BuildContext context) {
   return Scaffold(
+    backgroundColor: AppTheme.colors['secondary']![100],
     body: Stack(
       children: [
         Container(
@@ -57,28 +59,31 @@ Widget buildMobile(BuildContext context) {
               const LogoWithName(),
               verticalMargin16,
               verticalMargin4,
-              const Text(
+              Text(
                 '''Let's get started''',
                 style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 34,
-                    color: Colors.white),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 34,
+                  color: AppTheme.colors['white'],
+                ),
               ),
               verticalMargin8,
               verticalMargin2,
-              const Text(
+              Text(
                 'Sign up or login to see what',
                 style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: Colors.white70),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                  color: AppTheme.colors['white']![100],
+                ),
               ),
-              const Text(
+              Text(
                 'happening near you',
                 style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: Colors.white70),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                  color: AppTheme.colors['white']![100],
+                ),
               ),
               const Spacer(),
               SizedBox(
@@ -149,6 +154,7 @@ Widget buildMobile(BuildContext context) {
 
 Widget buildTablet() {
   return Scaffold(
+    backgroundColor: AppTheme.colors['secondary']![100],
     body: Stack(
       children: [
         Container(
@@ -164,12 +170,12 @@ Widget buildTablet() {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         backgroundImage:
                             AssetImage('assets/images/auto_hunt_logo.png'),
                       ),
@@ -179,7 +185,7 @@ Widget buildTablet() {
                         style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 22,
-                            color: Colors.white),
+                            color: AppTheme.colors['white']![100]),
                       )
                     ],
                   ),
@@ -188,26 +194,27 @@ Widget buildTablet() {
                   Text(
                     '''Let's get started''',
                     style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 34,
-                        color: Colors.white),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 34,
+                      color: AppTheme.colors['white']![100],
+                    ),
                   ),
                   verticalMargin2,
                   verticalMargin8,
                   Text(
                     'Sign up or login to see what',
                     style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppTheme.colors['white']![100],
+                    ),
+                  ),
+                  Text('happening near you',
+                      style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
-                        color: Colors.white70),
-                  ),
-                  Text(
-                    'happening near you',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: Colors.white70),
-                  ),
+                        color: AppTheme.colors['white']![100],
+                      )),
                 ],
               ),
               const Spacer(),
@@ -273,5 +280,8 @@ Widget buildTablet() {
 }
 
 Widget buildDeskTop() {
-  return const Text('We are not on Desktop.');
+  return Text(
+    'We are not on Desktop.',
+    style: subheading,
+  );
 }

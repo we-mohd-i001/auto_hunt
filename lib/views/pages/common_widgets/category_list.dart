@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../models/brands/brands_model.dart';
+import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
@@ -13,7 +14,7 @@ Widget categoryListWidget({
   required Size size,
 }) {
   return Container(
-    color: Colors.transparent,
+    color: AppTheme.colors['white']!.withOpacity(0.0),
     width: size.width,
     height: size.height * 0.07,
     child: Obx(
@@ -23,18 +24,18 @@ Widget categoryListWidget({
           children: List.generate(
             brandsController.subCat.length,
             (index) {
-              String cat = '';
+              String categoryString = '';
               Category category = brandsController.subCat[index];
               if (category == Category.HATCHBACK) {
-                cat = 'Hatchback';
+                categoryString = 'Hatchback';
               } else if (category == Category.LUXURY) {
-                cat = 'Luxury';
+                categoryString = 'Luxury';
               } else if (category == Category.SEDAN) {
-                cat = 'Sedan';
+                categoryString = 'Sedan';
               } else if (category == Category.SPORTS) {
-                cat = 'Sports';
+                categoryString = 'Sports';
               } else {
-                cat = 'No Categories';
+                categoryString = 'No Categories';
               }
               return Padding(
                 padding: allPadding8,
@@ -49,7 +50,7 @@ Widget categoryListWidget({
                     //Todo: Remove this route this is only for testing
                     Get.to(const HomePage());
                   },
-                  text: cat,
+                  text: categoryString,
                 ),
               );
             },

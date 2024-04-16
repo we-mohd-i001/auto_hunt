@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../vaahextendflutter/helpers/date_time.dart';
 import '../../../../vaahextendflutter/app_theme.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';
-import '../../ui/components/commons.dart';
+import '../../../../helpers/commons.dart';
 
 Widget chatBubble({required DocumentSnapshot data, required bool isSender}) {
   DateTime messageTime =
@@ -38,11 +38,11 @@ Widget chatBubble({required DocumentSnapshot data, required bool isSender}) {
         Text(
           data['message'],
           textAlign: TextAlign.start,
-          style: normal,
+          style: message,
         ),
         Text(
           messageTimeString,
-          style: normal,
+          style: small,
           textAlign: TextAlign.end,
         ),
       ]),
