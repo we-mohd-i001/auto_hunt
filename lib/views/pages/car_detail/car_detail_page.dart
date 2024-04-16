@@ -202,10 +202,10 @@ class CarDetailPage extends StatelessWidget {
                           ),
                           ButtonIcon(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/chat', arguments: [
-                                carModel.carOwner,
-                                carModel.carOwnerId
-                              ]);
+                              Navigator.push(
+                                  context,
+                                  ChatPage.route(
+                                      carModel.carOwner, carModel.carOwnerId));
                             },
                             iconData: Icons.chat_rounded,
                             buttonType: ButtonType.primary,

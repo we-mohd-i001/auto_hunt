@@ -49,8 +49,10 @@ class ChatListPage extends StatelessWidget {
                       name: chatModel.friendName.toString(),
                       lastMessage: chatModel.lastMessage.toString(),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/chat',
-                            arguments: [chatModel.friendName, chatModel.toId]);
+                        Navigator.push(
+                            context,
+                            ChatPage.route(
+                                chatModel.friendName, chatModel.toId));
                       },
                     );
                   });

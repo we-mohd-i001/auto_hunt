@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,17 @@ import 'main_navigator_controller.dart';
 import 'profile_controller.dart';
 
 class ChatController extends GetxController {
+  ChatController({
+    required this.friendName,
+    required this.friendId,
+  });
+  String friendName;
+  String friendId;
+
   CollectionReference<Map<String, dynamic>> chats =
       firestore.collection(chatsCollection);
   User? currentUser = Get.find<ProfileController>().currentFirebaseUser;
-  String friendName = Get.arguments[0];
-  String friendId = Get.arguments[1];
+
   String? senderName = Get.find<MainNavigatorController>().userName;
   RxBool isLoading = false.obs;
   TextEditingController messageController = TextEditingController();
