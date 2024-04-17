@@ -25,12 +25,12 @@ class AppConfig extends StatelessWidget {
         SentryNavigatorObserver(),
       ],
       onGenerateRoute: routeMiddleware,
-      builder: (BuildContext context, Widget? child) {
-        return DebugWidget(
-          navigatorKey: _navigatorKey,
-          child: child!,
-        );
-      },
+      // builder: (BuildContext context, Widget? child) {
+      //   return DebugWidget(
+      //     navigatorKey: _navigatorKey,
+      //     child: child!,
+      //   );
+      // },
     );
   }
 }
