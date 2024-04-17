@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 import '../../../helpers/constants/constants.dart';
 import '../../../controllers/liked_cars_controller.dart';
 import '../../../models/car/car_model.dart';
-import '../ui/components/commons.dart';
+import '../../../vaahextendflutter/app_theme.dart';
+import '../../../helpers/commons.dart';
 import '../car_detail/car_detail_page.dart';
 import '../common_widgets/car_bio.dart';
 
@@ -40,6 +41,7 @@ class LikedCarListPage extends StatelessWidget {
     LikedCarsController likedCarsController = Get.find<LikedCarsController>();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: AppTheme.colors['secondary']![100],
       appBar: AppBar(
         leading: IconButton(
           tooltip: Strings.back,
@@ -48,8 +50,12 @@ class LikedCarListPage extends StatelessWidget {
             Get.back();
           },
         ),
-        surfaceTintColor: Colors.transparent,
-        title: const Text('Liked Cars'),
+        surfaceTintColor: AppTheme.colors['secondary']![100],
+        backgroundColor: AppTheme.colors['secondary']![100],
+        title: Text(
+          'Liked Cars',
+          style: heading,
+        ),
       ),
       body: SafeArea(
         child: SizedBox(

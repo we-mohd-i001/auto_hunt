@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../helpers/commons.dart';
 import '../../../../helpers/constants/strings/strings.dart';
+import '../../../../vaahextendflutter/app_theme.dart';
 
 Widget locationAndProfile(
     {required String image,
@@ -15,18 +17,15 @@ Widget locationAndProfile(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               Strings.location,
-              style: TextStyle(color: Colors.white70),
+              style: normalWhite,
             ),
             SizedBox(
               width: 200,
               child: Text(
                 location,
-                style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                style: headingWhite,
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
               ),

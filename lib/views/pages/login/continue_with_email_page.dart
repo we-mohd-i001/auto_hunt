@@ -36,6 +36,7 @@ class ContinueWithEmailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthController controller = Get.put(AuthController());
     return Scaffold(
+      backgroundColor: AppTheme.colors['secondary']![100],
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -57,20 +58,20 @@ class ContinueWithEmailPage extends StatelessWidget {
                     size: 15,
                   ),
                   const SizedBox(height: 12),
-                  const Text(
+                  Text(
                     'Login',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 36,
-                        color: Colors.white),
+                        color: AppTheme.colors['white']),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Hello, Welcome back',
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
-                        color: Colors.white),
+                        color: AppTheme.colors['white']),
                   ),
                   const SizedBox(height: 60),
 
@@ -123,10 +124,10 @@ class ContinueWithEmailPage extends StatelessWidget {
                                 width: double.infinity,
                                 child: Obx(
                                   () => controller.isLoading.value
-                                      ? const Center(
+                                      ? Center(
                                           child: CircularProgressIndicator(
                                             valueColor: AlwaysStoppedAnimation(
-                                                Colors.green),
+                                                AppTheme.colors['success']),
                                           ),
                                         )
                                       : ButtonElevated(
@@ -189,12 +190,13 @@ class ContinueWithEmailPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'Not a member yet? ',
                           style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: Colors.white),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: AppTheme.colors['white'],
+                          ),
                         ),
                         GestureDetector(
                           onTap: () {

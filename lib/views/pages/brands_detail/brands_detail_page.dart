@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../../../helpers/constants/constants.dart';
 import '../../../controllers/brands_controller.dart';
 import '../../../controllers/brand_detail_controller.dart';
-import '../../../controllers/home_controller.dart';
+import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../models/car/car_model.dart';
@@ -13,7 +13,7 @@ import '../../../models/brands/brands_model.dart';
 import '../car_detail/car_detail_page.dart';
 import '../common_widgets/car_bio.dart';
 import '../common_widgets/category_list.dart';
-import '../ui/components/commons.dart';
+import '../../../helpers/commons.dart';
 
 class BrandsDetailPage extends StatelessWidget {
   final Brand brand;
@@ -50,18 +50,23 @@ class BrandsDetailPage extends StatelessWidget {
     List<CarModel> carList = brandDetailController.carList;
     return Obx(() {
       if (brandDetailController.isLoading.value) {
-        return const Scaffold(
-            body: Center(
-          child: CircularProgressIndicator(),
-        ));
+        return Scaffold(
+            backgroundColor: AppTheme.colors['secondary']![100],
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ));
       } else if (brandDetailController.isError.value) {
         return Scaffold(
+            backgroundColor: AppTheme.colors['secondary']![100],
             body: Center(
-          child: Text('Something went Wrong!', style: normal),
-        ));
+              child: Text('Something went Wrong!', style: normal),
+            ));
       } else if (brandDetailController.carList.isEmpty) {
         return Scaffold(
+          backgroundColor: AppTheme.colors['secondary']![100],
           appBar: AppBar(
+            backgroundColor: AppTheme.colors['secondary']![100],
+            surfaceTintColor: AppTheme.colors['secondary']![100],
             leading: IconButton(
                 tooltip: Strings.back,
                 onPressed: () {
@@ -82,19 +87,24 @@ class BrandsDetailPage extends StatelessWidget {
         );
       }
       return Scaffold(
+        backgroundColor: AppTheme.colors['secondary']![100],
         appBar: AppBar(
+          backgroundColor: AppTheme.colors['secondary']![100],
+          surfaceTintColor: AppTheme.colors['secondary']![100],
           leading: IconButton(
             tooltip: Strings.back,
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               brandsController.selectedCategoryIndex(-1);
-              Get.find<HomeController>().fetchMostPopularCarList();
+              //Get.find<HomeController>().fetchMostPopularCarList();
               Get.back();
             },
           ),
-          surfaceTintColor: Colors.transparent,
           // backgroundColor: Colors.transparent,
-          title: Text('Cars From ${brand.name}'),
+          title: Text(
+            'Cars From ${brand.name}',
+            style: heading,
+          ),
         ),
         body: SafeArea(
           child: Column(

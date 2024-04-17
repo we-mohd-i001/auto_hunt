@@ -6,10 +6,11 @@ import 'package:get/get.dart';
 
 import '../../../controllers/chat_controller.dart';
 import '../../../helpers/constants/constants.dart';
+import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
-import '../ui/components/commons.dart';
+import '../../../helpers/commons.dart';
 import 'widgets/chat_bubble.dart';
 
 class ChatPage extends StatelessWidget {
@@ -46,9 +47,19 @@ class ChatPage extends StatelessWidget {
     ChatController chatController = Get.find<ChatController>();
     chatController.getChatId(user.uid);
     return Scaffold(
+      backgroundColor: AppTheme.colors['secondary']![100],
       appBar: AppBar(
+        backgroundColor: AppTheme.colors['secondary']![100],
+        surfaceTintColor: AppTheme.colors['secondary']![100],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () {
+            Navigator.pop(context);
+            Get.delete<ChatController>();
+          },
+        ),
         title: Text('${Strings.chatWith} ${chatController.friendName}',
-            style: normal),
+            style: heading),
       ),
       body: SizedBox(
         width: double.infinity,

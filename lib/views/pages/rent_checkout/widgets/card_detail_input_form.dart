@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../helpers/constants/constants.dart';
+import '../../../../vaahextendflutter/app_theme.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../vaahextendflutter/helpers/enums.dart';
 import '../../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
-import '../../ui/components/commons.dart';
+import '../../../../helpers/commons.dart';
 
-Widget cardDetailInputForm(rentCheckoutController) {
+Widget carDetailInputForm(rentCheckoutController) {
   return Container(
     decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(12)),
+        color: AppTheme.colors['white'],
+        borderRadius: BorderRadius.circular(12)),
     height: double.infinity,
     width: double.infinity,
     child: Padding(

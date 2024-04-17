@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
+import '../../../helpers/commons.dart';
 
 Widget carDetailWidget(
   String? name,
@@ -19,10 +20,10 @@ Widget carDetailWidget(
       height: 260,
       width: width,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.colors['white'],
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: AppTheme.colors['secondary']!.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 6,
             offset: const Offset(0, 3), // changes position of shadow
@@ -42,25 +43,13 @@ Widget carDetailWidget(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Text(
-                      name ?? '',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
+                    child: Text(name ?? '', style: subheadingBlack),
                   ),
                 ],
               ),
               verticalMargin4,
               verticalMargin2,
-              Text(
-                fuelAndType ?? '',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    color: AppTheme.colors['secondary']),
-              ),
+              Text(fuelAndType ?? '', style: normal),
               image == null
                   ? SizedBox(
                       height: 140,
@@ -93,7 +82,10 @@ Widget carDetailWidget(
                       color: AppTheme.colors['primary'],
                     ),
                     horizontalMargin4,
-                    Text('$seatCapacity'),
+                    Text(
+                      '$seatCapacity',
+                      style: normal,
+                    ),
                     verticalMargin8,
                     Icon(
                       Icons.cable_rounded,
@@ -101,9 +93,15 @@ Widget carDetailWidget(
                       color: AppTheme.colors['primary'],
                     ),
                     horizontalMargin4,
-                    const Text('AM'),
+                    Text(
+                      'AM',
+                      style: normal,
+                    ),
                     const Spacer(),
-                    Text('₹$carRent/day')
+                    Text(
+                      '₹$carRent/day',
+                      style: normalBlack,
+                    )
                   ],
                 ),
               )),

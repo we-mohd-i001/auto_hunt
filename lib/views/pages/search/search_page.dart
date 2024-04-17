@@ -4,9 +4,10 @@ import 'package:get/get.dart';
 
 import '../../../controllers/search_controller.dart';
 import '../../../models/car/car_model.dart';
+import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
-import '../ui/components/commons.dart';
+import '../../../helpers/commons.dart';
 import '../car_detail/car_detail_page.dart';
 import '../common_widgets/car_bio.dart';
 
@@ -20,7 +21,10 @@ class SearchPage extends StatelessWidget {
     SearchCarsController searchCarsController =
         Get.find<SearchCarsController>();
     return Scaffold(
+      backgroundColor: AppTheme.colors['secondary']![100],
       appBar: AppBar(
+        backgroundColor: AppTheme.colors['secondary']![100],
+        surfaceTintColor: AppTheme.colors['secondary']![100],
         automaticallyImplyLeading: false,
         title: Padding(
           padding: horizontalPadding12,

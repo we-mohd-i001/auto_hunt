@@ -6,20 +6,24 @@ import 'package:get/get.dart';
 import '../../../helpers/constants/others/other_consts.dart';
 import '../../../controllers/chat_list_controller.dart';
 import '../../../models/chat/chat_model.dart';
+import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
-import '../ui/components/commons.dart';
+import '../../../helpers/commons.dart';
 import '../chat/chat_page.dart';
 
 class ChatListPage extends StatelessWidget {
-  final User? theUser;
-  const ChatListPage({super.key, required this.theUser});
+  final User? user;
+  const ChatListPage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     ChatListController chatListController = Get.put(ChatListController());
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: AppTheme.colors['secondary']![100],
       appBar: AppBar(
+        backgroundColor: AppTheme.colors['secondary']![100],
+        foregroundColor: AppTheme.colors['secondary']![100],
+        surfaceTintColor: AppTheme.colors['secondary']![100],
         title: Text(
           'Chats',
           style: subheading,
@@ -27,7 +31,7 @@ class ChatListPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: StreamBuilder(
-            stream: chatListController.getChatList(theUser!.uid),
+            stream: chatListController.getChatList(user!.uid),
             builder: (BuildContext context,
                 AsyncSnapshot<QuerySnapshot<ChatModel>> snapshot) {
               if (!snapshot.hasData) {
@@ -78,9 +82,6 @@ class ChatListElement extends StatelessWidget {
       onPressed: onPressed,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey)),
-        ),
         child: Row(
           children: [
             const SizedBox(
@@ -102,7 +103,7 @@ class ChatListElement extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: subheading,
+                    style: subheadingBlack,
                   ),
                   Expanded(
                     child: Text(

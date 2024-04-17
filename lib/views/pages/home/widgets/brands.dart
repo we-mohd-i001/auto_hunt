@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../vaahextendflutter/app_theme.dart';
+
 Widget brands(dynamic image) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -7,7 +9,7 @@ Widget brands(dynamic image) {
       height: 70,
       width: 70,
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: AppTheme.colors['secondary'],
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(

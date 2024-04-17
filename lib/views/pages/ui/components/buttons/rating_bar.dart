@@ -4,7 +4,7 @@ import '../../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../../vaahextendflutter/services/logging_library/logging_library.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/rating_bar.dart';
 import '../code_preview.dart';
-import '../commons.dart';
+import '../../../../../helpers/commons.dart';
 
 class RatingBarPreview extends StatelessWidget {
   const RatingBarPreview({Key? key}) : super(key: key);

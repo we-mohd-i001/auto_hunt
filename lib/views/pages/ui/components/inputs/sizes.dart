@@ -5,7 +5,7 @@ import '../../../../../vaahextendflutter/helpers/enums.dart';
 import '../../../../../vaahextendflutter/helpers/styles.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../code_preview.dart';
-import '../commons.dart';
+import '../../../../../helpers/commons.dart';
 
 class InputSizesPreview extends StatelessWidget {
   const InputSizesPreview({Key? key}) : super(key: key);
@@ -39,15 +39,19 @@ class InputSizesCode extends StatelessWidget {
       children: [
         Text('Small', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const InputText(size: InputSize.small, label: 'Small'),"]),
+        const CodePreview(
+            code: ["const InputText(size: InputSize.small, label: 'Small'),"]),
         verticalMargin8,
         Text('Medium', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const InputText(size: InputSize.medium, label: 'Medium'),"]),
+        const CodePreview(code: [
+          "const InputText(size: InputSize.medium, label: 'Medium'),"
+        ]),
         verticalMargin8,
         Text('Large', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const InputText(size: InputSize.large, label: 'Large'),"]),
+        const CodePreview(
+            code: ["const InputText(size: InputSize.large, label: 'Large'),"]),
       ],
     );
   }

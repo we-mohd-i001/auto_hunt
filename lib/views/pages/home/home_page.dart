@@ -15,7 +15,7 @@ import '../../../vaahextendflutter/helpers/constants.dart';
 import '../car_detail/car_detail_page.dart';
 import '../common_widgets/car_bio.dart';
 import '../common_widgets/learn_more_with_title.dart';
-import '../ui/components/commons.dart';
+import '../../../helpers/commons.dart';
 import 'widgets/home_screen_options.dart';
 import 'widgets/location_and_profile.dart';
 import 'widgets/most_popular_cars.dart';
@@ -23,11 +23,11 @@ import 'widgets/search_by_brands.dart';
 
 class HomePage extends StatelessWidget {
   final ProfileController profileController;
-  final User? theUser;
+  final User? user;
   const HomePage({
     Key? key,
     required this.profileController,
-    required this.theUser,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
     LikedCarsController likedCarsController = Get.put(LikedCarsController());
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: Colors.grey.shade100,
+      color: AppTheme.colors['secondary']![100],
       width: size.width,
       height: size.height,
       child: SafeArea(
@@ -73,12 +73,6 @@ class HomePage extends StatelessWidget {
                                     userLocationController.update();
                                   }),
                             ),
-                            // const SizedBox(
-                            //   width: 300,
-                            //   child: InputText(
-                            //     label: 'Search cars...',
-                            //   ),
-                            // ),
                             verticalMargin8,
                             Expanded(child: homeScreenOptions()),
                           ],
@@ -91,7 +85,7 @@ class HomePage extends StatelessWidget {
             SliverList(
               delegate: SliverChildListDelegate([
                 learnMoreWithTitle(Strings.searchByBrand),
-                searchByBrands(size: size, user: theUser),
+                searchByBrands(size: size, user: user),
                 learnMoreWithTitle(Strings.mostPopularCars),
                 Obx(() {
                   if (homeController.isLoading.value) {
@@ -101,16 +95,15 @@ class HomePage extends StatelessWidget {
                         child: Center(child: CircularProgressIndicator()));
                   } else if (homeController.isError.value) {
                     return Scaffold(
+                        backgroundColor: AppTheme.colors['secondary']![100],
                         body: Center(
-                      child: Text('Something went Wrong!', style: normal),
-                    ));
+                          child: Text('Something went Wrong!', style: normal),
+                        ));
                   } else if (homeController.carList.isEmpty) {
                     return emptyWidget;
                   }
                   return mostPopularCars(
-                      carList: homeController.carList,
-                      size: size,
-                      theUser: theUser);
+                      carList: homeController.carList, size: size, user: user);
                 }),
                 Obx(
                   () => likedCarsController.isLikedCarEmpty.value
@@ -118,7 +111,7 @@ class HomePage extends StatelessWidget {
                       : learnMoreWithTitle(Strings.likedCars),
                 ),
                 StreamBuilder(
-                    stream: likedCarsController.getLikedCarsList(theUser!.uid),
+                    stream: likedCarsController.getLikedCarsList(user!.uid),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot<CarModel>> snapshot) {
                       if (!snapshot.hasData) {
@@ -141,27 +134,20 @@ class HomePage extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (BuildContext context, int index) {
-                              CarModel carIndex =
+                              CarModel carModel =
                                   snapshot.data!.docs[index].data.call();
                               return carDetailWidget(
-                                carIndex.carName,
-                                carIndex.carFuelType,
-                                carIndex.carImages[0],
+                                carModel.carName,
+                                carModel.carFuelType,
+                                carModel.carImages[0],
                                 200.0,
-                                carIndex.carRentPricePerDay,
-                                carIndex.carSeatingCapacity,
+                                carModel.carRentPricePerDay,
+                                carModel.carSeatingCapacity,
                                 () {
-                                  // Get.to(
-                                  //   () => CarDetailPage(
-                                  //     data: carIndex,
-                                  //     theUser: theUser,
-                                  //   ),
-                                  // );
-
                                   Navigator.push(context,
-                                      CarDetailPage.route(theUser, carIndex));
+                                      CarDetailPage.route(user, carModel));
                                 },
-                                '${carIndex.carImages[0]}',
+                                '${carModel.carImages[0]}',
                               );
                             },
                           ),
