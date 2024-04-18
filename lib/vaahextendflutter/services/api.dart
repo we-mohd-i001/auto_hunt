@@ -14,6 +14,9 @@ import '../helpers/constants.dart';
 import 'logging_library/logging_library.dart';
 
 // alertType : 'dialog', 'toast',
+enum RequestMethod { get, put, post, delete, patch }
+
+enum AlertType { dialog, toast }
 
 abstract class Api {
   // To check  env variables logs enabled, apiUrl and timeout limit for requests
@@ -24,7 +27,8 @@ abstract class Api {
   static final Dio _dio = Dio();
 
   // Get request header options
-  static Future<Options> _getOptions({String contentType = Headers.jsonContentType}) async {
+  static Future<Options> _getOptions(
+      {String contentType = Headers.jsonContentType}) async {
     final Map<String, String> header = <String, String>{};
     header.addAll(<String, String>{'Accept': 'application/json'});
     header.addAll(<String, String>{'X-Requested-With': 'XMLHttpRequest'});
@@ -36,14 +40,17 @@ abstract class Api {
   static Future<dynamic> ajax<T>({
     required String url,
     Future<void> Function(dynamic data, Response<dynamic>? res)? callback,
-    String method = 'get',
+    RequestMethod method = RequestMethod.get,
     Map<String, dynamic>?
         params, // eg: { 'name': 'abc' }. params is data passed in post, put, etc. requests.
     Map<String, dynamic>? query, // eg: { 'name': 'abc' }
-    List<Map<String, String>>? headers, // eg: [{'title': 'content'}, {'key', 'value'}]
+    List<Map<String, String>>?
+        headers, // eg: [{'title': 'content'}, {'key', 'value'}]
     int? customTimeoutLimit,
-    bool showAlert = true, // if set false then on success or error, nothing will be shown
-    String alertType = 'toast', // 'toast' and 'dialog' are valid values
+    bool showAlert =
+        true, // if set false then on success or error, nothing will be shown
+    AlertType alertType =
+        AlertType.toast, // 'toast' and 'dialog' are valid values
     Future<void> Function()? onStart,
     Future<void> Function()? onCompleted,
     Future<void> Function(dynamic error)? onError,
@@ -88,7 +95,8 @@ abstract class Api {
       }
 
       return {
-        'data': _parseKeys(data: responseData, changeKeys: _snakeCaseToLowerCamelCase),
+        'data': _parseKeys(
+            data: responseData, changeKeys: _snakeCaseToLowerCamelCase),
         'response': response
       };
     } catch (error) {
@@ -166,19 +174,21 @@ abstract class Api {
   }
 
   static Future<Response<dynamic>?> _handleRequest({
-    required String method,
+    required RequestMethod method,
     required String url,
     required Map<String, dynamic>? query,
     required Map<String, dynamic>? params,
     required List<Map<String, String>>? headers,
     required int? customTimeoutLimit,
     required bool showAlert,
-    required String alertType,
+    required AlertType alertType,
   }) async {
     Response? response;
     final Options options = await _getOptions();
-    options.sendTimeout = Duration(milliseconds: customTimeoutLimit ?? _config.timeoutLimit);
-    options.receiveTimeout = Duration(milliseconds: customTimeoutLimit ?? _config.timeoutLimit);
+    options.sendTimeout =
+        Duration(milliseconds: customTimeoutLimit ?? _config.timeoutLimit);
+    options.receiveTimeout =
+        Duration(milliseconds: customTimeoutLimit ?? _config.timeoutLimit);
     if (headers != null && headers.isNotEmpty) {
       if (options.headers != null) {
         for (Map<String, String> element in headers) {
@@ -199,7 +209,7 @@ abstract class Api {
       ),
     );
     switch (method) {
-      case 'get':
+      case RequestMethod.get:
         response = await _dio.get<dynamic>(
           '$_apiBaseUrl$url',
           queryParameters: query,
@@ -207,7 +217,7 @@ abstract class Api {
         );
         break;
 
-      case 'post':
+      case RequestMethod.post:
         response = await _dio.post<dynamic>(
           '$_apiBaseUrl$url',
           data: encodedData,
@@ -216,7 +226,7 @@ abstract class Api {
         );
         break;
 
-      case 'put':
+      case RequestMethod.put:
         response = await _dio.put<dynamic>(
           '$_apiBaseUrl$url',
           data: encodedData,
@@ -225,7 +235,7 @@ abstract class Api {
         );
         break;
 
-      case 'patch':
+      case RequestMethod.patch:
         response = await _dio.patch<dynamic>(
           '$_apiBaseUrl$url',
           data: encodedData,
@@ -234,7 +244,7 @@ abstract class Api {
         );
         break;
 
-      case 'delete':
+      case RequestMethod.delete:
         response = await _dio.delete<dynamic>(
           '$_apiBaseUrl$url',
           data: encodedData,
@@ -245,12 +255,13 @@ abstract class Api {
 
       default:
         if (showAlert) {
-          if (alertType == 'dialog') {
+          if (alertType == AlertType.dialog) {
             if (Alerts.showErrorDialog != null) {
               await Alerts.showErrorDialog!(
                 title: 'Error',
                 messages: ['Invalid request type!'],
-                hint: "get, post, put, patch, delete request types are allowed.",
+                hint:
+                    "get, post, put, patch, delete request types are allowed.",
               );
               break;
             }
@@ -279,11 +290,12 @@ abstract class Api {
   static Future<dynamic> _handleResponse(
     Response<dynamic>? response,
     bool showAlert,
-    String alertType,
+    AlertType alertType,
   ) async {
     if (response != null && response.data != null) {
       try {
-        final Map<String, dynamic> formatedResponse = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> formatedResponse =
+            response.data as Map<String, dynamic>;
         dynamic responseData = formatedResponse['data'];
         if (responseData == null) {
           Log.warning(
@@ -300,15 +312,17 @@ abstract class Api {
             disableCloudLogging: true,
           );
         } else {
-          responseMessages =
-              (formatedResponse['messages'] as List<dynamic>).map((e) => e.toString()).toList();
+          responseMessages = (formatedResponse['messages'] as List<dynamic>)
+              .map((e) => e.toString())
+              .toList();
         }
         String? responseHint = formatedResponse['hint'] as String?;
         if (responseHint == null) {
-          Log.warning('response doesn\'t contain hint key.', disableCloudLogging: true);
+          Log.warning('response doesn\'t contain hint key.',
+              disableCloudLogging: true);
         }
         if (showAlert) {
-          if (alertType == 'dialog') {
+          if (alertType == AlertType.dialog) {
             if (Alerts.showSuccessDialog != null) {
               await Alerts.showSuccessDialog!(
                 title: 'Success',
@@ -346,11 +360,11 @@ abstract class Api {
   static Future<void> _handleTimeoutError(
     DioException error,
     bool showAlert,
-    String alertType,
+    AlertType alertType,
   ) async {
     Log.exception(error, stackTrace: error.stackTrace);
     if (showAlert) {
-      if (alertType == 'dialog') {
+      if (alertType == AlertType.dialog) {
         if (Alerts.showErrorDialog != null) {
           await Alerts.showErrorDialog!(
             title: 'Error',
@@ -380,7 +394,7 @@ abstract class Api {
   static Future<void> _handleResponseError(
     DioException error,
     bool showAlert,
-    String alertType,
+    AlertType alertType,
   ) async {
     final Response<dynamic>? response = error.response;
     try {
@@ -418,16 +432,21 @@ abstract class Api {
         try {
           Log.exception(catchErr, data: error.response, stackTrace: stackTrace);
 
-          final Map<String, dynamic> response = error.response?.data as Map<String, dynamic>;
+          final Map<String, dynamic> response =
+              error.response?.data as Map<String, dynamic>;
           if (response['errors'] != null) {
-            errors = (response['errors'] as List<dynamic>).map((e) => e.toString()).toList();
+            errors = (response['errors'] as List<dynamic>)
+                .map((e) => e.toString())
+                .toList();
           }
           if (errors.isEmpty) {
-            Log.warning('response doesn\'t contain errors key.', disableCloudLogging: true);
+            Log.warning('response doesn\'t contain errors key.',
+                disableCloudLogging: true);
           }
           debug = response['debug'] as String?;
           if (debug == null) {
-            Log.warning('response doesn\'t contain debug key.', disableCloudLogging: true);
+            Log.warning('response doesn\'t contain debug key.',
+                disableCloudLogging: true);
           }
         } catch (e) {
           throw Exception(
@@ -437,7 +456,7 @@ abstract class Api {
       }
 
       if (showAlert) {
-        if (alertType == 'dialog') {
+        if (alertType == AlertType.dialog) {
           if (Alerts.showErrorDialog != null) {
             await Alerts.showErrorDialog!(
               title: 'Error',
