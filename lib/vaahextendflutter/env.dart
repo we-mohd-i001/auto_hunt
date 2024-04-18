@@ -11,26 +11,36 @@ import 'services/logging_library/logging_library.dart';
 
 // Version and build
 const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
-const String build = '2022030201'; // build no format 'YYYYMMDDNUMBER'
+const String build = '2024041702'; // build no format 'YYYYMMDDNUMBER'
 
 final EnvironmentConfig defaultConfig = EnvironmentConfig(
-  appTitle: 'Auto.Hunt',
-  appTitleShort: 'Auto.Hunt',
-  envType: 'default',
-  version: version,
-  build: build,
-  backendUrl: '',
-  apiUrl: '',
-  timeoutLimit: 20 * 1000, // 20 seconds
-  enableLocalLogs: true,
-  enableCloudLogs: true,
-  enableApiLogInterceptor: true,
-  pushNotificationsServiceType: PushNotificationsServiceType.none,
-  internalNotificationsServiceType: InternalNotificationsServiceType.none,
-  showDebugPanel: true,
-  debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
-  sentryConfig: const SentryConfig(dsn: 'https://67fb7037cd9c95f3680d0b5b48d4b394@o4506977107050496.ingest.us.sentry.io/4506977112424448')
-);
+    appTitle: 'Auto.Hunt',
+    appTitleShort: 'Auto.Hunt',
+    envType: 'default',
+    version: version,
+    build: build,
+    backendUrl: '',
+    apiUrl: 'https://jsonplaceholder.typicode.com/todos',
+    timeoutLimit: 20 * 1000, // 20 seconds
+    enableLocalLogs: true,
+    enableCloudLogs: true,
+    enableApiLogInterceptor: true,
+    pushNotificationsServiceType: PushNotificationsServiceType.remote,
+    internalNotificationsServiceType: InternalNotificationsServiceType.none,
+    showDebugPanel: true,
+    debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
+    firebaseId: 'mohd-i001@webreinvent.com',
+    oneSignalConfig:
+        const OneSignalConfig(appId: '53dd3db0-5f0e-40be-936c-31f8022a391a'),
+    sentryConfig: const SentryConfig(
+      dsn:
+          'https://67fb7037cd9c95f3680d0b5b48d4b394@o4506977107050496.ingest.us.sentry.io/4506977112424448',
+      enableAutoPerformanceTracing: true,
+      autoAppStart: true,
+      enableUserInteractionTracing: true,
+      enableAssetsInstrumentation: true,
+      tracesSampleRate: 0.6,
+    ));
 
 // To add new configuration add new key, value pair in envConfigs
 Map<String, EnvironmentConfig> _envConfigs = {
@@ -62,7 +72,8 @@ class EnvController extends GetxController {
 
   EnvController(String environment) {
     try {
-      _config = getSpecificConfig(environment).copyWith(openCount: _storage.read('open_count'));
+      _config = getSpecificConfig(environment)
+          .copyWith(openCount: _storage.read('open_count'));
     } catch (error, stackTrace) {
       Log.exception(error, stackTrace: stackTrace);
       exit(0);
@@ -138,7 +149,8 @@ class EnvironmentConfig {
   }
 
   static void setEnvConfig() {
-    String environment = const String.fromEnvironment('environment', defaultValue: 'default');
+    String environment =
+        const String.fromEnvironment('environment', defaultValue: 'default');
     final EnvController envController = Get.put(EnvController(environment));
     Log.info(
       'Env Type: ${envController.config.envType}',
@@ -186,11 +198,12 @@ class EnvironmentConfig {
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
       enableCloudLogs: enableCloudLogs ?? this.enableCloudLogs,
       sentryConfig: sentryConfig ?? this.sentryConfig,
-      enableApiLogInterceptor: enableApiLogInterceptor ?? this.enableApiLogInterceptor,
+      enableApiLogInterceptor:
+          enableApiLogInterceptor ?? this.enableApiLogInterceptor,
       pushNotificationsServiceType:
           pushNotificationsServiceType ?? this.pushNotificationsServiceType,
-      internalNotificationsServiceType:
-          internalNotificationsServiceType ?? this.internalNotificationsServiceType,
+      internalNotificationsServiceType: internalNotificationsServiceType ??
+          this.internalNotificationsServiceType,
       oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
       pusherConfig: pusherConfig ?? this.pusherConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
@@ -242,7 +255,8 @@ class SentryConfig {
           enableAutoPerformanceTracing ?? this.enableAutoPerformanceTracing,
       enableUserInteractionTracing:
           enableUserInteractionTracing ?? this.enableUserInteractionTracing,
-      enableAssetsInstrumentation: enableAssetsInstrumentation ?? this.enableAssetsInstrumentation,
+      enableAssetsInstrumentation:
+          enableAssetsInstrumentation ?? this.enableAssetsInstrumentation,
     );
   }
 }
