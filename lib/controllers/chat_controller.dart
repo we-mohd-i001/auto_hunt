@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../helpers/constants/consts.dart';
 import '../vaahextendflutter/helpers/alerts.dart';
+import '../vaahextendflutter/services/logging_library/logging_library.dart';
 import 'main_navigator_controller.dart';
 import 'profile_controller.dart';
 
@@ -29,6 +29,7 @@ class ChatController extends GetxController {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getChatMessages(
       {required String docId}) {
+    Log.info('Loading Chat Messages...');
     return firestore
         .collection(chatsCollection)
         .doc(docId)
@@ -39,6 +40,7 @@ class ChatController extends GetxController {
 
   Future<void> getChatId(String currentId) async {
     try {
+      Log.info('Loading Chat Id...');
       isLoading(true);
       await chats
           .where('users', isEqualTo: {friendId: null, currentId: null})
@@ -48,7 +50,9 @@ class ChatController extends GetxController {
             (QuerySnapshot snapshot) {
               if (snapshot.docs.isNotEmpty) {
                 chatDocId = snapshot.docs.single.id;
+                Log.success('Chat id Loaded. $chatDocId');
               } else {
+                Log.info('Chat id do not exists creating a new chat id...');
                 chats.add(
                   {
                     'created_on': null,
@@ -62,6 +66,7 @@ class ChatController extends GetxController {
                   },
                 ).then((value) {
                   chatDocId = value.id;
+                  Log.success('Created a new chat id $chatDocId.');
                 });
               }
             },
@@ -74,7 +79,9 @@ class ChatController extends GetxController {
 
   void sendMessage({required String message, required String currentId}) async {
     try {
+      Log.info('sendMessage invoked!');
       if (message.trim().isNotEmpty) {
+        Log.info('Message is not empty $message');
         chats.doc(chatDocId).update({
           'created_on': FieldValue.serverTimestamp(),
           'last_message': message,
@@ -82,14 +89,19 @@ class ChatController extends GetxController {
           'to_id': friendId,
           'from_id': currentId,
         });
+        Log.info('Update the chats document in firestore with id : $chatDocId');
         chats.doc(chatDocId).collection(messagesCollection).doc().set({
           'created_on': FieldValue.serverTimestamp(),
           'message': message,
           'uid': currentId,
         });
+        Log.info('Message sent/received successfully.');
+      } else {
+        Log.info('''Can't send empty message.''');
       }
-    } on Exception catch (_) {
+    } on Exception catch (e) {
       Alerts.showErrorToast!(content: 'Something went wrong!');
+      Log.exception('Exception : $e');
     }
   }
 }

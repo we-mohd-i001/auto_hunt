@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../helpers/constants/consts.dart';
 import '../vaahextendflutter/helpers/alerts.dart';
+import '../vaahextendflutter/services/logging_library/logging_library.dart';
 
 class CarDetailController extends GetxController {
   CarDetailController({
@@ -35,8 +36,11 @@ class CarDetailController extends GetxController {
       await _firestore.collection(carsCollection).doc(carId).set({
         'car_liked': FieldValue.arrayUnion([currentId])
       }, SetOptions(merge: true));
-    } on Exception catch (_) {
+      Log.info('$carId Added to Liked Cars List.');
+    } on Exception catch (e) {
       Alerts.showErrorToast!(content: 'Something went wrong!');
+      Log.exception(
+          'Exception $e occured while adding $carId to Liked cars list.');
     }
   }
 
@@ -46,15 +50,21 @@ class CarDetailController extends GetxController {
       await _firestore.collection(carsCollection).doc(carId).set({
         'car_liked': FieldValue.arrayRemove([currentId])
       }, SetOptions(merge: true));
-    } on Exception catch (_) {
+      Log.info('$carId removed from Liked Cars List.');
+    } on Exception catch (e) {
       Alerts.showErrorToast!(content: 'Something went wrong!');
+      Log.exception(
+          'Exception $e occured while adding $carId to Liked cars list.');
     }
   }
 
   void checkIfLiked() async {
+    Log.info('Checking if car is Liked...');
     if (carLikedList.contains(user!.uid)) {
+      Log.info('Car is Liked.');
       isCarLiked(true);
     } else {
+      Log.info('Car is Not Liked.');
       isCarLiked(false);
     }
   }
