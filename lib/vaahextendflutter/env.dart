@@ -20,7 +20,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
     version: version,
     build: build,
     backendUrl: '',
-    apiUrl: 'https://jsonplaceholder.typicode.com/todos',
+    apiUrl: 'https://51eca2ace39c4d1a890938712349c34b.api.mockbin.io',
     timeoutLimit: 20 * 1000, // 20 seconds
     enableLocalLogs: true,
     enableCloudLogs: true,

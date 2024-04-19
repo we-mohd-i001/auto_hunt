@@ -34,6 +34,7 @@ class SearchPage extends StatelessWidget {
             suffixIcon: Icons.search,
             onChanged: (value) {
               searchCarsController.getCarList(keyword: value.toLowerCase());
+              searchCarsController.fetchPost();
             },
           ),
         ),
