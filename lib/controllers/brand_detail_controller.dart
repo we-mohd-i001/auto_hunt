@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../helpers/constants/consts.dart';
 import '../models/car/car_model.dart';
+import '../vaahextendflutter/services/logging_library/logging_library.dart';
 
 class BrandDetailController extends GetxController {
   final String brand;
@@ -17,6 +18,7 @@ class BrandDetailController extends GetxController {
   void fetchCarList(String brand, {bool condition = true}) async {
     if (condition == true) {
       isLoading(true);
+      Log.info('Loading Cars List from Brand $brand');
     } else {
       isLoading(false);
     }
@@ -33,10 +35,17 @@ class BrandDetailController extends GetxController {
         carList.assignAll(docSnapshot.map((doc) => doc.data.call()).toList());
       });
       isError(false);
+      Log.info('Loading Complete. Fetched Cars List for $brand');
     } catch (e) {
+      Log.exception('Error Loading Cars from $brand');
       debugPrint("Error fetching cars: $e");
       isError(true);
     } finally {
+      if (carList.isEmpty) {
+        Log.info('There are no cars from $brand.');
+      } else {
+        Log.info('There are ${carList.length} cars from $brand.');
+      }
       isLoading(false);
     }
   }

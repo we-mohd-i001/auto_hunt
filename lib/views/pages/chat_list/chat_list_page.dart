@@ -9,6 +9,7 @@ import '../../../models/chat/chat_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../helpers/commons.dart';
+import '../../../vaahextendflutter/services/logging_library/logging_library.dart';
 import '../chat/chat_page.dart';
 
 class ChatListPage extends StatelessWidget {
@@ -35,15 +36,20 @@ class ChatListPage extends StatelessWidget {
             builder: (BuildContext context,
                 AsyncSnapshot<QuerySnapshot<ChatModel>> snapshot) {
               if (!snapshot.hasData) {
+                Log.info('ChatList loaded with no snapshot data.');
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
               if (snapshot.hasError) {
+                Log.exception(
+                    'ChatListPage snapshot has error ${snapshot.error}');
                 return Center(
                   child: Text('Something went wrong!', style: normal),
                 );
               }
+              Log.success(
+                  'ChatList loaded with ${snapshot.data!.docs.length} chats.');
               return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (BuildContext context, int index) {

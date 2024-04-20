@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../helpers/constants/consts.dart';
 import '../models/chat/chat_model.dart';
+import '../vaahextendflutter/services/logging_library/logging_library.dart';
 
 class ChatListController extends GetxController {
   RxBool isLoading = false.obs;
@@ -12,6 +13,7 @@ class ChatListController extends GetxController {
 
   Stream<QuerySnapshot<ChatModel>> getChatList(String currentId) {
     isLoading(true);
+    Log.info('Loading chats from $chatDocId');
     Stream<QuerySnapshot<ChatModel>> data = firestore
         .collection(chatsCollection)
         .withConverter(
