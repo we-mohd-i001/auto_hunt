@@ -11,113 +11,124 @@ import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../../helpers/commons.dart';
 import '../../common_widgets/learn_more_with_title.dart';
 import '../../../../controllers/rent_checkout_controller.dart';
-import 'card_detail_input_form.dart';
+import 'car_detail_input_form.dart';
 import 'price_detail_widget.dart';
 
-Widget rentDetailForm() {
-  RentCheckoutController rentCheckoutController =
-      Get.find<RentCheckoutController>();
-  return Form(
-    key: rentCheckoutController.rentCheckoutFormKey,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InputText(
-          validator: (value) {
-            if (value != null && value.isEmpty) {
-              return Strings.enterPickupAddress;
-            }
-            return null;
-          },
-          label: Strings.enterPickupAddress,
-          onChanged: (value) {
-            rentCheckoutController.rentCheckoutFormKey.currentState!.validate();
-            rentCheckoutController.addPickupLocation(value);
-          },
-        ),
-        verticalMargin12,
-        InputDateTime(
-          validator: (value) {
-            if (value != null && value.isEmpty) {
-              return Strings.chooseStartDateAndTime;
-            }
-            return null;
-          },
-          firstDate: DateTime.now(),
-          label: Strings.chooseStartDateAndTime,
-          pickerType: PickerType.dateAndTime,
-          callback: (data) {
-            rentCheckoutController.rentCheckoutFormKey.currentState!.validate();
-            rentCheckoutController.updateStartDate(data);
-            rentCheckoutController.userDateAndTime.value =
-                rentCheckoutController.startDate.value.toFullDateTimeString;
-          },
-        ),
-        verticalMargin12,
-        Row(
-          children: [
-            Text(
-              'Select days from the below slider.',
-              style: normal,
-            ),
-            horizontalMargin8,
-            Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: const Border(
-                      top: BorderSide(),
-                      bottom: BorderSide(),
-                      left: BorderSide(),
-                      right: BorderSide(),
-                    )),
-                height: 40,
-                width: 50,
-                child: Center(
-                    child: Text('${rentCheckoutController.rentDays.value}')))
-          ],
-        ),
-        InputSlider(
-          precision: 0,
-          min: 1,
-          max: 10,
-          initialValue: rentCheckoutController.rentDays.value,
-          step: 1,
-          onChanged: (value) => rentCheckoutController.rentDays.value = value,
-        ),
-        InputText(
-            readOnly: true,
+class RentDetailForm extends StatelessWidget {
+  const RentDetailForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    RentCheckoutController rentCheckoutController =
+        Get.find<RentCheckoutController>();
+    return Form(
+      key: rentCheckoutController.rentCheckoutFormKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InputText(
             validator: (value) {
               if (value != null && value.isEmpty) {
-                return Strings.enterYourCardDetailsMessage;
+                return Strings.enterPickupAddress;
               }
               return null;
             },
-            onChanged: (_) {
+            label: Strings.enterPickupAddress,
+            onChanged: (value) {
               rentCheckoutController.rentCheckoutFormKey.currentState!
                   .validate();
+              rentCheckoutController.addPickupLocation(value);
             },
-            controller: TextEditingController(
-                text: rentCheckoutController.cardDetails.value),
-            suffixIcon: FontAwesomeIcons.pencil,
-            suffixOnTap: () {
-              Get.bottomSheet(
-                carDetailInputForm(rentCheckoutController),
-              );
+          ),
+          verticalMargin12,
+          InputDateTime(
+            validator: (value) {
+              if (value != null && value.isEmpty) {
+                return Strings.chooseStartDateAndTime;
+              }
+              return null;
             },
-            label: Strings.enterCardDetails),
-        verticalMargin16,
-        learnMoreWithTitle(Strings.priceDetails, changeLearnMore: ''),
-        verticalMargin16,
-        priceDetailWidget(
+            firstDate: DateTime.now(),
+            label: Strings.chooseStartDateAndTime,
+            pickerType: PickerType.dateAndTime,
+            callback: (data) {
+              rentCheckoutController.rentCheckoutFormKey.currentState!
+                  .validate();
+              rentCheckoutController.updateStartDate(data);
+              rentCheckoutController.userDateAndTime.value =
+                  rentCheckoutController.startDate.value.toFullDateTimeString;
+            },
+          ),
+          verticalMargin12,
+          Row(
+            children: [
+              Text(
+                'Select days from the below slider.',
+                style: normal,
+              ),
+              horizontalMargin8,
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: const Border(
+                        top: BorderSide(),
+                        bottom: BorderSide(),
+                        left: BorderSide(),
+                        right: BorderSide(),
+                      )),
+                  height: 40,
+                  width: 50,
+                  child: Center(
+                      child: Text('${rentCheckoutController.rentDays.value}')))
+            ],
+          ),
+          InputSlider(
+            precision: 0,
+            min: 1,
+            max: 10,
+            initialValue: rentCheckoutController.rentDays.value,
+            step: 1,
+            onChanged: (value) => rentCheckoutController.rentDays.value = value,
+          ),
+          InputText(
+              readOnly: true,
+              validator: (value) {
+                if (value != null && value.isEmpty) {
+                  return Strings.enterYourCardDetailsMessage;
+                }
+                return null;
+              },
+              onChanged: (_) {
+                rentCheckoutController.rentCheckoutFormKey.currentState!
+                    .validate();
+              },
+              controller: TextEditingController(
+                  text: rentCheckoutController.cardDetails.value),
+              suffixIcon: FontAwesomeIcons.pencil,
+              suffixOnTap: () {
+                Get.bottomSheet(
+                  CarDetailInputForm(
+                    rentCheckoutController: rentCheckoutController,
+                  ),
+                );
+              },
+              label: Strings.enterCardDetails),
+          verticalMargin16,
+          const LearnMoreWithTitle(
+              title: Strings.priceDetails, changeLearnMore: ''),
+          verticalMargin16,
+          PriceDetailWidget(
             rentPrice: rentCheckoutController.carModel.carRentPricePerDay,
-            days: rentCheckoutController.rentDays,
+            days: rentCheckoutController.rentDays.value,
             tax: rentCheckoutController.carModel.carRentTax,
             total: rentCheckoutController.totalRentPrice(
                 rentCheckoutController.carModel.carRentPricePerDay,
-                rentCheckoutController.carModel.carRentTax)),
-        verticalMargin48,
-        verticalMargin32,
-      ],
-    ),
-  );
+                rentCheckoutController.carModel.carRentTax),
+          ),
+          verticalMargin48,
+          verticalMargin32,
+        ],
+      ),
+    );
+  }
 }

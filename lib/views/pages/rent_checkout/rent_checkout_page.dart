@@ -8,6 +8,7 @@ import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../helpers/commons.dart';
+import '../common_widgets/custom_appbar.dart';
 import '../common_widgets/my_custom_button.dart';
 import '../../../controllers/rent_checkout_controller.dart';
 import '../main_navigator/main_navigator.dart';
@@ -39,22 +40,13 @@ class RentCheckoutPage extends StatelessWidget {
         Get.find<RentCheckoutController>();
     return Scaffold(
       backgroundColor: AppTheme.colors['secondary']![100],
-      appBar: AppBar(
-        backgroundColor: AppTheme.colors['secondary']![100],
-        surfaceTintColor: AppTheme.colors['secondary']![100],
-        leading: IconButton(
-          tooltip: Strings.back,
-          onPressed: () {
-            rentCheckoutController.rentCarButtonEnableCount(0);
-            Get.delete<RentCheckoutController>();
-            Get.back();
-          },
-          icon: const Icon(Icons.arrow_back_rounded),
-        ),
-        title: Text(
-          Strings.rentDetail,
-          style: heading,
-        ),
+      appBar: customAppBar(
+        title: Strings.rentDetail,
+        onPressed: () {
+          rentCheckoutController.rentCarButtonEnableCount(0);
+          Get.delete<RentCheckoutController>();
+          Get.back();
+        },
       ),
       body: SafeArea(
         child: Obx(
@@ -67,19 +59,19 @@ class RentCheckoutPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      carBioMini(
+                      CarBioMini(
                           carIcon: '${carModel.carIcon}',
                           carName: '${carModel.carName}',
                           currentFuelCapacity:
                               '${carModel.carCurrentFuelCapacity}',
                           carFuelType: '${carModel.carFuelType}'),
                       verticalMargin8,
-                      rentDetailForm(),
+                      const RentDetailForm(),
                     ],
                   ),
                 ),
               ),
-              myCustomButton(
+              MyCustomButton(
                   type: ButtonType.primary,
                   onPressed: () async {
                     if (rentCheckoutController.rentCheckoutFormKey.currentState!

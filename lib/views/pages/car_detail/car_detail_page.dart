@@ -1,9 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:photo_view/photo_view.dart';
 
 import '../../../helpers/constants/strings/strings.dart';
 import '../../../controllers/brand_detail_controller.dart';
@@ -13,15 +11,19 @@ import '../../../models/car/car_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
-import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../helpers/commons.dart';
 import '../chat/chat_page.dart';
+import '../common_widgets/custom_appbar.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import '../common_widgets/my_custom_button.dart';
 import '../rent_checkout/rent_checkout_page.dart';
 import '../../../controllers/car_detail_controller.dart';
 import 'widgets/car_information_widget.dart';
+import 'widgets/carousel_image_car.dart';
+import 'widgets/like_button.dart';
+import 'widgets/message_button.dart';
+import 'widgets/owner_detail_widget.dart';
 
 class CarDetailPage extends StatelessWidget {
   final User? user;
@@ -56,54 +58,37 @@ class CarDetailPage extends StatelessWidget {
     CarDetailController carDetailController = Get.find<CarDetailController>();
     return Scaffold(
       backgroundColor: AppTheme.colors['secondary']![100],
-      appBar: AppBar(
-        backgroundColor: AppTheme.colors['secondary']![100],
-        surfaceTintColor: AppTheme.colors['secondary']![100],
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          tooltip: Strings.back,
-          onPressed: () {
-            Navigator.pop(context);
-            Get.delete<CarDetailController>();
-            Get.find<HomeController>().fetchMostPopularCarList();
-            Get.find<BrandDetailController>()
-                .fetchCarList(carModel.carBrand.toString());
-            SearchCarsController searchCarsController =
-                Get.find<SearchCarsController>();
-            searchCarsController.getCarList(
-                keyword: searchCarsController.searchTextController.text);
-            carDetailController.isImageOpened(false);
-          },
-        ),
+      appBar: customAppBar(
+        onPressed: () {
+          Navigator.pop(context);
+          Get.delete<CarDetailController>();
+          Get.find<HomeController>().fetchMostPopularCarList();
+          Get.find<BrandDetailController>()
+              .fetchCarList(carModel.carBrand.toString());
+          SearchCarsController searchCarsController =
+              Get.find<SearchCarsController>();
+          searchCarsController.getCarList(
+              keyword: searchCarsController.searchTextController.text);
+          carDetailController.isImageOpened(false);
+        },
+        title: '${carModel.carName}',
         actions: [
-          Obx(() => IconButton(
-                tooltip: carDetailController.isCarLiked.value
-                    ? Strings.unlike
-                    : Strings.like,
-                icon: Icon(
-                    carDetailController.isCarLiked.value
-                        ? Icons.favorite
-                        : Icons.favorite_outline_rounded,
-                    color: carDetailController.isCarLiked.value
-                        ? AppTheme.colors['danger']
-                        : AppTheme.colors['black']),
-                onPressed: carDetailController.isCarLiked.value
-                    ? () {
-                        carDetailController.isCarLiked(false);
-                        carDetailController.removeFromLikedCarsList(
-                            carId: carModel.id, currentId: user!.uid);
-                      }
-                    : () {
-                        carDetailController.isCarLiked(true);
-                        carDetailController.addToLikedCarsList(
-                            carId: carModel.id, currentId: user!.uid);
-                      },
-              ))
+          Obx(
+            () => LikeButton(
+              isCarLiked: carDetailController.isCarLiked.value,
+              onPressedToLike: () {
+                carDetailController.isCarLiked(true);
+                carDetailController.addToLikedCarsList(
+                    carId: carModel.id, currentId: user!.uid);
+              },
+              onPressedToUnlike: () {
+                carDetailController.isCarLiked(false);
+                carDetailController.removeFromLikedCarsList(
+                    carId: carModel.id, currentId: user!.uid);
+              },
+            ),
+          ),
         ],
-        title: Text(
-          '${carModel.carName}',
-          style: heading,
-        ),
       ),
       body: SafeArea(
         child: Obx(
@@ -113,60 +98,12 @@ class CarDetailPage extends StatelessWidget {
                 child: Column(
                   children: [
                     verticalMargin8,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SizedBox(
-                        child: CarouselSlider.builder(
-                          options: CarouselOptions(
-                            autoPlay: false,
-                            viewportFraction: 1,
-                            initialPage: 0,
-                          ),
-                          itemCount: carModel.carImages.length,
-                          itemBuilder: (BuildContext context, int itemIndex,
-                                  int pageViewIndex) =>
-                              ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: Stack(
-                              children: [
-                                Hero(
-                                  tag: '${carModel.carName}',
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    child: PhotoView(
-                                      backgroundDecoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      imageProvider: NetworkImage(
-                                        carModel.carImages[itemIndex],
-                                      ),
-                                      filterQuality: FilterQuality.medium,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: ContainerWithRoundedBorder(
-                                    color: AppTheme.colors['secondary']![50]
-                                        as Color,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 4),
-                                    borderRadius: 6,
-                                    child: Text(
-                                      '${itemIndex + 1}',
-                                      style: normal,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                    CarouselImageCar(
+                      heroTag: '${carModel.carName}',
+                      carImagesList: carModel.carImages,
                     ),
                     Visibility(
+                        // condition dependent vertical margin
                         visible:
                             !carDetailController.areExtraDetailsVisible.value,
                         child: verticalMargin24),
@@ -176,42 +113,23 @@ class CarDetailPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(Strings.carOwner, style: small),
-                              verticalMargin4,
-                              Row(
-                                children: [
-                                  Image.network(
-                                    carModel.brandLogo.toString(),
-                                    height: 26,
-                                    fit: BoxFit.contain,
-                                  ),
-                                  horizontalMargin4,
-                                  Text(
-                                    '${carModel.carBrand}',
-                                    style: subheadingBlack,
-                                  ),
-                                ],
-                              )
-                            ],
+                          OwnerDetailWidget(
+                            logoUrl: carModel.brandLogo.toString(),
+                            ownerName: '${carModel.carBrand}',
                           ),
-                          ButtonIcon(
+                          MessageButton(
                             onPressed: () {
                               Navigator.push(
                                   context,
                                   ChatPage.route(
                                       carModel.carOwner, carModel.carOwnerId));
                             },
-                            iconData: Icons.chat_rounded,
-                            buttonType: ButtonType.primary,
-                          )
+                          ),
                         ],
                       ),
                     ),
                     Visibility(
+                        // condition dependent vertical margin
                         visible:
                             !carDetailController.areExtraDetailsVisible.value,
                         child: verticalMargin24),
@@ -219,7 +137,8 @@ class CarDetailPage extends StatelessWidget {
                       onTap: () {
                         carDetailController.toggleAreExtraDetailsVisible();
                       },
-                      child: learnMoreWithTitle(Strings.carInfo,
+                      child: const LearnMoreWithTitle(
+                          title: Strings.carInfo,
                           changeLearnMore: Strings.viewDetail),
                     ),
                     verticalMargin12,
@@ -228,17 +147,19 @@ class CarDetailPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          carInformationWidget(
-                            FontAwesomeIcons.road,
+                          CarInformationWidget(
+                            icon: FontAwesomeIcons.road,
                             informationType: Strings.carRange,
                             value: '${carModel.carRange}',
                             size: size.width - 30,
                           ),
-                          carInformationWidget(FontAwesomeIcons.gear,
+                          CarInformationWidget(
+                              icon: FontAwesomeIcons.gear,
                               informationType: Strings.enginePower,
                               value: '${carModel.carEnginePower}',
                               size: size.width - 30),
-                          carInformationWidget(FontAwesomeIcons.gauge,
+                          CarInformationWidget(
+                              icon: FontAwesomeIcons.gauge,
                               informationType: Strings.maxTorque,
                               value: '${carModel.carMaxTorque}',
                               size: size.width - 30),
@@ -246,6 +167,7 @@ class CarDetailPage extends StatelessWidget {
                       ),
                     ),
                     Visibility(
+                        // condition dependent vertical margin
                         visible:
                             carDetailController.areExtraDetailsVisible.value,
                         child: verticalMargin12),
@@ -256,17 +178,19 @@ class CarDetailPage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            carInformationWidget(
-                              FontAwesomeIcons.gears,
+                            CarInformationWidget(
+                              icon: FontAwesomeIcons.gears,
                               informationType: Strings.transmission,
                               value: '${carModel.carTransmission}',
                               size: size.width - 30,
                             ),
-                            carInformationWidget(FontAwesomeIcons.peopleGroup,
+                            CarInformationWidget(
+                                icon: FontAwesomeIcons.peopleGroup,
                                 informationType: Strings.seatCapacity,
                                 value: '${carModel.carSeatingCapacity}',
                                 size: size.width - 30),
-                            carInformationWidget(FontAwesomeIcons.carRear,
+                            CarInformationWidget(
+                                icon: FontAwesomeIcons.carRear,
                                 informationType: Strings.wheelType,
                                 value: '${carModel.carWheelType}',
                                 size: size.width - 30),
@@ -275,10 +199,12 @@ class CarDetailPage extends StatelessWidget {
                       ),
                     ),
                     Visibility(
+                        // condition dependent vertical margin
                         visible:
                             !carDetailController.areExtraDetailsVisible.value,
                         child: verticalMargin24),
-                    learnMoreWithTitle(Strings.carLocation,
+                    const LearnMoreWithTitle(
+                        title: Strings.carLocation,
                         changeLearnMore: Strings.distance),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -301,6 +227,7 @@ class CarDetailPage extends StatelessWidget {
                       ),
                     ),
                     Visibility(
+                      // condition dependent vertical margin
                       visible: carDetailController.areExtraDetailsVisible.value,
                       child: const SizedBox(
                         height: 84,
@@ -309,7 +236,7 @@ class CarDetailPage extends StatelessWidget {
                   ],
                 ),
               ),
-              myCustomButton(
+              MyCustomButton(
                   type: ButtonType.primary,
                   tag: 'hero-1',
                   onPressed: () {

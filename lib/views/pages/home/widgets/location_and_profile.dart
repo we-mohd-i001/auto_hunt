@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../helpers/commons.dart';
 import '../../../../helpers/constants/strings/strings.dart';
-import '../../../../vaahextendflutter/app_theme.dart';
 
 Widget locationAndProfile(
     {required String image,
