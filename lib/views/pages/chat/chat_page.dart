@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +7,10 @@ import '../../../controllers/chat_controller.dart';
 import '../../../helpers/constants/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
-import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
-import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../helpers/commons.dart';
+import '../common_widgets/custom_appbar.dart';
 import 'widgets/chat_bubble.dart';
+import 'widgets/send_message_field.dart';
 
 class ChatPage extends StatelessWidget {
   final String friendName;
@@ -48,18 +47,12 @@ class ChatPage extends StatelessWidget {
     chatController.getChatId(user.uid);
     return Scaffold(
       backgroundColor: AppTheme.colors['secondary']![100],
-      appBar: AppBar(
-        backgroundColor: AppTheme.colors['secondary']![100],
-        surfaceTintColor: AppTheme.colors['secondary']![100],
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () {
-            Navigator.pop(context);
-            Get.delete<ChatController>();
-          },
-        ),
-        title: Text('${Strings.chatWith} ${chatController.friendName}',
-            style: heading),
+      appBar: customAppBar(
+        title: '${Strings.chatWith} ${chatController.friendName}',
+        onPressed: () {
+          Navigator.pop(context);
+          Get.delete<ChatController>();
+        },
       ),
       body: SizedBox(
         width: double.infinity,
@@ -107,7 +100,7 @@ class ChatPage extends StatelessWidget {
                                         alignment: data['uid'] == user.uid
                                             ? Alignment.centerRight
                                             : Alignment.centerLeft,
-                                        child: chatBubble(
+                                        child: ChatBubble(
                                             data: data,
                                             isSender: data['uid'] == user.uid));
                                   }),
@@ -121,27 +114,14 @@ class ChatPage extends StatelessWidget {
                 verticalMargin12
               ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ContainerWithRoundedBorder(
-                borderRadius: 8,
-                padding: allPadding0,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: InputText(
-                    controller: chatController.messageController,
-                    label: 'Type a message...',
-                    suffixIcon: Icons.send_rounded,
-                    suffixOnTap: () {
-                      chatController.sendMessage(
-                          currentId: user.uid,
-                          message: chatController.messageController.text);
-                      chatController.messageController.clear();
-                    },
-                  ),
-                ),
-              ),
+            SendMessageField(
+              controller: chatController.messageController,
+              onSendTap: () {
+                chatController.sendMessage(
+                    currentId: user.uid,
+                    message: chatController.messageController.text);
+                chatController.messageController.clear();
+              },
             ),
             verticalMargin8,
           ],

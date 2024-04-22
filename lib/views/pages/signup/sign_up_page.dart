@@ -10,6 +10,7 @@ import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../controllers/auth_controller.dart';
+import '../common_widgets/custom_appbar.dart';
 import '../main_navigator/main_navigator.dart';
 import '../../../helpers/commons.dart';
 
@@ -46,19 +47,11 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       backgroundColor: AppTheme.colors['secondary']![50],
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-          tooltip: Strings.back,
-          icon: Icon(
-            Icons.arrow_back,
-            color: AppTheme.colors['white'],
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        backgroundColor: AppTheme.colors['secondary']![50],
-        title: Text('Sign Up', style: heading),
+      appBar: customAppBar(
+        title: 'Sign Up',
+        onPressed: () {
+          Get.back();
+        },
       ),
       body: Center(
         child: Padding(

@@ -56,7 +56,6 @@ class MyHomePage extends StatelessWidget {
           label: 'Profile',
           tooltip: 'Profile 4 of 4')
     ];
-
     List<Widget> pages = [
       HomePage(
         profileController: profileController,

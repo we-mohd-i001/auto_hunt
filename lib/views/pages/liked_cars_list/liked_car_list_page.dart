@@ -9,7 +9,8 @@ import '../../../models/car/car_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../helpers/commons.dart';
 import '../car_detail/car_detail_page.dart';
-import '../common_widgets/car_bio.dart';
+import '../common_widgets/car_detail_widget.dart';
+import '../common_widgets/custom_appbar.dart';
 
 class LikedCarListPage extends StatelessWidget {
   final User? user;
@@ -42,20 +43,11 @@ class LikedCarListPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppTheme.colors['secondary']![100],
-      appBar: AppBar(
-        leading: IconButton(
-          tooltip: Strings.back,
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        surfaceTintColor: AppTheme.colors['secondary']![100],
-        backgroundColor: AppTheme.colors['secondary']![100],
-        title: Text(
-          'Liked Cars',
-          style: heading,
-        ),
+      appBar: customAppBar(
+        title: 'Liked Cars',
+        onPressed: () {
+          Get.back();
+        },
       ),
       body: SafeArea(
         child: SizedBox(
@@ -83,18 +75,18 @@ class LikedCarListPage extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     CarModel carModelAtIndex =
                         snapshot.data!.docs[index].data.call();
-                    return carDetailWidget(
-                      carModelAtIndex.carName,
-                      carModelAtIndex.carFuelType,
-                      carModelAtIndex.carImages[0],
-                      size.width,
-                      carModelAtIndex.carRentPricePerDay,
-                      carModelAtIndex.carSeatingCapacity,
-                      () {
+                    return CarDetailWidget(
+                      name: carModelAtIndex.carName,
+                      fuelAndType: carModelAtIndex.carFuelType,
+                      image: carModelAtIndex.carImages[0],
+                      width: size.width,
+                      carRent: carModelAtIndex.carRentPricePerDay,
+                      seatCapacity: carModelAtIndex.carSeatingCapacity,
+                      onPressed: () {
                         Navigator.push(context,
                             CarDetailPage.route(user, carModelAtIndex));
                       },
-                      '${carModelAtIndex.carName}',
+                      tag: '${carModelAtIndex.carName}',
                     );
                   },
                 );

@@ -56,7 +56,7 @@ class ProfilePage extends StatelessWidget {
                 child: Obx(
                   () => Column(
                     children: [
-                      editProfileButton(() {
+                      EditProfileButton(onPressed: () {
                         profileController.nameController.text = data['name'];
 
                         Get.to(() => ProfileEditPage(
@@ -65,12 +65,13 @@ class ProfilePage extends StatelessWidget {
                       }),
                       Row(
                         children: [
-                          profilePictureContainer(
-                              profileController.profileImagePath.isNotEmpty
+                          ProfilePictureContainer(
+                              image: profileController
+                                      .profileImagePath.isNotEmpty
                                   ? FileImage(File(
                                       profileController.profileImagePath.value))
                                   : NetworkImage(data['imageUrl']),
-                              28.0),
+                              radius: 28.0),
                           horizontalMargin8,
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,13 +93,14 @@ class ProfilePage extends StatelessWidget {
                       ),
                       verticalMargin16,
                       verticalMargin4,
-                      likedAndOrderedCars('${data['liked_cars_count']}',
-                          '${data['order_count']}'),
+                      LikedAndOrderedCars(
+                          likedCount: '${data['liked_cars_count']}',
+                          orderCount: '${data['order_count']}'),
                       verticalMargin24,
                       verticalMargin2,
-                      navigatorWidgetToOrdersAndLiked(() {}, () {
+                      NavigatorWidgetToOrdersAndLiked(likedCarsOnPressed: () {
                         Navigator.push(context, LikedCarListPage.route(user));
-                      }, () {})
+                      })
                     ],
                   ),
                 ),

@@ -2,19 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../helpers/constants/constants.dart';
 import '../../../controllers/brands_controller.dart';
 import '../../../controllers/brand_detail_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
-import '../../../vaahextendflutter/helpers/enums.dart';
-import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../models/car/car_model.dart';
 import '../../../models/brands/brands_model.dart';
 import '../../../vaahextendflutter/widgets/debug.dart';
 import '../car_detail/car_detail_page.dart';
-import '../common_widgets/car_bio.dart';
+import '../common_widgets/car_detail_widget.dart';
 import '../common_widgets/category_list.dart';
-import '../../../helpers/commons.dart';
+import '../common_widgets/custom_appbar.dart';
+import '../common_widgets/error_widget_with_scaffold.dart';
+import '../common_widgets/loading_widget_with_scaffold.dart';
+import 'widgets/no_cars_found_widget.dart';
 
 class BrandsDetailPage extends StatelessWidget {
   final Brand brand;
@@ -54,66 +54,28 @@ class BrandsDetailPage extends StatelessWidget {
       navigatorKey: _navigatorKey,
       child: Obx(() {
         if (brandDetailController.isLoading.value) {
-          return Scaffold(
-              backgroundColor: AppTheme.colors['secondary']![100],
-              body: const Center(
-                child: CircularProgressIndicator(),
-              ));
+          return const LoadingWidgetWithScaffold();
         } else if (brandDetailController.isError.value) {
-          return Scaffold(
-              backgroundColor: AppTheme.colors['secondary']![100],
-              body: Center(
-                child: Text('Something went Wrong!', style: normal),
-              ));
-        } else if (brandDetailController.carList.isEmpty) {
-          return Scaffold(
-            backgroundColor: AppTheme.colors['secondary']![100],
-            appBar: AppBar(
-              backgroundColor: AppTheme.colors['secondary']![100],
-              surfaceTintColor: AppTheme.colors['secondary']![100],
-              leading: IconButton(
-                  tooltip: Strings.back,
-                  onPressed: () {
-                    Get.back();
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_rounded,
-                  )),
-            ),
-            body: Center(
-              child: ButtonOutlined(
-                buttonType: ButtonType.danger,
-                text: 'No cars Found Go Back',
-                borderRadius: 8,
-                onPressed: () => Get.back(),
-              ),
-            ),
+          return const ErrorWidgetWithScaffold(
+            errorText: 'Something went Wrong!',
           );
+        } else if (brandDetailController.carList.isEmpty) {
+          return const NoCarsFoundWidget();
         }
         return Scaffold(
+          //main widget to show loaded cars
           backgroundColor: AppTheme.colors['secondary']![100],
-          appBar: AppBar(
-            backgroundColor: AppTheme.colors['secondary']![100],
-            surfaceTintColor: AppTheme.colors['secondary']![100],
-            leading: IconButton(
-              tooltip: Strings.back,
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                brandsController.selectedCategoryIndex(-1);
-                //Get.find<HomeController>().fetchMostPopularCarList();
-                Get.back();
-              },
-            ),
-            // backgroundColor: Colors.transparent,
-            title: Text(
-              'Cars From ${brand.name}',
-              style: heading,
-            ),
+          appBar: customAppBar(
+            onPressed: () {
+              brandsController.selectedCategoryIndex(-1);
+              Get.back();
+            },
+            title: 'Cars From ${brand.name}',
           ),
           body: SafeArea(
             child: Column(
               children: [
-                categoryListWidget(
+                CategoryListWidget(
                     brandsController: brandsController, size: size),
                 SizedBox(
                   height: size.height * 0.8,
@@ -122,18 +84,18 @@ class BrandsDetailPage extends StatelessWidget {
                     itemCount: brandDetailController.carList.length,
                     itemBuilder: (BuildContext context, int index) {
                       CarModel carModel = carList[index];
-                      return carDetailWidget(
-                        carModel.carName,
-                        carModel.carFuelType,
-                        carModel.carImages[0],
-                        size.width,
-                        carModel.carRentPricePerDay,
-                        carModel.carSeatingCapacity,
-                        () {
+                      return CarDetailWidget(
+                        name: carModel.carName,
+                        fuelAndType: carModel.carFuelType,
+                        image: carModel.carImages[0],
+                        width: size.width,
+                        carRent: carModel.carRentPricePerDay,
+                        seatCapacity: carModel.carSeatingCapacity,
+                        onPressed: () {
                           Navigator.push(
                               context, CarDetailPage.route(user, carModel));
                         },
-                        '${carModel.carName}',
+                        tag: '${carModel.carName}',
                       );
                     },
                   ),

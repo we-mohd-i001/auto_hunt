@@ -114,17 +114,6 @@ Widget buildMobile(BuildContext context) {
                     Get.offAllNamed(MyHomePage.routePath);
                   },
                   text: "Continue with Google",
-
-                  // style:  ButtonStyle(
-                  //   elevation: MaterialStatePropertyAll(20),
-                  //   side: MaterialStatePropertyAll(
-                  //     BorderSide(
-                  //         color: Colors.grey),
-                  //
-                  //   ),
-                  //
-                  //
-                  // ),
                   borderRadius: 8,
                   iconData: FontAwesomeIcons.google,
                   iconSize: 19,

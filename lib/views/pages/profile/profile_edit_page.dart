@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:yourtasks/vaahextendflutter/helpers/constants.dart';
-import 'package:yourtasks/vaahextendflutter/helpers/enums.dart';
+
+import '../../../vaahextendflutter/helpers/constants.dart';
+import '../../../vaahextendflutter/helpers/enums.dart';
+import '../common_widgets/custom_appbar.dart';
 import '../common_widgets/profile_picture_container.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/alerts.dart';
@@ -32,19 +34,11 @@ class ProfileEditPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.colors['secondary']![100],
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: AppTheme.colors['secondary']![100],
-        surfaceTintColor: AppTheme.colors['secondary']![100],
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        title: Text(
-          'Edit Profile',
-          style: heading,
-        ),
+      appBar: customAppBar(
+        title: 'Edit Profile',
+        onPressed: () {
+          Get.back();
+        },
       ),
       body: SafeArea(
         child: Padding(
@@ -61,14 +55,14 @@ class ProfileEditPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   profileController.profileImagePath.isEmpty
-                      ? profilePictureContainer(
-                          NetworkImage(data['imageUrl']),
-                          44.0,
+                      ? ProfilePictureContainer(
+                          image: NetworkImage(data['imageUrl']),
+                          radius: 44.0,
                         )
-                      : profilePictureContainer(
-                          FileImage(
+                      : ProfilePictureContainer(
+                          image: FileImage(
                               File(profileController.profileImagePath.value)),
-                          44.0,
+                          radius: 44.0,
                         ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

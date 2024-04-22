@@ -13,7 +13,7 @@ import '../../../models/car/car_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../car_detail/car_detail_page.dart';
-import '../common_widgets/car_bio.dart';
+import '../common_widgets/car_detail_widget.dart';
 import '../common_widgets/learn_more_with_title.dart';
 import '../../../helpers/commons.dart';
 import 'widgets/home_screen_options.dart';
@@ -74,7 +74,7 @@ class HomePage extends StatelessWidget {
                                   }),
                             ),
                             verticalMargin8,
-                            Expanded(child: homeScreenOptions()),
+                            const Expanded(child: HomeScreenOptions()),
                           ],
                         );
                       }),
@@ -84,9 +84,9 @@ class HomePage extends StatelessWidget {
             ),
             SliverList(
               delegate: SliverChildListDelegate([
-                learnMoreWithTitle(Strings.searchByBrand),
-                searchByBrands(size: size, user: user),
-                learnMoreWithTitle(Strings.mostPopularCars),
+                const LearnMoreWithTitle(title: Strings.searchByBrand),
+                SearchByBrands(size: size, user: user),
+                const LearnMoreWithTitle(title: Strings.mostPopularCars),
                 Obx(() {
                   if (homeController.isLoading.value) {
                     return const SizedBox(
@@ -102,13 +102,16 @@ class HomePage extends StatelessWidget {
                   } else if (homeController.carList.isEmpty) {
                     return emptyWidget;
                   }
-                  return mostPopularCars(
-                      carList: homeController.carList, size: size, user: user);
+                  return MostPopularCars(
+                    carList: homeController.carList,
+                    size: size,
+                    user: user,
+                  );
                 }),
                 Obx(
                   () => likedCarsController.isLikedCarEmpty.value
                       ? emptyWidget
-                      : learnMoreWithTitle(Strings.likedCars),
+                      : const LearnMoreWithTitle(title: Strings.likedCars),
                 ),
                 StreamBuilder(
                     stream: likedCarsController.getLikedCarsList(user!.uid),
@@ -136,18 +139,18 @@ class HomePage extends StatelessWidget {
                             itemBuilder: (BuildContext context, int index) {
                               CarModel carModel =
                                   snapshot.data!.docs[index].data.call();
-                              return carDetailWidget(
-                                carModel.carName,
-                                carModel.carFuelType,
-                                carModel.carImages[0],
-                                200.0,
-                                carModel.carRentPricePerDay,
-                                carModel.carSeatingCapacity,
-                                () {
+                              return CarDetailWidget(
+                                name: carModel.carName,
+                                fuelAndType: carModel.carFuelType,
+                                image: carModel.carImages[0],
+                                width: 200.0,
+                                carRent: carModel.carRentPricePerDay,
+                                seatCapacity: carModel.carSeatingCapacity,
+                                onPressed: () {
                                   Navigator.push(context,
                                       CarDetailPage.route(user, carModel));
                                 },
-                                '${carModel.carImages[0]}',
+                                tag: '${carModel.carImages[0]}',
                               );
                             },
                           ),

@@ -6,9 +6,21 @@ import '../../../../vaahextendflutter/widgets/atoms/container_with_rounded_borde
 import '../../../../helpers/commons.dart';
 import 'price_details_content.dart';
 
-Widget priceDetailWidget(
-    {required rentPrice, required days, required tax, required String total}) {
-  return ContainerWithRoundedBorder(
+class PriceDetailWidget extends StatelessWidget {
+  final int rentPrice;
+  final double days;
+  final int tax;
+  final String total;
+  const PriceDetailWidget(
+      {super.key,
+      required this.rentPrice,
+      required this.days,
+      required this.tax,
+      required this.total});
+
+  @override
+  Widget build(BuildContext context) {
+    return ContainerWithRoundedBorder(
       padding: allPadding0,
       borderRadius: 8,
       width: double.infinity,
@@ -16,13 +28,15 @@ Widget priceDetailWidget(
       child: Column(
         children: [
           verticalMargin8,
-          priceDetailContent(
-              'Rent Price', '₹ $rentPrice x${days.value.toStringAsFixed(0)}'),
+          PriceDetailContent(
+              title: 'Rent Price',
+              content: '₹ $rentPrice x${days.toStringAsFixed(0)}'),
           verticalMargin8,
-          priceDetailContent(
-              'Rent Duration', '${days.value.toStringAsFixed(0)} Days'),
+          PriceDetailContent(
+              title: 'Rent Duration',
+              content: '${days.toStringAsFixed(0)} Days'),
           verticalMargin8,
-          priceDetailContent('Tax', '₹ $tax'),
+          PriceDetailContent(title: 'Tax', content: '₹ $tax'),
           verticalMargin16,
           Container(
               decoration: BoxDecoration(
@@ -45,5 +59,7 @@ Widget priceDetailWidget(
                 ],
               )),
         ],
-      ));
+      ),
+    );
+  }
 }

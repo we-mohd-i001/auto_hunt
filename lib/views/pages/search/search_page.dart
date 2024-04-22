@@ -9,7 +9,7 @@ import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../helpers/commons.dart';
 import '../car_detail/car_detail_page.dart';
-import '../common_widgets/car_bio.dart';
+import '../common_widgets/car_detail_widget.dart';
 
 class SearchPage extends StatelessWidget {
   final User? user;
@@ -71,16 +71,18 @@ class SearchPage extends StatelessWidget {
             itemCount: searchCarsController.carList.length,
             itemBuilder: (context, index) {
               CarModel carModelAtIndex = searchCarsController.carList[index];
-              return carDetailWidget(
-                  carModelAtIndex.carName,
-                  carModelAtIndex.carFuelType,
-                  carModelAtIndex.carImages[0],
-                  size.width,
-                  carModelAtIndex.carRentPricePerDay,
-                  carModelAtIndex.carSeatingCapacity, () {
-                Navigator.push(
-                    context, CarDetailPage.route(user, carModelAtIndex));
-              }, '${carModelAtIndex.carName}');
+              return CarDetailWidget(
+                  name: carModelAtIndex.carName,
+                  fuelAndType: carModelAtIndex.carFuelType,
+                  image: carModelAtIndex.carImages[0],
+                  width: size.width,
+                  carRent: carModelAtIndex.carRentPricePerDay,
+                  seatCapacity: carModelAtIndex.carSeatingCapacity,
+                  onPressed: () {
+                    Navigator.push(
+                        context, CarDetailPage.route(user, carModelAtIndex));
+                  },
+                  tag: '${carModelAtIndex.carName}');
             },
           );
         }
