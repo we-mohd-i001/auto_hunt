@@ -12,11 +12,11 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    fetchMostPopularCarList();
+    fetchMostPopularCars();
     super.onInit();
   }
 
-  void fetchMostPopularCarList() async {
+  void fetchMostPopularCars() async {
     try {
       isLoading(true);
       await firestore

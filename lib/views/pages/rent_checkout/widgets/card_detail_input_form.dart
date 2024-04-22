@@ -10,9 +10,9 @@ import '../../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../../helpers/commons.dart';
 
-class CarDetailInputForm extends StatelessWidget {
+class CardDetailInputForm extends StatelessWidget {
   final RentCheckoutController rentCheckoutController;
-  const CarDetailInputForm({super.key, required this.rentCheckoutController});
+  const CardDetailInputForm({super.key, required this.rentCheckoutController});
 
   @override
   Widget build(BuildContext context) {

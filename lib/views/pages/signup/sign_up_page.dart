@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../helpers/constants/constants.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/alerts.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
@@ -12,16 +12,24 @@ import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../controllers/auth_controller.dart';
 import '../common_widgets/custom_appbar.dart';
 import '../main_navigator/main_navigator.dart';
-import '../../../helpers/commons.dart';
 
 class SignupPage extends StatefulWidget {
   static const String routePath = '/signup';
 
   static Route<void> route() {
+    _initialize();
     return MaterialPageRoute(
       settings: const RouteSettings(name: routePath),
       builder: (_) => const SignupPage(),
     );
+  }
+
+  static _initialize() {
+    return Get.isRegistered<AuthController>()
+        ? Get.find<AuthController>()
+        : Get.put(
+            AuthController(),
+          );
   }
 
   const SignupPage({super.key});
@@ -31,16 +39,31 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  void _signUp(String email, String password) async {
+    UserCredential? userCredential =
+        await controller.signUp(email, password).then((value) {
+      return controller.storeUserData(_nameController.text,
+          _passwordController.text, _emailController.text);
+    }).then((value) {
+      Alerts.showSuccessToast!(content: 'SignUp Successful');
+      Get.offAllNamed(MyHomePage.routePath);
+    });
+    if (userCredential != null) {
+    } else {
+      Alerts.showErrorToast!(content: 'Something went wrong!');
+    }
+  }
+
   bool isPasswordVisible = false;
   bool isRetypePasswordVisible = false;
-  bool isCheck = false;
+  bool isEnabled = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _retypePasswordController =
       TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  AuthController controller = Get.put(AuthController());
+  AuthController controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +177,7 @@ class _SignupPageState extends State<SignupPage> {
                       ],
                       onChanged: (items) {
                         setState(() {
-                          isCheck = !isCheck;
+                          isEnabled = !isEnabled;
                         });
                       }),
                   SizedBox(
@@ -172,33 +195,15 @@ class _SignupPageState extends State<SignupPage> {
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  if (isCheck != false) {
-                                    try {
-                                      controller.isLoading(true);
-                                      await controller
-                                          .signUp(_emailController.text,
-                                              _passwordController.text)
-                                          .then((value) {
-                                        return controller.storeUserData(
-                                            _nameController.text,
-                                            _passwordController.text,
-                                            _emailController.text);
-                                      }).then((value) {
-                                        Alerts.showSuccessToast!(
-                                            content: 'SignUp Successful');
-                                        Get.offAllNamed(MyHomePage.routePath);
-                                      });
-                                    } catch (e) {
-                                      controller.auth.signOut();
-                                      Alerts.showErrorToast!(
-                                          content: 'Something went wrong!');
-                                    }
+                                  if (isEnabled != false) {
+                                    _signUp(_emailController.text,
+                                        _passwordController.text);
                                   }
                                 }
                               },
                               text: "Sign Up",
                               fontSize: 17,
-                              buttonType: !isCheck
+                              buttonType: !isEnabled
                                   ? ButtonType.secondary
                                   : ButtonType.success,
                               foregroundColor: AppTheme.colors['white'],

@@ -14,7 +14,7 @@ import '../common_widgets/category_list.dart';
 import '../common_widgets/custom_appbar.dart';
 import '../common_widgets/error_widget_with_scaffold.dart';
 import '../common_widgets/loading_widget_with_scaffold.dart';
-import 'widgets/no_cars_found_widget.dart';
+import 'widgets/cars_error_widget.dart';
 
 class BrandsDetailPage extends StatelessWidget {
   final Brand brand;
@@ -43,7 +43,7 @@ class BrandsDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _navigatorKey = GlobalKey<NavigatorState>();
+    final navigatorKey = GlobalKey<NavigatorState>();
     Size size = MediaQuery.of(context).size;
     BrandDetailController brandDetailController =
         Get.find<BrandDetailController>();
@@ -51,7 +51,7 @@ class BrandsDetailPage extends StatelessWidget {
     brandDetailController.fetchCarList(brand.name);
     List<CarModel> carList = brandDetailController.carList;
     return DebugWidget(
-      navigatorKey: _navigatorKey,
+      navigatorKey: navigatorKey,
       child: Obx(() {
         if (brandDetailController.isLoading.value) {
           return const LoadingWidgetWithScaffold();
@@ -60,7 +60,7 @@ class BrandsDetailPage extends StatelessWidget {
             errorText: 'Something went Wrong!',
           );
         } else if (brandDetailController.carList.isEmpty) {
-          return const NoCarsFoundWidget();
+          return const CarsErrorWidget();
         }
         return Scaffold(
           //main widget to show loaded cars
@@ -75,7 +75,7 @@ class BrandsDetailPage extends StatelessWidget {
           body: SafeArea(
             child: Column(
               children: [
-                CategoryListWidget(
+                CarCategoryListWidget(
                     brandsController: brandsController, size: size),
                 SizedBox(
                   height: size.height * 0.8,

@@ -113,7 +113,7 @@ class CarDetailWidget extends StatelessWidget {
                         Text(
                           '₹$carRent/day',
                           style: normalBlack,
-                        )
+                        ),
                       ],
                     ),
                   ),

@@ -33,7 +33,7 @@ class SearchByBrands extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0)),
                   onPressed: () {
                     brandsController
-                        .getCarsList(brandsController.brandsList[index].name);
+                        .getCars(brandsController.brandsList[index].name);
                     Navigator.push(
                       context,
                       BrandsDetailPage.route(

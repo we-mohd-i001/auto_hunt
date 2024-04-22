@@ -11,12 +11,12 @@ import '../../../../vaahextendflutter/widgets/atoms/container_with_rounded_borde
 
 class CarouselImageCar extends StatelessWidget {
   final String? heroTag;
-  final List? carImagesList;
-  const CarouselImageCar({super.key, this.heroTag, this.carImagesList});
+  final List? carImages;
+  const CarouselImageCar({super.key, this.heroTag, this.carImages});
 
   @override
   Widget build(BuildContext context) {
-    if (carImagesList == null) {
+    if (carImages == null) {
       return emptyWidget;
     } else {
       return Padding(
@@ -28,7 +28,7 @@ class CarouselImageCar extends StatelessWidget {
               viewportFraction: 1,
               initialPage: 0,
             ),
-            itemCount: carImagesList!.length,
+            itemCount: carImages!.length,
             itemBuilder:
                 (BuildContext context, int itemIndex, int pageViewIndex) {
               return ClipRRect(
@@ -44,7 +44,7 @@ class CarouselImageCar extends StatelessWidget {
                           backgroundDecoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12)),
                           imageProvider: NetworkImage(
-                            carImagesList![itemIndex],
+                            carImages![itemIndex],
                           ),
                           filterQuality: FilterQuality.low,
                         ),

@@ -24,17 +24,20 @@ class ChatPage extends StatelessWidget {
   static const String routePath = '/chat';
 
   static Route<void> route(friendName, friendId) {
-    initializeController(friendName, friendId);
+    _initialize(friendName, friendId);
     return MaterialPageRoute(
         settings: const RouteSettings(name: routePath),
         builder: (_) => ChatPage(friendName: friendName, friendId: friendId));
   }
 
-  static initializeController(friendName, friendId) {
+  static _initialize(friendName, friendId) {
     return Get.isRegistered<ChatController>()
         ? Get.find<ChatController>()
         : Get.put(
-            ChatController(friendName: friendName, friendId: friendId),
+            ChatController(
+              friendName: friendName,
+              friendId: friendId,
+            ),
           );
   }
 
@@ -42,9 +45,18 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser!;
-
     ChatController chatController = Get.find<ChatController>();
+
     chatController.getChatId(user.uid);
+
+    void _sendMessage() {
+      chatController.sendMessage(
+        currentId: user.uid,
+        message: chatController.messageController.text,
+      );
+      chatController.messageController.clear();
+    }
+
     return Scaffold(
       backgroundColor: AppTheme.colors['secondary']![100],
       appBar: customAppBar(
@@ -92,10 +104,10 @@ class ChatPage extends StatelessWidget {
                                   reverse: true,
                                   shrinkWrap: true,
                                   controller: chatController.scrollController,
-                                  itemCount: snapshot.data!.docs.length,
+                                  itemCount: snapshot.requireData.docs.length,
                                   itemBuilder: ((context, index) {
                                     DocumentSnapshot data =
-                                        snapshot.data!.docs[index];
+                                        snapshot.requireData.docs[index];
                                     return Align(
                                         alignment: data['uid'] == user.uid
                                             ? Alignment.centerRight
@@ -116,12 +128,7 @@ class ChatPage extends StatelessWidget {
             ),
             SendMessageField(
               controller: chatController.messageController,
-              onSendTap: () {
-                chatController.sendMessage(
-                    currentId: user.uid,
-                    message: chatController.messageController.text);
-                chatController.messageController.clear();
-              },
+              onSendTap: _sendMessage,
             ),
             verticalMargin8,
           ],

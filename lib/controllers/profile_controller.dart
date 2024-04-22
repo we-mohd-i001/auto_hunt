@@ -34,7 +34,8 @@ class ProfileController extends GetxController {
     super.onInit();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> updateUiImageUrl() {
+  //stream of images from firestore
+  Stream<QuerySnapshot<Map<String, dynamic>>> imageUrls() {
     Stream<QuerySnapshot<Map<String, dynamic>>> data = firestore
         .collection(usersCollection)
         .where('id', isEqualTo: currentFirebaseUser!.uid)
@@ -46,6 +47,7 @@ class ProfileController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
+  //gets the image location in device
   Future<void> changeImage() async {
     try {
       final XFile? img = await ImagePicker()
@@ -64,6 +66,7 @@ class ProfileController extends GetxController {
     }
   }
 
+  //uploads an image on firebase storage
   Future<void> uploadProfileImage() async {
     String fileName = basename(profileImagePath.value);
     String destination = 'images/${currentFirebaseUser!.uid}/$fileName';
@@ -72,16 +75,7 @@ class ProfileController extends GetxController {
     profileImageLinkFromFirebaseStorage = await ref.getDownloadURL();
   }
 
-  Future<void> updateName(String name) async {
-    DocumentReference<Map<String, dynamic>> store =
-        firestore.collection(usersCollection).doc(currentFirebaseUser!.uid);
-    await store.set(
-      {'name': name},
-      SetOptions(merge: true),
-    );
-    isNameTextFieldIconButtonDisabled(true);
-  }
-
+  //updates imageUrl field on firestore
   Future<void> updateProfileImage(String imageUrl) async {
     final DocumentReference<Map<String, dynamic>> store =
         firestore.collection(usersCollection).doc(currentFirebaseUser!.uid);
@@ -92,6 +86,18 @@ class ProfileController extends GetxController {
     isImageUploadButtonDisabled(true);
   }
 
+  //update name field in firestore
+  Future<void> updateName(String name) async {
+    DocumentReference<Map<String, dynamic>> store =
+        firestore.collection(usersCollection).doc(currentFirebaseUser!.uid);
+    await store.set(
+      {'name': name},
+      SetOptions(merge: true),
+    );
+    isNameTextFieldIconButtonDisabled(true);
+  }
+
+  //changes password in firebase credentials
   Future<void> changeAuthPassword(
       String email, String password, String newPassword) async {
     final AuthCredential cred =
@@ -103,6 +109,7 @@ class ProfileController extends GetxController {
     });
   }
 
+  //updates password field in firestore
   Future<void> updatePassword(String password) async {
     try {
       DocumentReference<Map<String, dynamic>> store =

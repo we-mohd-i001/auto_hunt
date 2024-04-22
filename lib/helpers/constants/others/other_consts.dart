@@ -6,23 +6,23 @@ class OtherConsts {
   static const carSellImageUrl =
       'https://images.assetsdelivery.com/compings_v2/imdproduction/imdproduction2209/imdproduction220900019.jpg';
   static const bmwLogo =
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/2048px-BMW.svg.png';
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/100px-BMW.svg.png';
   static const teslaLogo =
       'https://upload.wikimedia.org/wikipedia/commons/e/e8/Tesla_logo.png';
   static const mercedesLogo =
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/1024px-Mercedes-Logo.svg.png';
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/100px-Mercedes-Logo.svg.png';
   static const toyotaLogo =
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Toyota_EU.svg/2560px-Toyota_EU.svg.png';
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Toyota_EU.svg/100px-Toyota_EU.svg.png';
   static const nissanLogo =
-      'https://upload.wikimedia.org/wikipedia/commons/8/8c/Nissan_logo.png';
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Nissan_2020_logo.svg/100px-Nissan_2020_logo.svg.png';
   static const carBMW =
       'https://i.pinimg.com/736x/47/5d/05/475d05a41d699b3f3cf0ab0a54d64d5d.jpg';
   static const carBMWM8 =
       'https://www.freepnglogos.com/uploads/bmw-png/black-bmw-xdrive-car-png-image-pngpix-33.png';
   static const audiLogo =
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Audi-Logo_2016.svg/1920px-Audi-Logo_2016.svg.png';
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Audi-Logo_2016.svg/100px-Audi-Logo_2016.svg.png';
   static const hyundaiLogo =
-      'https://upload.wikimedia.org/wikipedia/de/thumb/b/b1/Hyundai.svg/968px-Hyundai.svg.png?20080815131529';
+      'https://upload.wikimedia.org/wikipedia/de/thumb/b/b1/Hyundai.svg/100px-Hyundai.svg.png?20080815131529';
   static const suzukiLogo =
       'https://imgd-ct.aeplcdn.com/272x153/n/cw/ec/10/brands/logos/maruti-suzuki1647009823420.jpg?v=1647009823707&q=80';
   static const brandsImages = [

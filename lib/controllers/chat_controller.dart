@@ -25,7 +25,7 @@ class ChatController extends GetxController {
   RxBool isLoading = false.obs;
   TextEditingController messageController = TextEditingController();
   ScrollController scrollController = ScrollController();
-  dynamic chatDocId;
+  String? chatDocId;
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getChatMessages(
       {required String docId}) {
@@ -95,7 +95,7 @@ class ChatController extends GetxController {
           'message': message,
           'uid': currentId,
         });
-        Log.info('Message sent/received successfully.');
+        Log.info('Message sent successfully.');
       } else {
         Log.info('''Can't send empty message.''');
       }

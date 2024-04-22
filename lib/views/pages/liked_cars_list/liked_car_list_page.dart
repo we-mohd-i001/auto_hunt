@@ -20,7 +20,7 @@ class LikedCarListPage extends StatelessWidget {
   });
 
   static Route<void> route(User? user) {
-    initializeController();
+    _initialize();
     return MaterialPageRoute(
       settings: const RouteSettings(name: '/liked_cars_page'),
       builder: (_) => LikedCarListPage(
@@ -29,7 +29,7 @@ class LikedCarListPage extends StatelessWidget {
     );
   }
 
-  static initializeController() {
+  static _initialize() {
     return Get.isRegistered<LikedCarsController>()
         ? Get.find<LikedCarsController>()
         : Get.put(
@@ -54,7 +54,7 @@ class LikedCarListPage extends StatelessWidget {
           height: size.height * 0.87,
           width: size.width,
           child: StreamBuilder(
-              stream: likedCarsController.getLikedCarsList(user!.uid),
+              stream: likedCarsController.getLikedCars(user!.uid),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot<CarModel>> snapshot) {
                 if (!snapshot.hasData) {

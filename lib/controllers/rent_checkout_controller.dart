@@ -27,6 +27,9 @@ class RentCheckoutController extends GetxController {
   RxInt rentCarButtonEnableCount = 0.obs;
   RxBool isRentCarButtonDisabled = false.obs;
 
+  final GlobalKey<FormState> rentCheckoutFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> cardDetailFormKey = GlobalKey<FormState>();
+
   void enableRentCarButton() {
     print(rentCarButtonEnableCount.value);
     if (rentCarButtonEnableCount.value == pickupLocation.value.length + 2) {
@@ -40,10 +43,7 @@ class RentCheckoutController extends GetxController {
         const Duration(seconds: 2), () => isCarBookingInProgress(false));
   }
 
-  final GlobalKey<FormState> rentCheckoutFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> cardDetailFormKey = GlobalKey<FormState>();
-
-  String totalRentPrice(int rentPrice, int carRentTax) {
+  String getTotalRentPrice(int rentPrice, int carRentTax) {
     double total = (rentPrice * rentDays.value) + carRentTax;
     totalPrice('$total');
     return '$total';

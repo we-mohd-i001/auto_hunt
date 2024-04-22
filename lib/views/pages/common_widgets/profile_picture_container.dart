@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class ProfilePictureContainer extends StatelessWidget {
+class ProfilePictureWidget extends StatelessWidget {
   final dynamic image;
   final double? radius;
-  const ProfilePictureContainer(
+  const ProfilePictureWidget(
       {super.key, required this.image, required this.radius});
 
   @override

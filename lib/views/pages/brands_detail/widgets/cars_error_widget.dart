@@ -6,8 +6,8 @@ import '../../../../vaahextendflutter/app_theme.dart';
 import '../../../../vaahextendflutter/helpers/enums.dart';
 import '../../../../vaahextendflutter/widgets/atoms/buttons.dart';
 
-class NoCarsFoundWidget extends StatelessWidget {
-  const NoCarsFoundWidget({super.key});
+class CarsErrorWidget extends StatelessWidget {
+  const CarsErrorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

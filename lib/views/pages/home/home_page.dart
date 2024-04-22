@@ -12,12 +12,12 @@ import '../../../controllers/user_location_controller.dart';
 import '../../../models/car/car_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
+import '../../../helpers/commons.dart';
 import '../car_detail/car_detail_page.dart';
 import '../common_widgets/car_detail_widget.dart';
-import '../common_widgets/learn_more_with_title.dart';
-import '../../../helpers/commons.dart';
+import '../common_widgets/list_heading.dart';
 import 'widgets/home_screen_options.dart';
-import 'widgets/location_and_profile.dart';
+import 'widgets/location_and_profile_image.dart';
 import 'widgets/most_popular_cars.dart';
 import 'widgets/search_by_brands.dart';
 
@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
                 background: Container(
                   color: AppTheme.colors['black'],
                   child: StreamBuilder(
-                      stream: profileController.updateUiImageUrl(),
+                      stream: profileController.imageUrls(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
@@ -63,15 +63,13 @@ class HomePage extends StatelessWidget {
                         return Column(
                           children: [
                             Obx(
-                              () => locationAndProfile(
-                                  image: !snapshot.hasData
-                                      ? OtherConsts.profilePlaceHolder
-                                      : snapshot.data!.docs[0]['imageUrl'],
-                                  location: userLocationController
-                                      .currentLocation.value,
-                                  onPressedRefreshIcon: () {
-                                    userLocationController.update();
-                                  }),
+                              () => LocationAndProfileImage(
+                                image: !snapshot.hasData
+                                    ? OtherConsts.profilePlaceHolder
+                                    : snapshot.data!.docs[0]['imageUrl'],
+                                location: userLocationController
+                                    .currentLocation.value,
+                              ),
                             ),
                             verticalMargin8,
                             const Expanded(child: HomeScreenOptions()),
@@ -83,47 +81,53 @@ class HomePage extends StatelessWidget {
               expandedHeight: 230,
             ),
             SliverList(
-              delegate: SliverChildListDelegate([
-                const LearnMoreWithTitle(title: Strings.searchByBrand),
-                SearchByBrands(size: size, user: user),
-                const LearnMoreWithTitle(title: Strings.mostPopularCars),
-                Obx(() {
-                  if (homeController.isLoading.value) {
-                    return const SizedBox(
+              delegate: SliverChildListDelegate(
+                [
+                  const ListHeading(
+                    heading: Strings.searchByBrand,
+                    subHeadingRight: Strings.learnMore,
+                  ),
+                  SearchByBrands(size: size, user: user),
+                  const ListHeading(
+                    heading: Strings.mostPopularCars,
+                    subHeadingRight: Strings.learnMore,
+                  ),
+                  Obx(() {
+                    if (homeController.isLoading.value) {
+                      return const SizedBox(
                         height: 280,
                         width: double.infinity,
-                        child: Center(child: CircularProgressIndicator()));
-                  } else if (homeController.isError.value) {
-                    return Scaffold(
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (homeController.isError.value) {
+                      return Scaffold(
                         backgroundColor: AppTheme.colors['secondary']![100],
                         body: Center(
                           child: Text('Something went Wrong!', style: normal),
-                        ));
-                  } else if (homeController.carList.isEmpty) {
-                    return emptyWidget;
-                  }
-                  return MostPopularCars(
-                    carList: homeController.carList,
-                    size: size,
-                    user: user,
-                  );
-                }),
-                Obx(
-                  () => likedCarsController.isLikedCarEmpty.value
-                      ? emptyWidget
-                      : const LearnMoreWithTitle(title: Strings.likedCars),
-                ),
-                StreamBuilder(
-                    stream: likedCarsController.getLikedCarsList(user!.uid),
+                        ),
+                      );
+                    } else if (homeController.carList.isEmpty) {
+                      return emptyWidget;
+                    }
+                    return MostPopularCars(
+                      carList: homeController.carList,
+                      size: size,
+                      user: user,
+                    );
+                  }),
+                  const ListHeading(
+                    heading: Strings.likedCars,
+                    subHeadingRight: Strings.learnMore,
+                  ),
+                  StreamBuilder(
+                    stream: likedCarsController.getLikedCars(user!.uid),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot<CarModel>> snapshot) {
                       if (!snapshot.hasData) {
                         return const SizedBox(
                           height: 280,
                           width: double.infinity,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                          child: Center(child: CircularProgressIndicator()),
                         );
                       } else if (snapshot.data!.docs.isEmpty) {
                         return emptyWidget;
@@ -147,8 +151,10 @@ class HomePage extends StatelessWidget {
                                 carRent: carModel.carRentPricePerDay,
                                 seatCapacity: carModel.carSeatingCapacity,
                                 onPressed: () {
-                                  Navigator.push(context,
-                                      CarDetailPage.route(user, carModel));
+                                  Navigator.push(
+                                    context,
+                                    CarDetailPage.route(user, carModel),
+                                  );
                                 },
                                 tag: '${carModel.carImages[0]}',
                               );
@@ -156,8 +162,10 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                       );
-                    }),
-              ]),
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),

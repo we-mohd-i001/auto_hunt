@@ -55,11 +55,11 @@ class ProfileEditPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   profileController.profileImagePath.isEmpty
-                      ? ProfilePictureContainer(
+                      ? ProfilePictureWidget(
                           image: NetworkImage(data['imageUrl']),
                           radius: 44.0,
                         )
-                      : ProfilePictureContainer(
+                      : ProfilePictureWidget(
                           image: FileImage(
                               File(profileController.profileImagePath.value)),
                           radius: 44.0,

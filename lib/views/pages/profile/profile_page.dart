@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../vaahextendflutter/app_theme.dart';
-import '../common_widgets/profile_picture_container.dart';
 import '../../../helpers/constants/consts.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../controllers/auth_controller.dart';
-import '../liked_cars_list/liked_car_list_page.dart';
-import '../login/login_page.dart';
 import '../../../controllers/profile_controller.dart';
 import '../../../helpers/commons.dart';
+import '../common_widgets/profile_picture_container.dart';
+import '../liked_cars_list/liked_car_list_page.dart';
+import '../login/login_page.dart';
 import 'profile_edit_page.dart';
 import 'widgets/edit_profile_button.dart';
 import 'widgets/liked_and_ordered_cars.dart';
@@ -65,7 +65,7 @@ class ProfilePage extends StatelessWidget {
                       }),
                       Row(
                         children: [
-                          ProfilePictureContainer(
+                          ProfilePictureWidget(
                               image: profileController
                                       .profileImagePath.isNotEmpty
                                   ? FileImage(File(
@@ -81,14 +81,16 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ),
                           const Spacer(),
-                          ButtonOutlinedWithIcon(
-                            iconData: Icons.logout_rounded,
-                            text: 'Log Out',
-                            onPressed: () async {
-                              await authController.logOut();
-                              Get.offAllNamed(LoginPage.routePath);
-                            },
-                          ),
+                          authController.isLoading.value
+                              ? const CircularProgressIndicator()
+                              : ButtonOutlinedWithIcon(
+                                  iconData: Icons.logout_rounded,
+                                  text: 'Log Out',
+                                  onPressed: () async {
+                                    await authController.logOut();
+                                    Get.offAllNamed(LoginPage.routePath);
+                                  },
+                                ),
                         ],
                       ),
                       verticalMargin16,

@@ -15,7 +15,7 @@ class BrandsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getBrandsList();
+    getBrands();
   }
 
   void toggleSelectedCategory(int index) {
@@ -26,23 +26,27 @@ class BrandsController extends GetxController {
     }
   }
 
-  void getBrandsList() async {
-    String rawData =
-        await rootBundle.loadString("lib/helpers/services/brands_model.json");
-    BrandsModel decodedData = brandsModelFromJson(rawData);
-    brandsList.value = decodedData.brands.toList();
+  void getBrands() async {
+    try {
+      String rawData =
+          await rootBundle.loadString("lib/helpers/services/brands_model.json");
+      BrandsModel decodedData = brandsModelFromJson(rawData);
+      brandsList.value = decodedData.brands.toList();
+    } catch (_) {}
   }
 
-  void getCarsList(brandName) async {
+  void getCars(brandName) async {
     subCat.value = [];
-    String data =
-        await rootBundle.loadString("lib/helpers/services/brands_model.json");
-    BrandsModel decodedData = brandsModelFromJson(data);
-    List<Brand> brandList = decodedData.brands
-        .where((element) => element.name == brandName)
-        .toList();
-    for (Category e in brandList[0].categories) {
-      subCat.add(e);
-    }
+    try {
+      String data =
+          await rootBundle.loadString("lib/helpers/services/brands_model.json");
+      BrandsModel decodedData = brandsModelFromJson(data);
+      List<Brand> brandList = decodedData.brands
+          .where((element) => element.name == brandName)
+          .toList();
+      for (Category e in brandList[0].categories) {
+        subCat.add(e);
+      }
+    } catch (_) {}
   }
 }

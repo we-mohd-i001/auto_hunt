@@ -26,11 +26,22 @@ class CarDetailController extends GetxController {
     super.onInit();
   }
 
+  void checkIfLiked() async {
+    Log.info('Checking if car is Liked...');
+    if (carLikedList.contains(user!.uid)) {
+      Log.info('Car is Liked.');
+      isCarLiked(true);
+    } else {
+      Log.info('Car is Not Liked.');
+      isCarLiked(false);
+    }
+  }
+
   void toggleAreExtraDetailsVisible() {
     areExtraDetailsVisible.value = !areExtraDetailsVisible.value;
   }
 
-  void addToLikedCarsList(
+  void addToLikedCars(
       {required String carId, required String currentId}) async {
     try {
       await _firestore.collection(carsCollection).doc(carId).set({
@@ -44,7 +55,7 @@ class CarDetailController extends GetxController {
     }
   }
 
-  void removeFromLikedCarsList(
+  void removeFromLikedCars(
       {required String carId, required String currentId}) async {
     try {
       await _firestore.collection(carsCollection).doc(carId).set({
@@ -55,17 +66,6 @@ class CarDetailController extends GetxController {
       Alerts.showErrorToast!(content: 'Something went wrong!');
       Log.exception(
           'Exception $e occured while adding $carId to Liked cars list.');
-    }
-  }
-
-  void checkIfLiked() async {
-    Log.info('Checking if car is Liked...');
-    if (carLikedList.contains(user!.uid)) {
-      Log.info('Car is Liked.');
-      isCarLiked(true);
-    } else {
-      Log.info('Car is Not Liked.');
-      isCarLiked(false);
     }
   }
 }

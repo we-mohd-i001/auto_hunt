@@ -9,9 +9,9 @@ import '../../../../vaahextendflutter/widgets/atoms/input_date_time.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_slider.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../../helpers/commons.dart';
-import '../../common_widgets/learn_more_with_title.dart';
+import '../../common_widgets/list_heading.dart';
 import '../../../../controllers/rent_checkout_controller.dart';
-import 'car_detail_input_form.dart';
+import 'card_detail_input_form.dart';
 import 'price_detail_widget.dart';
 
 class RentDetailForm extends StatelessWidget {
@@ -107,21 +107,20 @@ class RentDetailForm extends StatelessWidget {
               suffixIcon: FontAwesomeIcons.pencil,
               suffixOnTap: () {
                 Get.bottomSheet(
-                  CarDetailInputForm(
+                  CardDetailInputForm(
                     rentCheckoutController: rentCheckoutController,
                   ),
                 );
               },
               label: Strings.enterCardDetails),
           verticalMargin16,
-          const LearnMoreWithTitle(
-              title: Strings.priceDetails, changeLearnMore: ''),
+          const ListHeading(heading: Strings.priceDetails, subHeadingRight: ''),
           verticalMargin16,
           PriceDetailWidget(
             rentPrice: rentCheckoutController.carModel.carRentPricePerDay,
             days: rentCheckoutController.rentDays.value,
             tax: rentCheckoutController.carModel.carRentTax,
-            total: rentCheckoutController.totalRentPrice(
+            total: rentCheckoutController.getTotalRentPrice(
                 rentCheckoutController.carModel.carRentPricePerDay,
                 rentCheckoutController.carModel.carRentTax),
           ),
