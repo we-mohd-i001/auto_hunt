@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../helpers/constants/constants.dart';
-import '../../../controllers/liked_cars_controller.dart';
+import '../../../controllers/car/liked_cars_controller.dart';
 import '../../../models/car/car_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../helpers/commons.dart';

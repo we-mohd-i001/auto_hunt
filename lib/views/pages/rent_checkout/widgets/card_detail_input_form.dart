@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../controllers/rent_checkout_controller.dart';
+import '../../../../controllers/rent/rent_checkout_controller.dart';
 import '../../../../helpers/constants/constants.dart';
 import '../../../../vaahextendflutter/app_theme.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';

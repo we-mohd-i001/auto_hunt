@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../vaahextendflutter/app_theme.dart';
-import '../../../helpers/constants/consts.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
-import '../../../controllers/auth_controller.dart';
-import '../../../controllers/profile_controller.dart';
+import '../../../vaahextendflutter/widgets/atoms/tab_options.dart';
+import '../../../controllers/authentication/auth_controller.dart';
+import '../../../controllers/profile/profile_controller.dart';
+import '../../../helpers/constants/consts.dart';
+import '../../../helpers/constants/constants.dart';
 import '../../../helpers/commons.dart';
+import '../common_widgets/list_heading.dart';
 import '../common_widgets/profile_picture_container.dart';
 import '../liked_cars_list/liked_car_list_page.dart';
 import '../login/login_page.dart';
@@ -19,6 +22,7 @@ import 'profile_edit_page.dart';
 import 'widgets/edit_profile_button.dart';
 import 'widgets/liked_and_ordered_cars.dart';
 import 'widgets/navigator_widget_to_orders_and_liked.dart';
+import 'widgets/theme_info_widget.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -96,13 +100,24 @@ class ProfilePage extends StatelessWidget {
                       verticalMargin16,
                       verticalMargin4,
                       LikedAndOrderedCars(
-                          likedCount: '${data['liked_cars_count']}',
-                          orderCount: '${data['order_count']}'),
+                        likedCount: '${data['liked_cars_count']}',
+                        orderCount: '${data['order_count']}',
+                      ),
                       verticalMargin24,
                       verticalMargin2,
-                      NavigatorWidgetToOrdersAndLiked(likedCarsOnPressed: () {
-                        Navigator.push(context, LikedCarListPage.route(user));
-                      })
+                      NavigatorWidgetToOrdersAndLiked(
+                        likedCarsOnPressed: () {
+                          Navigator.push(context, LikedCarListPage.route(user));
+                        },
+                      ),
+                      verticalMargin24,
+                      verticalMargin2,
+                      const ListHeading(
+                        subHeadingRight: Strings.learnMore,
+                        heading: 'Information about Themes',
+                      ),
+                      verticalMargin16,
+                      const ThemeInfo(),
                     ],
                   ),
                 ),

@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../helpers/constants/consts.dart';
-import '../models/car/car_model.dart';
-import '../vaahextendflutter/services/logging_library/logging_library.dart';
+import '../../helpers/constants/consts.dart';
+import '../../models/car/car_model.dart';
+import '../../vaahextendflutter/services/logging_library/logging_library.dart';
 
 class BrandDetailController extends GetxController {
   final String brand;

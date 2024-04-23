@@ -2,18 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../controllers/brands_controller.dart';
-import '../../../controllers/brand_detail_controller.dart';
+import '../../../controllers/brand/brand_detail_controller.dart';
+import '../../../controllers/brand/brands_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
-import '../../../models/car/car_model.dart';
-import '../../../models/brands/brands_model.dart';
 import '../../../vaahextendflutter/widgets/debug.dart';
-import '../car_detail/car_detail_page.dart';
+import '../../../models/brands/brands_model.dart';
+import '../../../models/car/car_model.dart';
+import '../common_widgets/loading_widget_with_scaffold.dart';
+import '../common_widgets/error_widget_with_scaffold.dart';
 import '../common_widgets/car_detail_widget.dart';
 import '../common_widgets/category_list.dart';
 import '../common_widgets/custom_appbar.dart';
-import '../common_widgets/error_widget_with_scaffold.dart';
-import '../common_widgets/loading_widget_with_scaffold.dart';
+import '../car_detail/car_detail_page.dart';
 import 'widgets/cars_error_widget.dart';
 
 class BrandsDetailPage extends StatelessWidget {
@@ -26,14 +26,14 @@ class BrandsDetailPage extends StatelessWidget {
   });
 
   static Route<void> route(Brand brand, User? user) {
-    initializeController(brand);
+    _initialize(brand);
     return MaterialPageRoute(
       settings: const RouteSettings(name: '/brand'),
       builder: (_) => BrandsDetailPage(brand: brand, user: user),
     );
   }
 
-  static initializeController(Brand brand) {
+  static _initialize(Brand brand) {
     return Get.isRegistered<BrandDetailController>()
         ? Get.find<BrandDetailController>()
         : Get.put(

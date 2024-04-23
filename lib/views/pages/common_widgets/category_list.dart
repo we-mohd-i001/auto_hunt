@@ -6,7 +6,7 @@ import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
-import '../../../controllers/brands_controller.dart';
+import '../../../controllers/brand/brands_controller.dart';
 import '../home.dart';
 
 class CarCategoryListWidget extends StatelessWidget {

@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:yourtasks/helpers/services/posts_api.dart';
 import 'package:yourtasks/vaahextendflutter/services/logging_library/logging_library.dart';
 
-import '../helpers/constants/consts.dart';
-import '../models/car/car_model.dart';
+import '../../helpers/constants/consts.dart';
+import '../../models/car/car_model.dart';
 
 class SearchCarsController extends GetxController {
   RxBool isLoading = false.obs;

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import '../helpers/constants/consts.dart';
-import '../models/car/car_model.dart';
+import '../../helpers/constants/consts.dart';
+import '../../models/car/car_model.dart';
 
 class LikedCarsController extends GetxController {
   RxBool isLoading = false.obs;

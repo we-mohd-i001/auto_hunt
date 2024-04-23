@@ -11,7 +11,7 @@ import 'services/logging_library/logging_library.dart';
 
 // Version and build
 const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
-const String build = '2024041702'; // build no format 'YYYYMMDDNUMBER'
+const String build = '2024042303'; // build no format 'YYYYMMDDNUMBER'
 
 final EnvironmentConfig defaultConfig = EnvironmentConfig(
     appTitle: 'Auto.Hunt',

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../vaahextendflutter/services/logging_library/logging_library.dart';
-import '../../../controllers/chat_list_controller.dart';
+import '../../../controllers/chat/chat_list_controller.dart';
 import '../../../models/chat/chat_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../helpers/commons.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../models/car/car_model.dart';
+import '../../models/car/car_model.dart';
 
 class RentCheckoutController extends GetxController {
   CarModel carModel;

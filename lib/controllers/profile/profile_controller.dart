@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 import 'package:path/path.dart' show basename;
 import 'package:image_picker/image_picker.dart';
 
-import '../helpers/constants/consts.dart';
-import '../vaahextendflutter/helpers/alerts.dart';
+import '../../helpers/constants/consts.dart';
+import '../../vaahextendflutter/helpers/alerts.dart';
 
 class ProfileController extends GetxController {
   FirebaseAuth fireAuth = FirebaseAuth.instance;

@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 
 import '../../../helpers/constants/constants.dart';
 import '../../../helpers/constants/others/other_consts.dart';
-import '../../../controllers/home_controller.dart';
-import '../../../controllers/liked_cars_controller.dart';
-import '../../../controllers/profile_controller.dart';
-import '../../../controllers/user_location_controller.dart';
+import '../../../controllers/home/home_controller.dart';
+import '../../../controllers/car/liked_cars_controller.dart';
+import '../../../controllers/profile/profile_controller.dart';
+import '../../../controllers/home/user_location_controller.dart';
 import '../../../models/car/car_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';

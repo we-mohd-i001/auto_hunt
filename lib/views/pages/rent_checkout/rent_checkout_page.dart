@@ -10,7 +10,7 @@ import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../helpers/commons.dart';
 import '../common_widgets/custom_appbar.dart';
 import '../common_widgets/my_custom_button.dart';
-import '../../../controllers/rent_checkout_controller.dart';
+import '../../../controllers/rent/rent_checkout_controller.dart';
 import '../main_navigator/main_navigator.dart';
 import 'widgets/car_bio_mini.dart';
 import 'widgets/rent_detail_form.dart';

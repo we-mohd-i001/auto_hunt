@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../controllers/splash_controller.dart';
+import '../../../controllers/splash/splash_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../common_widgets/logo_with_name.dart';
 

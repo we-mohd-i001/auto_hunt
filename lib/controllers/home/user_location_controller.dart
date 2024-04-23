@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../vaahextendflutter/helpers/alerts.dart';
-import '../views/pages/permission_denied.dart';
+import '../../vaahextendflutter/helpers/alerts.dart';
+import '../../views/pages/permission_denied.dart';
 
 class UserLocationController extends GetxController {
   RxString currentLocation = 'Location Unavailable'.obs;

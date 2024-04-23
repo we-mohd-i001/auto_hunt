@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../helpers/constants/consts.dart';
-import '../vaahextendflutter/helpers/alerts.dart';
-import '../vaahextendflutter/services/logging_library/logging_library.dart';
-import 'main_navigator_controller.dart';
-import 'profile_controller.dart';
+import '../../helpers/constants/consts.dart';
+import '../../vaahextendflutter/helpers/alerts.dart';
+import '../../vaahextendflutter/services/logging_library/logging_library.dart';
+import '../main_navigator/main_navigator_controller.dart';
+import '../profile/profile_controller.dart';
 
 class ChatController extends GetxController {
   ChatController({

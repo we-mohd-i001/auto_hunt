@@ -10,7 +10,7 @@ import '../../../../vaahextendflutter/widgets/atoms/input_slider.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../../helpers/commons.dart';
 import '../../common_widgets/list_heading.dart';
-import '../../../../controllers/rent_checkout_controller.dart';
+import '../../../../controllers/rent/rent_checkout_controller.dart';
 import 'card_detail_input_form.dart';
 import 'price_detail_widget.dart';
 
