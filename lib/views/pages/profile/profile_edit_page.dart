@@ -116,7 +116,7 @@ class ProfileEditPage extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
-                          child: Text('Change Name', style: subheading),
+                          child: Text('Change Name', style: subheadingBlack),
                         ),
                         Align(
                           alignment: Alignment.topLeft,
@@ -162,7 +162,8 @@ class ProfileEditPage extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
-                          child: Text('Change Password', style: subheading),
+                          child:
+                              Text('Change Password', style: subheadingBlack),
                         ),
                         Align(
                             alignment: Alignment.topLeft,
