@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:yourtasks/main.dart';
 
 import '../../../helpers/constants/constants.dart';
 import '../../../helpers/constants/others/other_consts.dart';
@@ -115,9 +117,14 @@ class HomePage extends StatelessWidget {
                       user: user,
                     );
                   }),
-                  const ListHeading(
-                    heading: Strings.likedCars,
-                    subHeadingRight: Strings.learnMore,
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => const MyTestApp());
+                    },
+                    child: const ListHeading(
+                      heading: Strings.likedCars,
+                      subHeadingRight: Strings.learnMore,
+                    ),
                   ),
                   StreamBuilder(
                     stream: likedCarsController.getLikedCars(user!.uid),

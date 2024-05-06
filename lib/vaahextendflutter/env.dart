@@ -11,36 +11,39 @@ import 'services/logging_library/logging_library.dart';
 
 // Version and build
 const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
-const String build = '2024042303'; // build no format 'YYYYMMDDNUMBER'
+const String build = '2024042601'; // build no format 'YYYYMMDDNUMBER'
 
 final EnvironmentConfig defaultConfig = EnvironmentConfig(
-    appTitle: 'Auto.Hunt',
-    appTitleShort: 'Auto.Hunt',
-    envType: 'default',
-    version: version,
-    build: build,
-    backendUrl: '',
-    apiUrl: 'https://51eca2ace39c4d1a890938712349c34b.api.mockbin.io',
-    timeoutLimit: 20 * 1000, // 20 seconds
-    enableLocalLogs: true,
-    enableCloudLogs: true,
-    enableApiLogInterceptor: true,
-    pushNotificationsServiceType: PushNotificationsServiceType.remote,
-    internalNotificationsServiceType: InternalNotificationsServiceType.none,
-    showDebugPanel: true,
-    debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
-    firebaseId: 'mohd-i001@webreinvent.com',
-    oneSignalConfig:
-        const OneSignalConfig(appId: '53dd3db0-5f0e-40be-936c-31f8022a391a'),
-    sentryConfig: const SentryConfig(
-      dsn:
-          'https://67fb7037cd9c95f3680d0b5b48d4b394@o4506977107050496.ingest.us.sentry.io/4506977112424448',
-      enableAutoPerformanceTracing: true,
-      autoAppStart: true,
-      enableUserInteractionTracing: true,
-      enableAssetsInstrumentation: true,
-      tracesSampleRate: 0.6,
-    ));
+  appTitle: 'Auto.Hunt',
+  appTitleShort: 'Auto.Hunt',
+  envType: 'default',
+  version: version,
+  build: build,
+  backendUrl: '',
+  apiUrl: 'https://51eca2ace39c4d1a890938712349c34b.api.mockbin.io',
+  timeoutLimit: 20 * 1000, // 20 seconds
+  enableLocalLogs: true,
+  enableCloudLogs: true,
+  enableApiLogInterceptor: true,
+  pushNotificationsServiceType: PushNotificationsServiceType.remote,
+  internalNotificationsServiceType: InternalNotificationsServiceType.none,
+  localStorageType: LocalStorageType.hive,
+  networkStorageType: NetworkStorageType.firebase,
+  showDebugPanel: true,
+  debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
+  firebaseId: 'mohd-i001@webreinvent.com',
+  oneSignalConfig:
+      const OneSignalConfig(appId: '53dd3db0-5f0e-40be-936c-31f8022a391a'),
+  sentryConfig: const SentryConfig(
+    dsn:
+        'https://67fb7037cd9c95f3680d0b5b48d4b394@o4506977107050496.ingest.us.sentry.io/4506977112424448',
+    enableAutoPerformanceTracing: true,
+    autoAppStart: true,
+    enableUserInteractionTracing: true,
+    enableAssetsInstrumentation: true,
+    tracesSampleRate: 0.6,
+  ),
+);
 
 // To add new configuration add new key, value pair in envConfigs
 Map<String, EnvironmentConfig> _envConfigs = {
@@ -111,6 +114,8 @@ class EnvironmentConfig {
   final bool enableApiLogInterceptor;
   final PushNotificationsServiceType pushNotificationsServiceType;
   final InternalNotificationsServiceType internalNotificationsServiceType;
+  final LocalStorageType localStorageType;
+  final NetworkStorageType networkStorageType;
   final OneSignalConfig? oneSignalConfig;
   final PusherConfig? pusherConfig;
   final bool showDebugPanel;
@@ -133,6 +138,8 @@ class EnvironmentConfig {
     required this.enableApiLogInterceptor,
     required this.pushNotificationsServiceType,
     required this.internalNotificationsServiceType,
+    required this.localStorageType,
+    required this.networkStorageType,
     this.oneSignalConfig,
     this.pusherConfig,
     required this.showDebugPanel,
@@ -179,6 +186,8 @@ class EnvironmentConfig {
     bool? enableApiLogInterceptor,
     PushNotificationsServiceType? pushNotificationsServiceType,
     InternalNotificationsServiceType? internalNotificationsServiceType,
+    LocalStorageType? localStorageType,
+    NetworkStorageType? networkStorageType,
     OneSignalConfig? oneSignalConfig,
     PusherConfig? pusherConfig,
     bool? showDebugPanel,
@@ -204,6 +213,8 @@ class EnvironmentConfig {
           pushNotificationsServiceType ?? this.pushNotificationsServiceType,
       internalNotificationsServiceType: internalNotificationsServiceType ??
           this.internalNotificationsServiceType,
+      localStorageType: localStorageType ?? this.localStorageType,
+      networkStorageType: networkStorageType ?? this.networkStorageType,
       oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
       pusherConfig: pusherConfig ?? this.pusherConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
@@ -221,6 +232,10 @@ class EnvironmentConfig {
 enum PushNotificationsServiceType { local, remote, both, none }
 
 enum InternalNotificationsServiceType { pusher, firebase, custom, none }
+
+enum LocalStorageType { hive, flutterSecureStorage, none }
+
+enum NetworkStorageType { firebase, supabase, none }
 
 class SentryConfig {
   final String dsn;
