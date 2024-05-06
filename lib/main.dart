@@ -18,20 +18,25 @@ Future<void> main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtYmdjbm91eXdwZ3Vucml1ZHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4OTk3NDMsImV4cCI6MjAyNTQ3NTc0M30.kRmshqh_welj6_fv-CE5sIDv5h3PzwofGOJseqnGHwI',
   );
+
+  final instance = Supabase.instance.client;
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
 
-  // runApp(MaterialApp(
-  //   routes: {
-  //     '/': (context) => const MyTestApp(),
-  //   },
-  // ));
+  final Storage storage = Storage.createLocal(name: 'UserData');
+  await storage.init();
 
-  await baseController.init(
-    firebaseOptions: DefaultFirebaseOptions.currentPlatform,
-    app: const AppConfig(),
-    errorApp: const ErrorAppConfig(),
-  ); // Pass main app as argument in init method
+  runApp(MaterialApp(
+    routes: {
+      '/': (context) => const MyTestApp(),
+    },
+  ));
+
+  // await baseController.init(
+  //   firebaseOptions: DefaultFirebaseOptions.currentPlatform,
+  //   app: const AppConfig(),
+  //   errorApp: const ErrorAppConfig(),
+  // ); // Pass main app as argument in init method
 }
 
 class MyTestApp extends StatefulWidget {
@@ -43,7 +48,7 @@ class MyTestApp extends StatefulWidget {
 
 class _MyTestAppState extends State<MyTestApp> {
   final Storage storage = Storage.createLocal(name: 'UserData');
-  final Storage networkStorage = Storage.createNetwork(name: 'NetworkStorage');
+  //final Storage networkStorage = Storage.createNetwork(name: 'NetworkStorage');
 
   String value = 'Data';
   String updatedData = 'Updated Data';
@@ -54,11 +59,11 @@ class _MyTestAppState extends State<MyTestApp> {
   UserLucky emptyUser = UserLucky(name: 'null', age: 'null');
   createUsingFirebase() async {
     user1 = UserLucky(name: 'Firebase Check', age: '12');
-    await networkStorage.create(
-      key: 'dave',
-      value: user1.toJson(),
-    );
-    storedData = await networkStorage.read(key: 'dave');
+    // await networkStorage.create(
+    //   key: 'dave',
+    //   value: user1.toJson(),
+    // );
+    // storedData = await networkStorage.read(key: 'dave');
   }
 
   updateAndGet() async {
@@ -134,9 +139,9 @@ class _MyTestAppState extends State<MyTestApp> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    print(await storage.read(key: ['john', 'dave']));
+                    print(await storage.read());
                   },
-                  child: const Text('Delete'),
+                  child: const Text('Read All'),
                 ),
               ],
             ),

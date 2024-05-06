@@ -9,9 +9,7 @@ import '../../storage.dart';
 class HiveStorageImpl implements Storage {
   final String name;
   HiveCipher? encryptionCypher;
-
   Box? box;
-
   HiveStorageImpl({
     required this.name,
     this.encryptionCypher,
@@ -48,7 +46,7 @@ class HiveStorageImpl implements Storage {
         }
       } else {
         throw ArgumentError(
-            'Data type not accepted. allowed types key{String, List<String>} data {String, List<String>, Map<String, String>}');
+            'key must be String or List<String>, data must be String, List<String>, or Map<String, String>');
       }
     } else {
       throw Exception('Box is null, not initiized.');
@@ -80,7 +78,7 @@ class HiveStorageImpl implements Storage {
         value = box!.toMap();
         return value;
       } else {
-        throw ArgumentError('Key must be of type String or List<String>');
+        throw ArgumentError('key must be of type String or List<String>');
       }
     } else {
       throw Exception('Box is null, not initiized.');
@@ -97,8 +95,10 @@ class HiveStorageImpl implements Storage {
         if (box!.containsKey(key)) {
           await box!.delete(key);
         }
+      } else if (key == null) {
+        await box!.clear();
       } else {
-        throw ArgumentError('Key must be of type String or List<String>');
+        throw ArgumentError('key must be of type String or List<String>');
       }
     } else {
       throw Exception('Box is null, not initiized.');

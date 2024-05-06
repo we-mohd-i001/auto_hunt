@@ -3,7 +3,7 @@ import 'encrypted/flutter_secure_storage_encrypted.dart';
 import 'encrypted/hive_encrypted_data_storage.dart';
 import 'local/flutter_secure_storage/flutter_secure_storage_impl.dart';
 import 'local/hive/hive_storage_impl.dart';
-import 'network/firebase/firebase_firestore_network_data_storage.dart';
+import 'network/firebase/firestore_storage_impl.dart';
 
 abstract class Storage {
   static final EnvironmentConfig _envConfig = EnvironmentConfig.getEnvConfig();
@@ -24,7 +24,7 @@ abstract class Storage {
     switch (_envConfig.networkStorageType) {
       case NetworkStorageType.firebase:
         final firestore =
-            FirebaseNetworkStorage(collectionName: name ?? 'default');
+            FirestoreStorageImpl(collectionName: name ?? 'default');
         firestore.init();
         return firestore;
       case NetworkStorageType.supabase:
@@ -38,7 +38,6 @@ abstract class Storage {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
         final hive = HiveLocalDataEncryptedStorage(name: name ?? 'default');
-        hive.init();
         return hive;
       case LocalStorageType.flutterSecureStorage:
         return FlutterSecureStorageLocalEncryptedDataStorage();

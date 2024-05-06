@@ -20,7 +20,7 @@ class FlutterSecureStorageImpl implements Storage {
       await storage.write(key: key, value: value);
     } else {
       throw ArgumentError(
-          'Data type not accepted. allowed types key{String List<String>} valueKey {String, List<String>}');
+          'key must be String or List<String>, data must be String, or List<String>');
     }
   }
 
@@ -40,8 +40,7 @@ class FlutterSecureStorageImpl implements Storage {
       result = await storage.readAll();
       return result;
     } else {
-      throw ArgumentError(
-          'Key of type ${key.runtimeType} not accepted, allowed types {String, List<String>} ');
+      throw ArgumentError('key must be of type String or List<String>');
     }
   }
 
@@ -64,7 +63,8 @@ class FlutterSecureStorageImpl implements Storage {
       await storage.deleteAll();
     } else {
       throw ArgumentError(
-          'Key of type ${key.runtimeType} not accepted, allowed types {String, List<String>} ');
+        'key must be of type String or List<String>',
+      );
     }
   }
 }
