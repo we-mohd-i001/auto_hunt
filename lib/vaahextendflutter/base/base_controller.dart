@@ -48,11 +48,13 @@ class BaseController extends GetxController {
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
         await SentryFlutter.init(
           (options) => options
-            ..dsn = 'https://67fb7037cd9c95f3680d0b5b48d4b394@o4506977107050496.ingest.us.sentry.io/4506977112424448'
+            ..dsn = config.sentryConfig!.dsn
             ..autoAppStart = config.sentryConfig!.autoAppStart
             ..tracesSampleRate = config.sentryConfig!.tracesSampleRate
-            ..enableAutoPerformanceTracing = config.sentryConfig!.enableAutoPerformanceTracing
-            ..enableUserInteractionTracing = config.sentryConfig!.enableUserInteractionTracing
+            ..enableAutoPerformanceTracing =
+                config.sentryConfig!.enableAutoPerformanceTracing
+            ..enableUserInteractionTracing =
+                config.sentryConfig!.enableUserInteractionTracing
             ..environment = config.envType,
         );
         Widget child = app;

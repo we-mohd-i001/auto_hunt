@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../vaahextendflutter/services/api.dart';
 
+//for testing Api class from vaah flutter
 class PostsApi {
   static const String apiEndPoint = '/';
   static Map<String, dynamic>? fetchedPosts;
