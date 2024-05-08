@@ -26,17 +26,17 @@ Future<void> main() async {
   final Storage storage = Storage.createLocal(name: 'UserData');
   await storage.init();
 
-  runApp(MaterialApp(
-    routes: {
-      '/': (context) => const MyTestApp(),
-    },
-  ));
+  // runApp(MaterialApp(
+  //   routes: {
+  //     '/': (context) => const MyTestApp(),
+  //   },
+  // ));
 
-  // await baseController.init(
-  //   firebaseOptions: DefaultFirebaseOptions.currentPlatform,
-  //   app: const AppConfig(),
-  //   errorApp: const ErrorAppConfig(),
-  // ); // Pass main app as argument in init method
+  await baseController.init(
+    firebaseOptions: DefaultFirebaseOptions.currentPlatform,
+    app: const AppConfig(),
+    errorApp: const ErrorAppConfig(),
+  ); // Pass main app as argument in init method
 }
 
 class MyTestApp extends StatefulWidget {
