@@ -1,3 +1,5 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../env.dart';
 import 'encrypted/flutter_secure_storage_encrypted.dart';
 import 'encrypted/hive_encrypted_data_storage.dart';
@@ -46,6 +48,8 @@ abstract class Storage {
     }
   }
 
+  Storage();
+
   Future<void> init();
 
   Future<void> create({dynamic key, dynamic value});
@@ -55,6 +59,60 @@ abstract class Storage {
   Future<dynamic> update({dynamic key, dynamic value});
 
   void delete({dynamic key});
+}
+
+abstract class NetworkStorage extends Storage {
+  @override
+  Future<void> init();
+
+  @override
+  Future<void> create({
+    dynamic key,
+    dynamic value,
+  });
+
+  @override
+  Future<dynamic> read({dynamic key, List<String>? filters});
+
+  @override
+  Future<dynamic> update({dynamic key, dynamic value});
+
+  @override
+  void delete({dynamic key});
+}
+
+class SupabaseImpl implements NetworkStorage {
+  final instance = Supabase.instance.client;
+  @override
+  Future<void> create({
+    key,
+    value,
+  }) {
+    // TODO: implement create
+    throw UnimplementedError();
+  }
+
+  @override
+  void delete({key}) {
+    // TODO: implement delete
+  }
+
+  @override
+  Future<void> init() {
+    // TODO: implement init
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<dynamic> read({key, List<String>? filters}) {
+    return instance.from('key').select();
+  }
+
+  @override
+  Future update({key, value}) {
+    // TODO: implement update
+    throw UnimplementedError();
+  }
 }
 
 class NullStorage implements Storage {
