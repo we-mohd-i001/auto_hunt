@@ -83,25 +83,23 @@ abstract class NetworkStorage extends Storage {
 
 class SupabaseImpl implements NetworkStorage {
   final instance = Supabase.instance.client;
+
   @override
   Future<void> create({
     key,
     value,
   }) {
-    // TODO: implement create
+    instance.from(key).insert(value);
     throw UnimplementedError();
   }
 
   @override
   void delete({key}) {
-    // TODO: implement delete
+    instance.from(key).delete();
   }
 
   @override
-  Future<void> init() {
-    // TODO: implement init
-    throw UnimplementedError();
-  }
+  Future<void> init() async {}
 
   @override
   Future<dynamic> read({key, List<String>? filters}) {
@@ -109,9 +107,8 @@ class SupabaseImpl implements NetworkStorage {
   }
 
   @override
-  Future update({key, value}) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<dynamic> update({key, value}) {
+    return instance.from(key).update(value);
   }
 }
 
