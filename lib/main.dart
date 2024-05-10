@@ -19,7 +19,11 @@ Future<void> main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtYmdjbm91eXdwZ3Vucml1ZHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4OTk3NDMsImV4cCI6MjAyNTQ3NTc0M30.kRmshqh_welj6_fv-CE5sIDv5h3PzwofGOJseqnGHwI',
   );
 
-  final instance = Supabase.instance.client;
+  final db = Database(useFirestore: false);
+  var iVlue = await db.getCollection('path');
+  var iVlueq = await db.getDocument('path');
+  print('~~~> $iVlue');
+  print('~~~> $iVlueq');
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
 

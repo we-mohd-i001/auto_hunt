@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../env.dart';
@@ -135,8 +136,6 @@ class NullStorage implements Storage {
   }
 }
 
-
-
 //   @override
 //   void create(key, String data, bool isMultiple) {}
 // }
@@ -162,4 +161,126 @@ class NullStorage implements Storage {
 //   void create(key, String data, bool isMultiple) {}
 // }
 
+abstract class DatabaseService {
+  Future<dynamic> getDocument(String path);
+  Future<dynamic> getCollection(String path);
+  Future<void> setDocument(String path, Map<String, dynamic> data);
+  Future<void> updateDocument(String path, Map<String, dynamic> data);
+  Future<void> deleteDocument(String path);
+}
 
+class FirestoreService implements DatabaseService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  @override
+  Future<dynamic> getDocument(String path) async {
+    try {
+      final snapshot = await _firestore.doc(path).get();
+      return snapshot;
+    } catch (e) {
+      throw Exception('Failed to get document: $e');
+    }
+  }
+
+  @override
+  Future<List<dynamic>> getCollection(String path) async {
+    try {
+      final snapshot = await _firestore.collection(path).get();
+      return snapshot.docs;
+    } catch (e) {
+      throw Exception('Failed to get collection: $e');
+    }
+  }
+
+  @override
+  Future<void> setDocument(String path, Map<String, dynamic> data) async {
+    try {
+      await _firestore.doc(path).set(data);
+    } catch (e) {
+      throw Exception('Failed to set document: $e');
+    }
+  }
+
+  @override
+  Future<void> updateDocument(String path, Map<String, dynamic> data) async {
+    try {
+      await _firestore.doc(path).update(data);
+    } catch (e) {
+      throw Exception('Failed to update document: $e');
+    }
+  }
+
+  @override
+  Future<void> deleteDocument(String path) async {
+    try {
+      await _firestore.doc(path).delete();
+    } catch (e) {
+      throw Exception('Failed to delete document: $e');
+    }
+  }
+}
+
+///these static values can be changed from the method call provided by the user
+class SupabaseService implements DatabaseService {
+  final instance = Supabase.instance.client;
+
+  @override
+  Future<dynamic> getDocument(String path) async {
+    try {
+      final response = await instance
+          .from('countries')
+          .select()
+          .eq('name', 'Canada')
+          .single();
+      final Map<String, dynamic> data = response;
+      return data;
+    } catch (_) {}
+  }
+
+  @override
+  Future<dynamic> getCollection(String path) async {
+    try {
+      final response = await instance.from('countries').select();
+      final List<dynamic> dataList = response;
+      return dataList;
+    } catch (_) {}
+  }
+
+  @override
+  Future<void> setDocument(
+      String collectionName, Map<String, dynamic> data) async {
+    try {
+      await instance.from('countries').upsert(data);
+    } catch (_) {}
+  }
+
+  @override
+  Future<void> updateDocument(
+      String collectionName, Map<String, dynamic> data) async {
+    try {
+      await instance.from('countries').update(data).eq('id', 'Canada');
+    } catch (_) {}
+  }
+
+  @override
+  Future<void> deleteDocument(String path) async {
+    try {
+      await instance.from(path).delete().eq('id', path);
+    } catch (_) {}
+  }
+}
+
+class Database {
+  final DatabaseService _service;
+
+  Database({required bool useFirestore})
+      : _service = useFirestore ? FirestoreService() : SupabaseService();
+
+  Future<dynamic> getDocument(String path) => _service.getDocument(path);
+  Future<dynamic> getCollection(String path) => _service.getCollection(path);
+  Future<void> setDocument(String path, Map<String, dynamic> data) =>
+      _service.setDocument(path, data);
+  Future<void> updateDocument(String path, Map<String, dynamic> data) =>
+      _service.updateDocument(path, data);
+  Future<void> deleteDocument(String path) => _service.deleteDocument(path);
+}
