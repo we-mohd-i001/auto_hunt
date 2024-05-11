@@ -23,8 +23,10 @@ Future<void> main() async {
   var iVlue = await db.getCollection();
   var iVlueq =
       await db.getDocument(eq: Eq(column: 'name', value: 'South Korea'));
+  //await db.setDocument({'id': 6, 'name': 'Jamaica'});
   // await db.updateDocument(
   //   {'name': 'Vatican City'},
+  //   eq: Eq(column: 'id', value: 2),
   // );
   print('~~~> $iVlue, Type: ${iVlue.runtimeType}');
   print('~~~> $iVlueq, Type: ${iVlueq.runtimeType}');

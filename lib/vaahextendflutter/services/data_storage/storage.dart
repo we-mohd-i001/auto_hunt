@@ -263,9 +263,10 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<void> setDocument(Map<String, dynamic> data) async {
+  Future<void> setDocument(Map<String, dynamic> data,
+      {String? onConflict}) async {
     try {
-      await instance.from(collectionName).upsert(data);
+      await instance.from(collectionName).upsert(data, onConflict: onConflict);
     } catch (_) {}
   }
 
@@ -306,11 +307,22 @@ class SupabaseService implements DatabaseService {
   @override
   Future<void> deleteDocument({Eq? eq, Neq? neq}) async {
     try {
-      if (eq != null) {
+      if (eq != null && neq == null) {
         await instance.from(collectionName).delete().eq(eq.column, eq.value);
-      } else if (neq != null) {
+      } else if (neq != null && eq == null) {
         await instance.from(collectionName).delete().neq(neq.column, neq.value);
+      } else if (eq != null && neq != null) {
+        await instance
+            .from(collectionName)
+            .delete()
+            .neq(neq.column, neq.value)
+            .eq(eq.column, eq.value);
+      } else {
+        throw ArgumentError();
       }
+    } on ArgumentError {
+      throw ArgumentError(
+          'Please provide eq or neq or both to filter out the document to delete.');
     } catch (_) {}
   }
 }
