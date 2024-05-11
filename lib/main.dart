@@ -19,11 +19,9 @@ Future<void> main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtYmdjbm91eXdwZ3Vucml1ZHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4OTk3NDMsImV4cCI6MjAyNTQ3NTc0M30.kRmshqh_welj6_fv-CE5sIDv5h3PzwofGOJseqnGHwI',
   );
 
-  final db = Database(useFirestore: false);
-  var iVlue = await db.getCollection('countries');
-  var iVlueq = await db.getDocument(
-    'countries',
-  );
+  final db = Database(useFirestore: false, collectionName: 'countries');
+  var iVlue = await db.getCollection();
+  var iVlueq = await db.getDocument();
   //await db.setDocument('countries', {'id': 5, 'name': 'Japan'});
   print('~~~> $iVlue');
   print('~~~> $iVlueq');

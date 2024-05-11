@@ -162,20 +162,23 @@ class NullStorage implements Storage {
 // }
 
 abstract class DatabaseService {
-  Future<dynamic> getDocument(String path, {Eq? eq});
-  Future<dynamic> getCollection(String documentName);
-  Future<void> setDocument(String path, Map<String, dynamic> data);
-  Future<void> updateDocument(String path, Map<String, dynamic> data, {Eq? eq});
-  Future<void> deleteDocument(String path);
+  Future<dynamic> getDocument({Eq? eq});
+  Future<dynamic> getCollection();
+  Future<void> setDocument(Map<String, dynamic> data);
+  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq});
+  Future<void> deleteDocument();
 }
 
 class FirestoreService implements DatabaseService {
+  final String collectionName;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  FirestoreService({required this.collectionName});
+
   @override
-  Future<dynamic> getDocument(String path, {Eq? eq}) async {
+  Future<dynamic> getDocument({Eq? eq}) async {
     try {
-      final snapshot = await _firestore.doc(path).get();
+      final snapshot = await _firestore.doc(collectionName).get();
       return snapshot;
     } catch (e) {
       throw Exception('Failed to get document: $e');
@@ -183,9 +186,9 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<List<dynamic>> getCollection(String path) async {
+  Future<List<dynamic>> getCollection() async {
     try {
-      final snapshot = await _firestore.collection(path).get();
+      final snapshot = await _firestore.collection(collectionName).get();
       return snapshot.docs;
     } catch (e) {
       throw Exception('Failed to get collection: $e');
@@ -193,28 +196,27 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<void> setDocument(String path, Map<String, dynamic> data) async {
+  Future<void> setDocument(Map<String, dynamic> data) async {
     try {
-      await _firestore.doc(path).set(data);
+      await _firestore.doc(collectionName).set(data);
     } catch (e) {
       throw Exception('Failed to set document: $e');
     }
   }
 
   @override
-  Future<void> updateDocument(String path, Map<String, dynamic> data,
-      {Eq? eq}) async {
+  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq}) async {
     try {
-      await _firestore.doc(path).update(data);
+      await _firestore.doc(collectionName).update(data);
     } catch (e) {
       throw Exception('Failed to update document: $e');
     }
   }
 
   @override
-  Future<void> deleteDocument(String path) async {
+  Future<void> deleteDocument() async {
     try {
-      await _firestore.doc(path).delete();
+      await _firestore.doc(collectionName).delete();
     } catch (e) {
       throw Exception('Failed to delete document: $e');
     }
@@ -222,21 +224,25 @@ class FirestoreService implements DatabaseService {
 }
 
 class SupabaseService implements DatabaseService {
+  final String collectionName;
+  SupabaseService({
+    required this.collectionName,
+  });
   final instance = Supabase.instance.client;
 
   @override
-  Future<dynamic> getDocument(String documentName, {Eq? eq}) async {
+  Future<dynamic> getDocument({Eq? eq}) async {
     try {
       if (eq != null) {
         final response = await instance
-            .from(documentName)
+            .from(collectionName)
             .select()
             .eq(eq.column, eq.value)
             .single();
         final Map<String, dynamic> data = response;
         return data;
       } else {
-        final response = await instance.from(documentName).select().single();
+        final response = await instance.from(collectionName).select().single();
         final Map<String, dynamic> data = response;
         return data;
       }
@@ -244,7 +250,7 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<dynamic> getCollection(String path) async {
+  Future<dynamic> getCollection() async {
     try {
       final response = await instance.from('countries').select();
       final List<dynamic> dataList = response;
@@ -253,16 +259,14 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<void> setDocument(
-      String collectionName, Map<String, dynamic> data) async {
+  Future<void> setDocument(Map<String, dynamic> data) async {
     try {
       await instance.from(collectionName).upsert(data);
     } catch (_) {}
   }
 
   @override
-  Future<void> updateDocument(String collectionName, Map<String, dynamic> data,
-      {Eq? eq}) async {
+  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq}) async {
     try {
       if (eq != null) {
         await instance.from('countries').update(data).eq(eq.column, eq.value);
@@ -273,30 +277,42 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<void> deleteDocument(String path) async {
+  Future<void> deleteDocument() async {
     try {
-      await instance.from(path).delete().neq('id', path);
+      await instance.from(collectionName).delete().neq('id', collectionName);
     } catch (_) {}
   }
 }
 
 class Database {
   final DatabaseService _service;
+  final String collectionName;
 
-  Database({required bool useFirestore})
-      : _service = useFirestore ? FirestoreService() : SupabaseService();
+  Database({required this.collectionName, required bool useFirestore})
+      : _service = useFirestore
+            ? FirestoreService(collectionName: collectionName)
+            : SupabaseService(collectionName: collectionName);
 
-  ///Returns a single document from [Supabase] or [FirebaseFirestore],
+  ///Returns a single document from a collection stored in [Supabase] or [FirebaseFirestore],
   ///
-  ///Required [documentName] and an Object of [Eq] for applying filters
-  Future<dynamic> getDocument(String documentName, {Eq? eq}) =>
-      _service.getDocument(documentName);
-  Future<dynamic> getCollection(String path) => _service.getCollection(path);
-  Future<void> setDocument(String path, Map<String, dynamic> data) =>
-      _service.setDocument(path, data);
-  Future<void> updateDocument(String path, Map<String, dynamic> data) =>
-      _service.updateDocument(path, data);
-  Future<void> deleteDocument(String path) => _service.deleteDocument(path);
+  ///Required [collectionName] and an Object of [Eq] for applying filters
+  Future<dynamic> getDocument({Eq? eq}) => _service.getDocument();
+
+  ///Returns all documents from [Supabase] or [FirebaseFirestore],
+  ///
+  ///Required [collectionName]
+  Future<dynamic> getCollection() => _service.getCollection();
+
+  ///
+  Future<void> setDocument(Map<String, dynamic> data) =>
+      _service.setDocument(data);
+
+  ///
+  Future<void> updateDocument(Map<String, dynamic> data) =>
+      _service.updateDocument(data);
+
+  ///
+  Future<void> deleteDocument() => _service.deleteDocument();
 }
 
 class Eq {
