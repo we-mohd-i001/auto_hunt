@@ -10,6 +10,12 @@ import 'network/firebase/firestore_storage_impl.dart';
 
 abstract class Storage {
   static final EnvironmentConfig _envConfig = EnvironmentConfig.getEnvConfig();
+
+  ///Creates a new Local Storage [HiveStorageImpl] or [FlutterSecureStorageImpl]
+  ///
+  ///The argument [name] is used to open Hive box with that name.
+  ///
+  ///If you don't provide [name], 'default' will be used
   factory Storage.createLocal({String? name}) {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
@@ -23,6 +29,7 @@ abstract class Storage {
     }
   }
 
+  ///Creates a new Network Storage [FirestoreStorageImpl]
   factory Storage.createNetwork({String? name}) {
     switch (_envConfig.networkStorageType) {
       case NetworkStorageType.firebase:
@@ -37,6 +44,7 @@ abstract class Storage {
     }
   }
 
+  ///Creates a new Encrypted Local Storage [HiveLocalDataEncryptedStorage]
   factory Storage.createEncryptedLocal(String? name) {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
@@ -162,11 +170,11 @@ class NullStorage implements Storage {
 // }
 
 abstract class DatabaseService {
-  Future<dynamic> getDocument({Eq? eq});
+  Future<dynamic> getDocument({required Eq eq});
   Future<dynamic> getCollection();
   Future<void> setDocument(Map<String, dynamic> data);
   Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq});
-  Future<void> deleteDocument();
+  Future<void> deleteDocument({Eq? eq, Neq? neq});
 }
 
 class FirestoreService implements DatabaseService {
@@ -176,7 +184,7 @@ class FirestoreService implements DatabaseService {
   FirestoreService({required this.collectionName});
 
   @override
-  Future<dynamic> getDocument({Eq? eq}) async {
+  Future<dynamic> getDocument({required Eq eq}) async {
     try {
       final snapshot = await _firestore.doc(collectionName).get();
       return snapshot;
@@ -214,7 +222,7 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<void> deleteDocument() async {
+  Future<void> deleteDocument({Eq? eq, Neq? neq}) async {
     try {
       await _firestore.doc(collectionName).delete();
     } catch (e) {
@@ -231,28 +239,24 @@ class SupabaseService implements DatabaseService {
   final instance = Supabase.instance.client;
 
   @override
-  Future<dynamic> getDocument({Eq? eq}) async {
+  Future<dynamic> getDocument({required Eq eq}) async {
     try {
-      if (eq != null) {
-        final response = await instance
-            .from(collectionName)
-            .select()
-            .eq(eq.column, eq.value)
-            .single();
-        final Map<String, dynamic> data = response;
-        return data;
-      } else {
-        final response = await instance.from(collectionName).select().single();
-        final Map<String, dynamic> data = response;
-        return data;
-      }
-    } catch (_) {}
+      final response = await instance
+          .from(collectionName)
+          .select('id')
+          .eq(eq.column, eq.value)
+          .single();
+      final Map<String, dynamic> document = response;
+      return document;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
   Future<dynamic> getCollection() async {
     try {
-      final response = await instance.from('countries').select();
+      final response = await instance.from(collectionName).select();
       final List<dynamic> dataList = response;
       return dataList;
     } catch (_) {}
@@ -269,17 +273,24 @@ class SupabaseService implements DatabaseService {
   Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq}) async {
     try {
       if (eq != null) {
-        await instance.from('countries').update(data).eq(eq.column, eq.value);
+        await instance
+            .from(collectionName)
+            .update(data)
+            .eq(eq.column, eq.value);
       } else {
-        await instance.from('countries').update(data);
+        await instance.from(collectionName).update(data);
       }
     } catch (_) {}
   }
 
   @override
-  Future<void> deleteDocument() async {
+  Future<void> deleteDocument({Eq? eq, Neq? neq}) async {
     try {
-      await instance.from(collectionName).delete().neq('id', collectionName);
+      if (eq != null) {
+        await instance.from(collectionName).delete().eq(eq.column, eq.value);
+      } else if (neq != null) {
+        await instance.from(collectionName).delete().neq(neq.column, neq.value);
+      }
     } catch (_) {}
   }
 }
@@ -288,6 +299,16 @@ class Database {
   final DatabaseService _service;
   final String collectionName;
 
+  ///Creates a new Storage object for either [FirebaseFirestore] or [Supabase]
+  ///
+  ///Example:
+  /// ```dart
+  /// import 'path/to/storage.dart.dart';
+  /// // ...
+  ///
+  /// final db = Database(useFirestore: false, collectionName: 'countries');
+  ///
+  /// ```
   Database({required this.collectionName, required bool useFirestore})
       : _service = useFirestore
             ? FirestoreService(collectionName: collectionName)
@@ -295,26 +316,28 @@ class Database {
 
   ///Returns a single document from a collection stored in [Supabase] or [FirebaseFirestore],
   ///
-  ///Required [collectionName] and an Object of [Eq] for applying filters
-  Future<dynamic> getDocument({Eq? eq}) => _service.getDocument();
+  ///Required String [collectionName] and an optional Object [eq] of [Eq] for applying filters
+  Future<dynamic> getDocument({required Eq eq}) => _service.getDocument(eq: eq);
 
-  ///Returns all documents from [Supabase] or [FirebaseFirestore],
+  ///Returns all documents of collection stored in [Supabase] or [FirebaseFirestore]
   ///
   ///Required [collectionName]
   Future<dynamic> getCollection() => _service.getCollection();
 
-  ///
-  Future<void> setDocument(Map<String, dynamic> data) =>
-      _service.setDocument(data);
+  ///Insert a document [document] in collerction [collectionName]
+  Future<void> setDocument(Map<String, dynamic> document) =>
+      _service.setDocument(document);
 
-  ///
-  Future<void> updateDocument(Map<String, dynamic> data) =>
-      _service.updateDocument(data);
+  ///Updates a given document in collerction [collectionName]
+  Future<void> updateDocument(Map<String, dynamic> document, {Eq? eq}) =>
+      _service.updateDocument(document, eq: eq);
 
-  ///
-  Future<void> deleteDocument() => _service.deleteDocument();
+  ///Deletes document from collection [collectionName]
+  Future<void> deleteDocument({Eq? eq, Neq? neq}) => _service.deleteDocument();
 }
 
+///[Eq] and [Neq] are the classes used as helpers to apply filters
+///in a given collection either from [Supabase] or [FirebaseFirestore],
 class Eq {
   final String column;
   final Object value;
@@ -322,6 +345,8 @@ class Eq {
   Eq({required this.column, required this.value});
 }
 
+///[Eq] and [Neq] are the classes used as helpers for applying filters
+///in a given collection either from [Supabase] or [FirebaseFirestore],
 class Neq {
   final String column;
   final Object value;

@@ -21,10 +21,11 @@ Future<void> main() async {
 
   final db = Database(useFirestore: false, collectionName: 'countries');
   var iVlue = await db.getCollection();
-  var iVlueq = await db.getDocument();
+  var iVlueq =
+      await db.getDocument(eq: Eq(column: 'name', value: 'South Korea'));
   //await db.setDocument('countries', {'id': 5, 'name': 'Japan'});
-  print('~~~> $iVlue');
-  print('~~~> $iVlueq');
+  print('~~~> $iVlue, Type: ${iVlue.runtimeType}');
+  print('~~~> $iVlueq, Type: ${iVlueq.runtimeType}');
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
 
@@ -53,7 +54,6 @@ class MyTestApp extends StatefulWidget {
 
 class _MyTestAppState extends State<MyTestApp> {
   final Storage storage = Storage.createLocal(name: 'UserData');
-  //final Storage networkStorage = Storage.createNetwork(name: 'NetworkStorage');
 
   String value = 'Data';
   String updatedData = 'Updated Data';
@@ -64,11 +64,6 @@ class _MyTestAppState extends State<MyTestApp> {
   UserLucky emptyUser = UserLucky(name: 'null', age: 'null');
   createUsingFirebase() async {
     user1 = UserLucky(name: 'Firebase Check', age: '12');
-    // await networkStorage.create(
-    //   key: 'dave',
-    //   value: user1.toJson(),
-    // );
-    // storedData = await networkStorage.read(key: 'dave');
   }
 
   updateAndGet() async {
@@ -77,22 +72,12 @@ class _MyTestAppState extends State<MyTestApp> {
     user2 = UserLucky(name: 'User 2', age: '56');
     print(await storage.read(key: 'john'));
     print(await storage.read(key: 'dave'));
-    // await storage.update('dave', user1.toJson(), false);
-    // storedData = await storage.read('dave');
-    // if (storedData != null) {
-    //   user2 = UserLucky.fromJson(storedData.toString());
-    // } else {
-    //   user2 = emptyUser;
-    // }
   }
 
   getData() async {
     var storedData1 = await storage.read(key: 'dave') as String;
     user1 = UserLucky.fromJson(storedData1);
   }
-  // _initialize() async {
-  //   await storage.init();
-  // }
 
   @override
   void initState() {
