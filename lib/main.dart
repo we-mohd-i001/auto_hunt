@@ -23,7 +23,9 @@ Future<void> main() async {
   var iVlue = await db.getCollection();
   var iVlueq =
       await db.getDocument(eq: Eq(column: 'name', value: 'South Korea'));
-  //await db.setDocument('countries', {'id': 5, 'name': 'Japan'});
+  // await db.updateDocument(
+  //   {'name': 'Vatican City'},
+  // );
   print('~~~> $iVlue, Type: ${iVlue.runtimeType}');
   print('~~~> $iVlueq, Type: ${iVlueq.runtimeType}');
   BaseController baseController = Get.put(BaseController());

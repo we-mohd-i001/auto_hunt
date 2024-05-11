@@ -243,7 +243,7 @@ class SupabaseService implements DatabaseService {
     try {
       final response = await instance
           .from(collectionName)
-          .select('id')
+          .select()
           .eq(eq.column, eq.value)
           .single();
       final Map<String, dynamic> document = response;
@@ -270,16 +270,36 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq}) async {
+  Future<void> updateDocument(Map<String, dynamic> data,
+      {Eq? eq, Neq? neq}) async {
     try {
-      if (eq != null) {
+      //only eq is provided
+      if (eq != null && neq == null) {
         await instance
             .from(collectionName)
             .update(data)
             .eq(eq.column, eq.value);
-      } else {
-        await instance.from(collectionName).update(data);
       }
+      //only neq is provided
+      else if (eq == null && neq != null) {
+        await instance
+            .from(collectionName)
+            .update(data)
+            .neq(neq.column, neq.value);
+      }
+      //when both eq and neq are not null
+      else if (eq != null && neq != null) {
+        await instance
+            .from(collectionName)
+            .update(data)
+            .neq(neq.column, neq.value)
+            .eq(eq.column, eq.value);
+      } else {
+        throw ArgumentError();
+      }
+    } on ArgumentError {
+      throw ArgumentError(
+          'Please provide eq or neq or both to filter out the document to update.');
     } catch (_) {}
   }
 
