@@ -19,11 +19,15 @@ Future<void> main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtYmdjbm91eXdwZ3Vucml1ZHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4OTk3NDMsImV4cCI6MjAyNTQ3NTc0M30.kRmshqh_welj6_fv-CE5sIDv5h3PzwofGOJseqnGHwI',
   );
 
-  final db = Database(useFirestore: false);
-  var iVlue = await db.getCollection('path');
-  var iVlueq = await db.getDocument('path');
-  print('~~~> $iVlue');
-  print('~~~> $iVlueq');
+  final db = Database(useFirestore: false, collectionName: 'countries');
+  var iVlue = await db.getCollection();
+  var iVlueq =
+      await db.getDocument(eq: Eq(column: 'name', value: 'South Korea'));
+  // await db.updateDocument(
+  //   {'name': 'Vatican City'},
+  // );
+  print('~~~> $iVlue, Type: ${iVlue.runtimeType}');
+  print('~~~> $iVlueq, Type: ${iVlueq.runtimeType}');
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
 
@@ -52,7 +56,6 @@ class MyTestApp extends StatefulWidget {
 
 class _MyTestAppState extends State<MyTestApp> {
   final Storage storage = Storage.createLocal(name: 'UserData');
-  //final Storage networkStorage = Storage.createNetwork(name: 'NetworkStorage');
 
   String value = 'Data';
   String updatedData = 'Updated Data';
@@ -63,11 +66,6 @@ class _MyTestAppState extends State<MyTestApp> {
   UserLucky emptyUser = UserLucky(name: 'null', age: 'null');
   createUsingFirebase() async {
     user1 = UserLucky(name: 'Firebase Check', age: '12');
-    // await networkStorage.create(
-    //   key: 'dave',
-    //   value: user1.toJson(),
-    // );
-    // storedData = await networkStorage.read(key: 'dave');
   }
 
   updateAndGet() async {
@@ -76,22 +74,12 @@ class _MyTestAppState extends State<MyTestApp> {
     user2 = UserLucky(name: 'User 2', age: '56');
     print(await storage.read(key: 'john'));
     print(await storage.read(key: 'dave'));
-    // await storage.update('dave', user1.toJson(), false);
-    // storedData = await storage.read('dave');
-    // if (storedData != null) {
-    //   user2 = UserLucky.fromJson(storedData.toString());
-    // } else {
-    //   user2 = emptyUser;
-    // }
   }
 
   getData() async {
     var storedData1 = await storage.read(key: 'dave') as String;
     user1 = UserLucky.fromJson(storedData1);
   }
-  // _initialize() async {
-  //   await storage.init();
-  // }
 
   @override
   void initState() {
