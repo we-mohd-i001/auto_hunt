@@ -162,10 +162,10 @@ class NullStorage implements Storage {
 // }
 
 abstract class DatabaseService {
-  Future<dynamic> getDocument(String path);
-  Future<dynamic> getCollection(String path);
+  Future<dynamic> getDocument(String path, {Eq? eq});
+  Future<dynamic> getCollection(String documentName);
   Future<void> setDocument(String path, Map<String, dynamic> data);
-  Future<void> updateDocument(String path, Map<String, dynamic> data);
+  Future<void> updateDocument(String path, Map<String, dynamic> data, {Eq? eq});
   Future<void> deleteDocument(String path);
 }
 
@@ -173,7 +173,7 @@ class FirestoreService implements DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<dynamic> getDocument(String path) async {
+  Future<dynamic> getDocument(String path, {Eq? eq}) async {
     try {
       final snapshot = await _firestore.doc(path).get();
       return snapshot;
@@ -202,7 +202,8 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<void> updateDocument(String path, Map<String, dynamic> data) async {
+  Future<void> updateDocument(String path, Map<String, dynamic> data,
+      {Eq? eq}) async {
     try {
       await _firestore.doc(path).update(data);
     } catch (e) {
@@ -220,20 +221,25 @@ class FirestoreService implements DatabaseService {
   }
 }
 
-///these static values can be changed from the method call provided by the user
 class SupabaseService implements DatabaseService {
   final instance = Supabase.instance.client;
 
   @override
-  Future<dynamic> getDocument(String path) async {
+  Future<dynamic> getDocument(String documentName, {Eq? eq}) async {
     try {
-      final response = await instance
-          .from('countries')
-          .select()
-          .eq('name', 'Canada')
-          .single();
-      final Map<String, dynamic> data = response;
-      return data;
+      if (eq != null) {
+        final response = await instance
+            .from(documentName)
+            .select()
+            .eq(eq.column, eq.value)
+            .single();
+        final Map<String, dynamic> data = response;
+        return data;
+      } else {
+        final response = await instance.from(documentName).select().single();
+        final Map<String, dynamic> data = response;
+        return data;
+      }
     } catch (_) {}
   }
 
@@ -250,22 +256,26 @@ class SupabaseService implements DatabaseService {
   Future<void> setDocument(
       String collectionName, Map<String, dynamic> data) async {
     try {
-      await instance.from('countries').upsert(data);
+      await instance.from(collectionName).upsert(data);
     } catch (_) {}
   }
 
   @override
-  Future<void> updateDocument(
-      String collectionName, Map<String, dynamic> data) async {
+  Future<void> updateDocument(String collectionName, Map<String, dynamic> data,
+      {Eq? eq}) async {
     try {
-      await instance.from('countries').update(data).eq('id', 'Canada');
+      if (eq != null) {
+        await instance.from('countries').update(data).eq(eq.column, eq.value);
+      } else {
+        await instance.from('countries').update(data);
+      }
     } catch (_) {}
   }
 
   @override
   Future<void> deleteDocument(String path) async {
     try {
-      await instance.from(path).delete().eq('id', path);
+      await instance.from(path).delete().neq('id', path);
     } catch (_) {}
   }
 }
@@ -276,11 +286,29 @@ class Database {
   Database({required bool useFirestore})
       : _service = useFirestore ? FirestoreService() : SupabaseService();
 
-  Future<dynamic> getDocument(String path) => _service.getDocument(path);
+  ///Returns a single document from [Supabase] or [FirebaseFirestore],
+  ///
+  ///Required [documentName] and an Object of [Eq] for applying filters
+  Future<dynamic> getDocument(String documentName, {Eq? eq}) =>
+      _service.getDocument(documentName);
   Future<dynamic> getCollection(String path) => _service.getCollection(path);
   Future<void> setDocument(String path, Map<String, dynamic> data) =>
       _service.setDocument(path, data);
   Future<void> updateDocument(String path, Map<String, dynamic> data) =>
       _service.updateDocument(path, data);
   Future<void> deleteDocument(String path) => _service.deleteDocument(path);
+}
+
+class Eq {
+  final String column;
+  final Object value;
+
+  Eq({required this.column, required this.value});
+}
+
+class Neq {
+  final String column;
+  final Object value;
+
+  Neq({required this.column, required this.value});
 }

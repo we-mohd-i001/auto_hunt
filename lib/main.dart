@@ -20,8 +20,11 @@ Future<void> main() async {
   );
 
   final db = Database(useFirestore: false);
-  var iVlue = await db.getCollection('path');
-  var iVlueq = await db.getDocument('path');
+  var iVlue = await db.getCollection('countries');
+  var iVlueq = await db.getDocument(
+    'countries',
+  );
+  //await db.setDocument('countries', {'id': 5, 'name': 'Japan'});
   print('~~~> $iVlue');
   print('~~~> $iVlueq');
   BaseController baseController = Get.put(BaseController());
