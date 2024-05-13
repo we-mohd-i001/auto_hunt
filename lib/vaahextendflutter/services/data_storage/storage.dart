@@ -271,10 +271,13 @@ class SupabaseService implements DatabaseService {
 
   @override
   Future<dynamic> getDocument({required Eq eq}) async {
+    PostgrestFilter filter =
+        PostgrestFilter(column: 'name', operator: 'eq', value: '');
     try {
       final response = await instance
           .from(collectionName)
           .select()
+          .filter(filter.column, filter.operator, filter.value)
           .eq(eq.column, eq.value)
           .single();
       final Map<String, dynamic> document = response;
@@ -415,4 +418,13 @@ class Database {
   ///Deletes document from collection [collectionName]
   Future<void> deleteDocument({Eq? eq, Neq? neq}) =>
       _service.deleteDocument(eq: eq, neq: neq);
+}
+
+class PostgrestFilter {
+  final String column;
+  final String operator; //make operator an enum
+  final Object? value;
+
+  PostgrestFilter(
+      {required this.column, required this.operator, required this.value});
 }
