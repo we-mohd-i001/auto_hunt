@@ -26,8 +26,7 @@ Future<void> main() async {
       await db.getDocument(eq: Eq(column: 'name', value: 'South Korea'));
   //await db.setDocument({'id': 6, 'name': 'Jamaica'});
   // await db.updateDocument(
-  //   {'name': 'Vatican City'},
-  //   eq: Eq(column: 'id', value: 2),
+  //   {'name': 'Manhattan'},
   // );
   print('~~~> $iVlue, Type: ${iVlue.runtimeType}');
   print('~~~> $iVlueq, Type: ${iVlueq.runtimeType}');
@@ -37,17 +36,17 @@ Future<void> main() async {
   final Storage storage = Storage.createLocal(name: 'UserData');
   await storage.init();
 
-  // runApp(MaterialApp(
-  //   routes: {
-  //     '/': (context) => const MyTestApp(),
-  //   },
-  // ));
+  runApp(MaterialApp(
+    routes: {
+      '/': (context) => const MyTestApp(),
+    },
+  ));
 
-  await baseController.init(
-    firebaseOptions: DefaultFirebaseOptions.currentPlatform,
-    app: const AppConfig(),
-    errorApp: const ErrorAppConfig(),
-  ); // Pass main app as argument in init method
+  // await baseController.init(
+  //   firebaseOptions: DefaultFirebaseOptions.currentPlatform,
+  //   app: const AppConfig(),
+  //   errorApp: const ErrorAppConfig(),
+  // ); // Pass main app as argument in init method
 }
 
 class MyTestApp extends StatefulWidget {

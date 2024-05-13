@@ -172,7 +172,7 @@ class NullStorage implements Storage {
 abstract class DatabaseService {
   Future<dynamic> getDocument({required Eq eq});
   Future<dynamic> getCollection({Eq? eq, Neq? neq});
-  Future<void> setDocument(Map<String, dynamic> data);
+  Future<void> setDocument(Map<String, dynamic> data, {String? onConflict});
   Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq, Neq? neq});
   Future<void> deleteDocument({Eq? eq, Neq? neq});
 }
@@ -232,7 +232,8 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<void> setDocument(Map<String, dynamic> data) async {
+  Future<void> setDocument(Map<String, dynamic> data,
+      {String? onConflict}) async {
     try {
       await _firestore.doc(collectionName).set(data);
     } catch (e) {
@@ -285,35 +286,29 @@ class SupabaseService implements DatabaseService {
   @override
   Future<dynamic> getCollection({Eq? eq, Neq? neq}) async {
     try {
+      final query = await instance.from(collectionName);
       //if only eq is provided
       if (eq != null && neq == null) {
-        final response = await instance
-            .from(collectionName)
-            .select()
-            .eq(eq.column, eq.value);
+        final response = await query.select().eq(eq.column, eq.value);
         final List<dynamic> dataList = response;
         return dataList;
       }
       //when eq is null but neq is provided
       else if (eq == null && neq != null) {
-        final response = await instance
-            .from(collectionName)
-            .select()
-            .neq(neq.column, neq.value);
+        final response = await query.select().neq(neq.column, neq.value);
         final List<dynamic> dataList = response;
         return dataList;
       }
       //when both eq and neq are provided (not null)
       else if (eq != null && neq != null) {
-        final response = await instance
-            .from(collectionName)
+        final response = await query
             .select()
             .eq(eq.column, eq.value)
             .neq(neq.column, neq.value);
         final List<dynamic> dataList = response;
         return dataList;
       } else {
-        final response = await instance.from(collectionName).select();
+        final response = await query.select();
         final List<dynamic> dataList = response;
         return dataList;
       }
@@ -415,8 +410,9 @@ class Database {
       _service.getCollection(eq: eq, neq: neq);
 
   ///Insert a document [document] in collerction [collectionName]
-  Future<void> setDocument(Map<String, dynamic> document) =>
-      _service.setDocument(document);
+  Future<void> setDocument(Map<String, dynamic> document,
+          {String? onConflict}) =>
+      _service.setDocument(document, onConflict: onConflict);
 
   ///Updates a given document in collerction [collectionName]
   Future<void> updateDocument(Map<String, dynamic> document,
