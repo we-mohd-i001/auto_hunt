@@ -286,7 +286,7 @@ class SupabaseService implements DatabaseService {
   @override
   Future<dynamic> getCollection({Eq? eq, Neq? neq}) async {
     try {
-      final query = await instance.from(collectionName);
+      final query = instance.from(collectionName);
       //if only eq is provided
       if (eq != null && neq == null) {
         final response = await query.select().eq(eq.column, eq.value);
@@ -321,7 +321,8 @@ class SupabaseService implements DatabaseService {
   Future<void> setDocument(Map<String, dynamic> data,
       {String? onConflict}) async {
     try {
-      await instance.from(collectionName).upsert(data, onConflict: onConflict);
+      final query = instance.from(collectionName);
+      await query.upsert(data, onConflict: onConflict);
     } catch (_) {}
   }
 
@@ -329,24 +330,18 @@ class SupabaseService implements DatabaseService {
   Future<void> updateDocument(Map<String, dynamic> data,
       {Eq? eq, Neq? neq}) async {
     try {
+      final query = instance.from(collectionName);
       //only eq is provided
       if (eq != null && neq == null) {
-        await instance
-            .from(collectionName)
-            .update(data)
-            .eq(eq.column, eq.value);
+        await query.update(data).eq(eq.column, eq.value);
       }
       //only neq is provided
       else if (eq == null && neq != null) {
-        await instance
-            .from(collectionName)
-            .update(data)
-            .neq(neq.column, neq.value);
+        await query.update(data).neq(neq.column, neq.value);
       }
       //when both eq and neq are not null
       else if (eq != null && neq != null) {
-        await instance
-            .from(collectionName)
+        await query
             .update(data)
             .neq(neq.column, neq.value)
             .eq(eq.column, eq.value);
@@ -361,16 +356,13 @@ class SupabaseService implements DatabaseService {
   @override
   Future<void> deleteDocument({Eq? eq, Neq? neq}) async {
     try {
+      final query = instance.from(collectionName);
       if (eq != null && neq == null) {
-        await instance.from(collectionName).delete().eq(eq.column, eq.value);
+        await query.delete().eq(eq.column, eq.value);
       } else if (neq != null && eq == null) {
-        await instance.from(collectionName).delete().neq(neq.column, neq.value);
+        await query.delete().neq(neq.column, neq.value);
       } else if (eq != null && neq != null) {
-        await instance
-            .from(collectionName)
-            .delete()
-            .neq(neq.column, neq.value)
-            .eq(eq.column, eq.value);
+        await query.delete().neq(neq.column, neq.value).eq(eq.column, eq.value);
       } else {
         throw ArgumentError();
       }
