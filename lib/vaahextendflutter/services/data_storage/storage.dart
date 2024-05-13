@@ -491,31 +491,73 @@ class Like {
 }
 
 abstract class Filter {
-  factory Filter.firestore(Eq? eq, Neq? neq, String? onConflict) {
-    return FirestoreFilter(eq, neq);
+  factory Filter.firestore(
+    Eq? eq,
+    Neq? neq,
+    String? onConflict,
+    Gt? gt,
+    Gte? gte,
+    Lt? lt,
+    Lte? lte,
+    Like? like,
+  ) {
+    return FirestoreFilter(eq, neq, onConflict, gt, gte, lt, lte, like);
   }
 
-  factory Filter.supabase(Eq? eq, Neq? neq) {
-    return SupabaseFilter(eq, neq);
+  factory Filter.supabase(
+    Eq? eq,
+    Neq? neq,
+    String? onConflict,
+    Gt? gt,
+    Gte? gte,
+    Lt? lt,
+    Lte? lte,
+    Like? like,
+  ) {
+    return SupabaseFilter(eq, neq, onConflict, gt, gte, lt, lte, like);
   }
 }
 
 class SupabaseFilter implements Filter {
   Eq? eq;
-
   Neq? neq;
-
   String? onConflict;
+  Gt? gt;
+  Gte? gte;
+  Lt? lt;
+  Lte? lte;
+  Like? like;
 
-  SupabaseFilter(this.eq, this.neq);
+  SupabaseFilter(
+    this.eq,
+    this.neq,
+    this.onConflict,
+    this.gt,
+    this.gte,
+    this.lt,
+    this.lte,
+    this.like,
+  );
 }
 
 class FirestoreFilter implements Filter {
   Eq? eq;
-
   Neq? neq;
-
   String? onConflict;
+  Gt? gt;
+  Gte? gte;
+  Lt? lt;
+  Lte? lte;
+  Like? like;
 
-  FirestoreFilter(this.eq, this.neq);
+  FirestoreFilter(
+    this.eq,
+    this.neq,
+    this.onConflict,
+    this.gt,
+    this.gte,
+    this.lt,
+    this.lte,
+    this.like,
+  );
 }
