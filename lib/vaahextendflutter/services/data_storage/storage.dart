@@ -196,8 +196,36 @@ class FirestoreService implements DatabaseService {
   @override
   Future<List<dynamic>> getCollection({Eq? eq, Neq? neq}) async {
     try {
-      final snapshot = await _firestore.collection(collectionName).get();
-      return snapshot.docs;
+      if (eq != null && neq == null) {
+        final snapshot = await _firestore
+            .collection(collectionName)
+            .where(eq.column, isEqualTo: eq.value)
+            .get();
+        return snapshot.docs;
+      } else if (eq == null && neq != null) {
+        final snapshot = await _firestore
+            .collection(collectionName)
+            .where(neq.column, isEqualTo: neq.value)
+            .get();
+        return snapshot.docs;
+      }
+      //when both eq and neq are provided (not null)
+      else if (eq != null && neq != null) {
+        if (eq.column != neq.column) {
+          final snapshot = await _firestore
+              .collection(collectionName)
+              .where(eq.column, isEqualTo: eq.value, isNotEqualTo: neq..value)
+              .get();
+          return snapshot.docs;
+        } else {
+          throw ArgumentError();
+        }
+      } else {
+        final snapshot = await _firestore.collection(collectionName).get();
+        return snapshot.docs;
+      }
+    } on ArgumentError {
+      throw ArgumentError('Eq.column should be equal to Neq.column');
     } catch (e) {
       throw Exception('Failed to get collection: $e');
     }
@@ -331,8 +359,7 @@ class SupabaseService implements DatabaseService {
         throw ArgumentError();
       }
     } on ArgumentError {
-      throw ArgumentError(
-          'Please provide eq or neq or both to filter out the document to update.');
+      throw ArgumentError('Both eq and neq can not be null at the same time.');
     } catch (_) {}
   }
 
@@ -353,8 +380,7 @@ class SupabaseService implements DatabaseService {
         throw ArgumentError();
       }
     } on ArgumentError {
-      throw ArgumentError(
-          'Please provide eq or neq or both to filter out the document to delete.');
+      throw ArgumentError('Both eq and neq can not be null at the same time.');
     } catch (_) {}
   }
 }
