@@ -20,7 +20,8 @@ Future<void> main() async {
   );
 
   final db = Database(useFirestore: false, collectionName: 'countries');
-  var iVlue = await db.getCollection();
+  var iVlue =
+      await db.getCollection(neq: Neq(column: 'name', value: 'South Korea'));
   var iVlueq =
       await db.getDocument(eq: Eq(column: 'name', value: 'South Korea'));
   //await db.setDocument({'id': 6, 'name': 'Jamaica'});

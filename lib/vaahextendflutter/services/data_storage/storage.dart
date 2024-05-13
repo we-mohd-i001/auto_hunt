@@ -171,9 +171,9 @@ class NullStorage implements Storage {
 
 abstract class DatabaseService {
   Future<dynamic> getDocument({required Eq eq});
-  Future<dynamic> getCollection();
+  Future<dynamic> getCollection({Eq? eq, Neq? neq});
   Future<void> setDocument(Map<String, dynamic> data);
-  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq});
+  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq, Neq? neq});
   Future<void> deleteDocument({Eq? eq, Neq? neq});
 }
 
@@ -194,7 +194,7 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<List<dynamic>> getCollection() async {
+  Future<List<dynamic>> getCollection({Eq? eq, Neq? neq}) async {
     try {
       final snapshot = await _firestore.collection(collectionName).get();
       return snapshot.docs;
@@ -213,7 +213,8 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq}) async {
+  Future<void> updateDocument(Map<String, dynamic> data,
+      {Eq? eq, Neq? neq}) async {
     try {
       await _firestore.doc(collectionName).update(data);
     } catch (e) {
@@ -254,12 +255,43 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<dynamic> getCollection() async {
+  Future<dynamic> getCollection({Eq? eq, Neq? neq}) async {
     try {
-      final response = await instance.from(collectionName).select();
-      final List<dynamic> dataList = response;
-      return dataList;
-    } catch (_) {}
+      //if only eq is provided
+      if (eq != null && neq == null) {
+        final response = await instance
+            .from(collectionName)
+            .select()
+            .eq(eq.column, eq.value);
+        final List<dynamic> dataList = response;
+        return dataList;
+      }
+      //when eq is null but neq is provided
+      else if (eq == null && neq != null) {
+        final response = await instance
+            .from(collectionName)
+            .select()
+            .neq(neq.column, neq.value);
+        final List<dynamic> dataList = response;
+        return dataList;
+      }
+      //when both eq and neq are provided (not null)
+      else if (eq != null && neq != null) {
+        final response = await instance
+            .from(collectionName)
+            .select()
+            .eq(eq.column, eq.value)
+            .neq(neq.column, neq.value);
+        final List<dynamic> dataList = response;
+        return dataList;
+      } else {
+        final response = await instance.from(collectionName).select();
+        final List<dynamic> dataList = response;
+        return dataList;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
@@ -351,21 +383,23 @@ class Database {
   ///Required String [collectionName] and an optional Object [eq] of [Eq] for applying filters
   Future<dynamic> getDocument({required Eq eq}) => _service.getDocument(eq: eq);
 
-  ///Returns all documents of collection stored in [Supabase] or [FirebaseFirestore]
-  ///
-  ///Required [collectionName]
-  Future<dynamic> getCollection() => _service.getCollection();
+  ///Returns all documents of collection stored in [Supabase] or [FirebaseFirestore].
+  ///If eq and neq are provided the it will return a filtered List of documents.
+  Future<dynamic> getCollection({Eq? eq, Neq? neq}) =>
+      _service.getCollection(eq: eq, neq: neq);
 
   ///Insert a document [document] in collerction [collectionName]
   Future<void> setDocument(Map<String, dynamic> document) =>
       _service.setDocument(document);
 
   ///Updates a given document in collerction [collectionName]
-  Future<void> updateDocument(Map<String, dynamic> document, {Eq? eq}) =>
-      _service.updateDocument(document, eq: eq);
+  Future<void> updateDocument(Map<String, dynamic> document,
+          {Eq? eq, Neq? neq}) =>
+      _service.updateDocument(document, eq: eq, neq: neq);
 
   ///Deletes document from collection [collectionName]
-  Future<void> deleteDocument({Eq? eq, Neq? neq}) => _service.deleteDocument();
+  Future<void> deleteDocument({Eq? eq, Neq? neq}) =>
+      _service.deleteDocument(eq: eq, neq: neq);
 }
 
 ///[Eq] and [Neq] are the classes used as helpers to apply filters
