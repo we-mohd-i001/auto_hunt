@@ -7,6 +7,7 @@ import 'encrypted/hive_encrypted_data_storage.dart';
 import 'local/flutter_secure_storage/flutter_secure_storage_impl.dart';
 import 'local/hive/hive_storage_impl.dart';
 import 'network/firebase/firestore_storage_impl.dart';
+import 'network/helpers/filter.dart';
 
 abstract class Storage {
   static final EnvironmentConfig _envConfig = EnvironmentConfig.getEnvConfig();
@@ -171,9 +172,9 @@ class NullStorage implements Storage {
 
 abstract class DatabaseService {
   Future<dynamic> getDocument({required Eq eq});
-  Future<dynamic> getCollection();
-  Future<void> setDocument(Map<String, dynamic> data);
-  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq});
+  Future<dynamic> getCollection({Eq? eq, Neq? neq});
+  Future<void> setDocument(Map<String, dynamic> data, {String? onConflict});
+  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq, Neq? neq});
   Future<void> deleteDocument({Eq? eq, Neq? neq});
 }
 
@@ -194,17 +195,46 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<List<dynamic>> getCollection() async {
+  Future<List<dynamic>> getCollection({Eq? eq, Neq? neq}) async {
     try {
-      final snapshot = await _firestore.collection(collectionName).get();
-      return snapshot.docs;
+      if (eq != null && neq == null) {
+        final snapshot = await _firestore
+            .collection(collectionName)
+            .where(eq.column, isEqualTo: eq.value)
+            .get();
+        return snapshot.docs;
+      } else if (eq == null && neq != null) {
+        final snapshot = await _firestore
+            .collection(collectionName)
+            .where(neq.column, isEqualTo: neq.value)
+            .get();
+        return snapshot.docs;
+      }
+      //when both eq and neq are provided (not null)
+      else if (eq != null && neq != null) {
+        if (eq.column != neq.column) {
+          final snapshot = await _firestore
+              .collection(collectionName)
+              .where(eq.column, isEqualTo: eq.value, isNotEqualTo: neq..value)
+              .get();
+          return snapshot.docs;
+        } else {
+          throw ArgumentError();
+        }
+      } else {
+        final snapshot = await _firestore.collection(collectionName).get();
+        return snapshot.docs;
+      }
+    } on ArgumentError {
+      throw ArgumentError('Eq.column should be equal to Neq.column');
     } catch (e) {
       throw Exception('Failed to get collection: $e');
     }
   }
 
   @override
-  Future<void> setDocument(Map<String, dynamic> data) async {
+  Future<void> setDocument(Map<String, dynamic> data,
+      {String? onConflict}) async {
     try {
       await _firestore.doc(collectionName).set(data);
     } catch (e) {
@@ -213,7 +243,8 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<void> updateDocument(Map<String, dynamic> data, {Eq? eq}) async {
+  Future<void> updateDocument(Map<String, dynamic> data,
+      {Eq? eq, Neq? neq}) async {
     try {
       await _firestore.doc(collectionName).update(data);
     } catch (e) {
@@ -240,10 +271,13 @@ class SupabaseService implements DatabaseService {
 
   @override
   Future<dynamic> getDocument({required Eq eq}) async {
+    PostgrestFilter filter =
+        PostgrestFilter(column: 'name', operator: 'eq', value: '');
     try {
       final response = await instance
           .from(collectionName)
           .select()
+          .filter(filter.column, filter.operator, filter.value)
           .eq(eq.column, eq.value)
           .single();
       final Map<String, dynamic> document = response;
@@ -254,19 +288,45 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<dynamic> getCollection() async {
+  Future<dynamic> getCollection({Eq? eq, Neq? neq}) async {
     try {
-      final response = await instance.from(collectionName).select();
-      final List<dynamic> dataList = response;
-      return dataList;
-    } catch (_) {}
+      final query = instance.from(collectionName);
+      //when only eq is provided
+      if (eq != null && neq == null) {
+        final response = await query.select().eq(eq.column, eq.value);
+        final List<dynamic> dataList = response;
+        return dataList;
+      }
+      //when eq is null but neq is provided
+      else if (eq == null && neq != null) {
+        final response = await query.select().neq(neq.column, neq.value);
+        final List<dynamic> dataList = response;
+        return dataList;
+      }
+      //when both eq and neq are provided (not null)
+      else if (eq != null && neq != null) {
+        final response = await query
+            .select()
+            .eq(eq.column, eq.value)
+            .neq(neq.column, neq.value);
+        final List<dynamic> dataList = response;
+        return dataList;
+      } else {
+        final response = await query.select();
+        final List<dynamic> dataList = response;
+        return dataList;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
   Future<void> setDocument(Map<String, dynamic> data,
       {String? onConflict}) async {
     try {
-      await instance.from(collectionName).upsert(data, onConflict: onConflict);
+      final query = instance.from(collectionName);
+      await query.upsert(data, onConflict: onConflict);
     } catch (_) {}
   }
 
@@ -274,24 +334,18 @@ class SupabaseService implements DatabaseService {
   Future<void> updateDocument(Map<String, dynamic> data,
       {Eq? eq, Neq? neq}) async {
     try {
+      final query = instance.from(collectionName);
       //only eq is provided
       if (eq != null && neq == null) {
-        await instance
-            .from(collectionName)
-            .update(data)
-            .eq(eq.column, eq.value);
+        await query.update(data).eq(eq.column, eq.value);
       }
       //only neq is provided
       else if (eq == null && neq != null) {
-        await instance
-            .from(collectionName)
-            .update(data)
-            .neq(neq.column, neq.value);
+        await query.update(data).neq(neq.column, neq.value);
       }
       //when both eq and neq are not null
       else if (eq != null && neq != null) {
-        await instance
-            .from(collectionName)
+        await query
             .update(data)
             .neq(neq.column, neq.value)
             .eq(eq.column, eq.value);
@@ -299,30 +353,25 @@ class SupabaseService implements DatabaseService {
         throw ArgumentError();
       }
     } on ArgumentError {
-      throw ArgumentError(
-          'Please provide eq or neq or both to filter out the document to update.');
+      throw ArgumentError('Both eq and neq can not be null at the same time.');
     } catch (_) {}
   }
 
   @override
   Future<void> deleteDocument({Eq? eq, Neq? neq}) async {
     try {
+      final query = instance.from(collectionName);
       if (eq != null && neq == null) {
-        await instance.from(collectionName).delete().eq(eq.column, eq.value);
+        await query.delete().eq(eq.column, eq.value);
       } else if (neq != null && eq == null) {
-        await instance.from(collectionName).delete().neq(neq.column, neq.value);
+        await query.delete().neq(neq.column, neq.value);
       } else if (eq != null && neq != null) {
-        await instance
-            .from(collectionName)
-            .delete()
-            .neq(neq.column, neq.value)
-            .eq(eq.column, eq.value);
+        await query.delete().neq(neq.column, neq.value).eq(eq.column, eq.value);
       } else {
         throw ArgumentError();
       }
     } on ArgumentError {
-      throw ArgumentError(
-          'Please provide eq or neq or both to filter out the document to delete.');
+      throw ArgumentError('Both eq and neq can not be null at the same time.');
     } catch (_) {}
   }
 }
@@ -351,37 +400,31 @@ class Database {
   ///Required String [collectionName] and an optional Object [eq] of [Eq] for applying filters
   Future<dynamic> getDocument({required Eq eq}) => _service.getDocument(eq: eq);
 
-  ///Returns all documents of collection stored in [Supabase] or [FirebaseFirestore]
-  ///
-  ///Required [collectionName]
-  Future<dynamic> getCollection() => _service.getCollection();
+  ///Returns all documents of collection stored in [Supabase] or [FirebaseFirestore].
+  ///If eq and neq are provided the it will return a filtered List of documents.
+  Future<dynamic> getCollection({Eq? eq, Neq? neq}) =>
+      _service.getCollection(eq: eq, neq: neq);
 
   ///Insert a document [document] in collerction [collectionName]
-  Future<void> setDocument(Map<String, dynamic> document) =>
-      _service.setDocument(document);
+  Future<void> setDocument(Map<String, dynamic> document,
+          {String? onConflict}) =>
+      _service.setDocument(document, onConflict: onConflict);
 
   ///Updates a given document in collerction [collectionName]
-  Future<void> updateDocument(Map<String, dynamic> document, {Eq? eq}) =>
-      _service.updateDocument(document, eq: eq);
+  Future<void> updateDocument(Map<String, dynamic> document,
+          {Eq? eq, Neq? neq}) =>
+      _service.updateDocument(document, eq: eq, neq: neq);
 
   ///Deletes document from collection [collectionName]
-  Future<void> deleteDocument({Eq? eq, Neq? neq}) => _service.deleteDocument();
+  Future<void> deleteDocument({Eq? eq, Neq? neq}) =>
+      _service.deleteDocument(eq: eq, neq: neq);
 }
 
-///[Eq] and [Neq] are the classes used as helpers to apply filters
-///in a given collection either from [Supabase] or [FirebaseFirestore],
-class Eq {
+class PostgrestFilter {
   final String column;
-  final Object value;
+  final String operator; //make operator an enum
+  final Object? value;
 
-  Eq({required this.column, required this.value});
-}
-
-///[Eq] and [Neq] are the classes used as helpers for applying filters
-///in a given collection either from [Supabase] or [FirebaseFirestore],
-class Neq {
-  final String column;
-  final Object value;
-
-  Neq({required this.column, required this.value});
+  PostgrestFilter(
+      {required this.column, required this.operator, required this.value});
 }
