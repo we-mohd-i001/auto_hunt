@@ -287,7 +287,7 @@ class SupabaseService implements DatabaseService {
   Future<dynamic> getCollection({Eq? eq, Neq? neq}) async {
     try {
       final query = instance.from(collectionName);
-      //if only eq is provided
+      //when only eq is provided
       if (eq != null && neq == null) {
         final response = await query.select().eq(eq.column, eq.value);
         final List<dynamic> dataList = response;
@@ -416,20 +416,106 @@ class Database {
       _service.deleteDocument(eq: eq, neq: neq);
 }
 
-///[Eq] and [Neq] are the classes used as helpers to apply filters
-///in a given collection either from [Supabase] or [FirebaseFirestore],
 class Eq {
   final String column;
   final Object value;
 
+  ///[Eq] and [Neq] are the classes used as helpers to apply filters
+  ///in a given collection either from [Supabase] or [FirebaseFirestore],
   Eq({required this.column, required this.value});
 }
 
-///[Eq] and [Neq] are the classes used as helpers for applying filters
-///in a given collection either from [Supabase] or [FirebaseFirestore],
 class Neq {
   final String column;
   final Object value;
 
+  ///[Eq] and [Neq] are the classes used as helpers for applying filters
+  ///in a given collection either from [Supabase] or [FirebaseFirestore],
   Neq({required this.column, required this.value});
+}
+
+class Gt {
+  String column;
+  Object value;
+
+  /// Finds all rows whose value on the stated [column] is greater than or equal to the specified [value].
+  Gt({
+    required this.column,
+    required this.value,
+  });
+}
+
+class Gte {
+  String column;
+  Object value;
+
+  /// Finds all rows whose value on the stated [column] is greater than or equal to the specified [value].
+
+  Gte({
+    required this.column,
+    required this.value,
+  });
+}
+
+class Lt {
+  String column;
+  Object value;
+
+  /// Finds all rows whose value on the stated [column] is less than the specified [value].
+  Lt({
+    required this.column,
+    required this.value,
+  });
+}
+
+class Lte {
+  String column;
+  Object value;
+
+  /// Finds all rows whose value on the stated [column] is less than or equal to the specified [value].
+  Lte({
+    required this.column,
+    required this.value,
+  });
+}
+
+class Like {
+  String column;
+  String pattern;
+
+  /// Finds all rows whose value in the stated [column] matches the supplied [pattern] (case sensitive).
+  Like({
+    required this.column,
+    required this.pattern,
+  });
+}
+
+abstract class Filter {
+  factory Filter.firestore(Eq? eq, Neq? neq, String? onConflict) {
+    return FirestoreFilter(eq, neq);
+  }
+
+  factory Filter.supabase(Eq? eq, Neq? neq) {
+    return SupabaseFilter(eq, neq);
+  }
+}
+
+class SupabaseFilter implements Filter {
+  Eq? eq;
+
+  Neq? neq;
+
+  String? onConflict;
+
+  SupabaseFilter(this.eq, this.neq);
+}
+
+class FirestoreFilter implements Filter {
+  Eq? eq;
+
+  Neq? neq;
+
+  String? onConflict;
+
+  FirestoreFilter(this.eq, this.neq);
 }
