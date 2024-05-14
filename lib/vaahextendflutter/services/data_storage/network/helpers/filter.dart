@@ -1,5 +1,5 @@
-abstract class Filter {
-  factory Filter.firestore(
+abstract class FilterItr1 {
+  factory FilterItr1.firestore(
     Eq? eq,
     Neq? neq,
     String? onConflict,
@@ -12,7 +12,7 @@ abstract class Filter {
     return FirestoreFilter(eq, neq, onConflict, gt, gte, lt, lte, like);
   }
 
-  factory Filter.supabase(
+  factory FilterItr1.supabase(
     Eq? eq,
     Neq? neq,
     String? onConflict,
@@ -26,7 +26,7 @@ abstract class Filter {
   }
 }
 
-class SupabaseFilter implements Filter {
+class SupabaseFilter implements FilterItr1 {
   Eq? eq;
   Neq? neq;
   String? onConflict;
@@ -48,7 +48,7 @@ class SupabaseFilter implements Filter {
   );
 }
 
-class FirestoreFilter implements Filter {
+class FirestoreFilter implements FilterItr1 {
   Eq? eq;
   Neq? neq;
   String? onConflict;
