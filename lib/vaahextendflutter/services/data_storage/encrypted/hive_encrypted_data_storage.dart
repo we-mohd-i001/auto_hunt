@@ -1,8 +1,8 @@
 import '../storage.dart';
 
-class HiveLocalDataEncryptedStorage implements Storage {
+class HiveEncryptedStorage implements Storage {
   String? name;
-  HiveLocalDataEncryptedStorage({this.name = 'default'});
+  HiveEncryptedStorage({this.name = 'default'});
 
   @override
   Future<void> create({key, value}) {

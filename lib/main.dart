@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:io';
 
@@ -22,9 +23,9 @@ Future<void> main() async {
 
   final db = Database(useFirestore: false, collectionName: 'countries');
   var iVlue = await db.getCollection(
-      filter: Filter(column: 'name', operator: 'neq', value: 'South Korea'));
-  var iVlueq = await db.getDocument(
-      filter: Filter(column: 'name', operator: 'eq', value: 'USA'));
+      filter: Filter(column: 'name', operator: Operator.neq, value: 'South Korea'));
+  var iVlueq =
+      await db.getDocument(filter: Filter(column: 'name', operator: Operator.eq, value: 'USA'));
   //await db.setDocument({'id': 6, 'name': 'Jamaica'});
   // await db.updateDocument({'name': 'Dummy Country'},
   //     neq: Neq(column: 'name', value: 'Manhattan'));
@@ -74,7 +75,10 @@ class _MyTestAppState extends State<MyTestApp> {
     print(await storage.read());
     user1 = UserLucky(name: 'Dave List', age: '22');
     user2 = UserLucky(name: 'User 2', age: '56');
-    print(await storage.read(key: 'john'));
+    print(await storage.read(key: [
+      'john',
+      'dave',
+    ]));
     print(await storage.read(key: 'dave'));
   }
 
@@ -100,17 +104,28 @@ class _MyTestAppState extends State<MyTestApp> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    UserLucky user = UserLucky(name: 'List', age: '2');
+                    final users = [
+                      UserLucky(name: 'List A', age: '2'),
+                      UserLucky(name: 'List B', age: '2'),
+                      UserLucky(name: 'List C', age: '2'),
+                      UserLucky(name: 'List D', age: '2'),
+                      UserLucky(name: 'List E', age: '2'),
+                      UserLucky(name: 'List F', age: '2'),
+                      UserLucky(name: 'List G', age: '2'),
+                      UserLucky(name: 'List H', age: '2')
+                    ];
+                    final friends = Friends(userLucky: users);
                     await updateAndGet();
                     storage.create(
-                      key: ['john', 'dave'],
-                      value: [user.toJson(), user1.toJson()],
+                      key: 'friends',
+                      value: friends.toJson(),
                     );
-                    String? storedData = await storage.read(key: 'dave');
-                    user = UserLucky.fromJson(storedData ?? '');
-                    setState(() {
-                      value = '${user.name} ${user.age}';
-                    });
+                    final storedData = await storage.read(key: 'friends');
+                    print('~~~>{$storedData}');
+                    // user = UserLucky.fromJson(storedData ?? '');
+                    // setState(() {
+                    //   value = '${user.name} ${user.age}';
+                    // });
                   },
                   child: const Text('Create'),
                 ),
@@ -150,6 +165,34 @@ class _MyTestAppState extends State<MyTestApp> {
       ),
     );
   }
+}
+
+class Friends {
+  final List<UserLucky> userLucky;
+  Friends({
+    required this.userLucky,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'userLucky': userLucky.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory Friends.fromMap(Map<String, dynamic> map) {
+    return Friends(
+      userLucky: List<UserLucky>.from(
+        (map['userLucky'] as List<int>).map<UserLucky>(
+          (x) => UserLucky.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Friends.fromJson(String source) =>
+      Friends.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class UserLucky {

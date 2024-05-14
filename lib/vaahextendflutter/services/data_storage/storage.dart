@@ -16,7 +16,7 @@ abstract class Storage {
   ///
   ///The argument [name] is used to open Hive box with that name.
   ///
-  ///If you don't provide [name], 'default' will be used
+  ///If you don't provide [name], 'default' will be used.
   factory Storage.createLocal({String? name}) {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
@@ -30,12 +30,11 @@ abstract class Storage {
     }
   }
 
-  ///Creates a new Network Storage [FirestoreStorageImpl]
+  ///Creates a new Network Storage [FirestoreStorageImpl] or [SupabaseImpl]
   factory Storage.createNetwork({String? name}) {
     switch (_envConfig.networkStorageType) {
       case NetworkStorageType.firebase:
-        final firestore =
-            FirestoreStorageImpl(collectionName: name ?? 'default');
+        final firestore = FirestoreStorageImpl(collectionName: name ?? 'default');
         firestore.init();
         return firestore;
       case NetworkStorageType.supabase:
@@ -45,14 +44,14 @@ abstract class Storage {
     }
   }
 
-  ///Creates a new Encrypted Local Storage [HiveLocalDataEncryptedStorage]
+  ///Creates a new Encrypted Local Storage [HiveEncryptedStorage] or [FlutterSecureStorageEncryptedImpl]
   factory Storage.createEncryptedLocal(String? name) {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
-        final hive = HiveLocalDataEncryptedStorage(name: name ?? 'default');
+        final hive = HiveEncryptedStorage(name: name ?? 'default');
         return hive;
       case LocalStorageType.flutterSecureStorage:
-        return FlutterSecureStorageLocalEncryptedDataStorage();
+        return FlutterSecureStorageEncryptedImpl();
       default:
         return NullStorage();
     }
@@ -60,14 +59,40 @@ abstract class Storage {
 
   Storage();
 
+  ///This methos is used to initialize the Storage.
+  ///Its not required in case of [FlutterSecureStorageImpl].
+  ///In case of [HiveStorageImpl] it creates a [Directory] using pat_provide package,
+  ///initializes hive at that directory, and opens a box with name [name] provided
+  ///during [Storage] creation.
+  ///```dart
+  /// Storage.createLocal('name')
+  /// ```
   Future<void> init();
 
+  ///Creates new item or items in the database.
+  ///
+  ///It can take String or List<String> as [key], and the [value] can be of type,
+  ///String, List of String this String could be a Json String or a simple text accourding to your requirement.
+  ///
+  ///In case of Hive you can only provide the value as Map<String, String> where Map's key will be used as
+  ///[key] and Map's value will be used as [value].
   Future<void> create({dynamic key, dynamic value});
 
+  ///Reads the value of the item with [key] from the database and returns the value according to type of [key]
+  ///provided.
+  ///
+  ///It can take the [key] parameter as String and will return [value] as String.
+  ///If the [key] is List of String it will return [value] as List of String.
+  ///
+  ///When the key is not provided it will return all the values from that [Storage] as Map<[key], [value]>
   Future<dynamic> read({dynamic key});
 
+  ///Updates an item with the [key], and [value].
+  ///for data types refer [create].
   Future<dynamic> update({dynamic key, dynamic value});
 
+  ///Deletes an item matching with the [key].
+  ///for data types refer [read].
   void delete({dynamic key});
 }
 
@@ -234,8 +259,7 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<void> setDocument(Map<String, dynamic> data,
-      {String? onConflict}) async {
+  Future<void> setDocument(Map<String, dynamic> data, {String? onConflict}) async {
     try {
       await _firestore.doc(collectionName).set(data);
     } catch (e) {
@@ -244,8 +268,7 @@ class FirestoreService implements DatabaseService {
   }
 
   @override
-  Future<void> updateDocument(Map<String, dynamic> data,
-      {Filter? filter}) async {
+  Future<void> updateDocument(Map<String, dynamic> data, {Filter? filter}) async {
     try {
       await _firestore.doc(collectionName).update(data);
     } catch (e) {
@@ -271,13 +294,16 @@ class SupabaseService implements DatabaseService {
   final instance = Supabase.instance.client;
 
   @override
-  Future<dynamic> getDocument({Filter? filter}) async {
-    Filter filter = Filter(column: 'name', operator: 'eq', value: 'USA');
+  Future<dynamic> getDocument({required Filter filter}) async {
     try {
       final response = await instance
           .from(collectionName)
           .select()
-          .filter(filter.column, filter.operator, filter.value)
+          .filter(
+            filter.column,
+            operatorToString(filter.operator),
+            filter.value,
+          )
           .single();
       final Map<String, dynamic> document = response;
       return document;
@@ -295,7 +321,17 @@ class SupabaseService implements DatabaseService {
       if (filter != null) {
         final response = await query
             .select()
-            .filter(filter.column, filter.operator, filter.value);
+            .filter(
+              filter.column,
+              operatorToString(filter.operator),
+              filter.value,
+            )
+            .filter(
+              filter.column,
+              operatorToString(filter.operator),
+              filter.value,
+            );
+
         final List<dynamic> dataList = response;
         return dataList;
         // }
@@ -324,8 +360,7 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<void> setDocument(Map<String, dynamic> data,
-      {String? onConflict}) async {
+  Future<void> setDocument(Map<String, dynamic> data, {String? onConflict}) async {
     try {
       final query = instance.from(collectionName);
       await query.upsert(data, onConflict: onConflict);
@@ -333,14 +368,15 @@ class SupabaseService implements DatabaseService {
   }
 
   @override
-  Future<void> updateDocument(Map<String, dynamic> data,
-      {Filter? filter}) async {
+  Future<void> updateDocument(Map<String, dynamic> data, {Filter? filter}) async {
     try {
       final query = instance.from(collectionName);
       if (filter != null) {
-        await query
-            .update(data)
-            .filter(filter.column, filter.operator, filter.value);
+        await query.update(data).filter(
+              filter.column,
+              operatorToString(filter.operator),
+              filter.value,
+            );
       }
 
       // //only eq is provided
@@ -370,9 +406,11 @@ class SupabaseService implements DatabaseService {
     try {
       final query = instance.from(collectionName);
       if (filter != null) {
-        await query
-            .delete()
-            .filter(filter.column, filter.operator, filter.value);
+        await query.delete().match({}).filter(
+          filter.column,
+          operatorToString(filter.operator),
+          filter.value,
+        );
       }
       // if (eq != null && neq == null) {
       //   await query.delete().eq(eq.column, eq.value);
@@ -411,33 +449,57 @@ class Database {
   ///Returns a single document from a collection stored in [Supabase] or [FirebaseFirestore],
   ///
   ///Required String [collectionName] and an optional Object [eq] of [Eq] for applying filters
-  Future<dynamic> getDocument({required Filter filter}) =>
-      _service.getDocument(filter: filter);
+  Future<dynamic> getDocument({required Filter filter}) => _service.getDocument(filter: filter);
 
   ///Returns all documents of collection stored in [Supabase] or [FirebaseFirestore].
   ///If eq and neq are provided the it will return a filtered List of documents.
-  Future<dynamic> getCollection({Filter? filter}) =>
-      _service.getCollection(filter: filter);
+  Future<dynamic> getCollection({Filter? filter}) => _service.getCollection(filter: filter);
 
   ///Insert a document [document] in collerction [collectionName]
-  Future<void> setDocument(Map<String, dynamic> document,
-          {String? onConflict}) =>
+  Future<void> setDocument(Map<String, dynamic> document, {String? onConflict}) =>
       _service.setDocument(document, onConflict: onConflict);
 
   ///Updates a given document in collerction [collectionName]
-  Future<void> updateDocument(Map<String, dynamic> document,
-          {Filter? filter}) =>
+  Future<void> updateDocument(Map<String, dynamic> document, {Filter? filter}) =>
       _service.updateDocument(document, filter: filter);
 
   ///Deletes document from collection [collectionName]
-  Future<void> deleteDocument({Filter? filter}) =>
-      _service.deleteDocument(filter: filter);
+  Future<void> deleteDocument({Filter? filter}) => _service.deleteDocument(filter: filter);
 }
 
 class Filter {
   final String column;
-  final String operator; //make operator an enum
+  final Operator operator; //make operator an enum
   final Object? value;
 
   Filter({required this.column, required this.operator, required this.value});
+}
+
+enum Operator {
+  eq,
+  neq,
+  gt,
+  gte,
+  lt,
+  lte,
+  like,
+}
+
+String operatorToString(Operator operator) {
+  switch (operator) {
+    case Operator.eq:
+      return 'eq';
+    case Operator.neq:
+      return 'neq';
+    case Operator.gt:
+      return 'gt';
+    case Operator.gte:
+      return 'gte';
+    case Operator.lt:
+      return 'lt';
+    case Operator.lte:
+      return 'lte';
+    case Operator.like:
+      return 'like';
+  }
 }

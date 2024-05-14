@@ -1,6 +1,6 @@
 import '../storage.dart';
 
-class FlutterSecureStorageLocalEncryptedDataStorage implements Storage {
+class FlutterSecureStorageEncryptedImpl implements Storage {
   @override
   Future<void> create({key, value}) {
     // TODO: implement create
