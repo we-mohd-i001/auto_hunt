@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'app_theme.dart';
 import 'services/logging_library/logging_library.dart';
@@ -32,8 +34,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
   firebaseId: 'mohd-i001@webreinvent.com',
-  oneSignalConfig:
-      const OneSignalConfig(appId: '53dd3db0-5f0e-40be-936c-31f8022a391a'),
+  oneSignalConfig: const OneSignalConfig(appId: '53dd3db0-5f0e-40be-936c-31f8022a391a'),
   sentryConfig: const SentryConfig(
     dsn:
         'https://67fb7037cd9c95f3680d0b5b48d4b394@o4506977107050496.ingest.us.sentry.io/4506977112424448',
@@ -43,6 +44,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
     enableAssetsInstrumentation: true,
     tracesSampleRate: 0.6,
   ),
+  hiveConfig: HiveConfig(directoryName: 'dir'),
 );
 
 // To add new configuration add new key, value pair in envConfigs
@@ -75,8 +77,7 @@ class EnvController extends GetxController {
 
   EnvController(String environment) {
     try {
-      _config = getSpecificConfig(environment)
-          .copyWith(openCount: _storage.read('open_count'));
+      _config = getSpecificConfig(environment).copyWith(openCount: _storage.read('open_count'));
     } catch (error, stackTrace) {
       Log.exception(error, stackTrace: stackTrace);
       exit(0);
@@ -120,6 +121,7 @@ class EnvironmentConfig {
   final PusherConfig? pusherConfig;
   final bool showDebugPanel;
   final Color debugPanelColor;
+  final HiveConfig? hiveConfig;
 
   const EnvironmentConfig({
     required this.appTitle,
@@ -144,6 +146,7 @@ class EnvironmentConfig {
     this.pusherConfig,
     required this.showDebugPanel,
     required this.debugPanelColor,
+    this.hiveConfig,
   });
 
   static EnvironmentConfig getEnvConfig() {
@@ -156,8 +159,7 @@ class EnvironmentConfig {
   }
 
   static void setEnvConfig() {
-    String environment =
-        const String.fromEnvironment('environment', defaultValue: 'default');
+    String environment = const String.fromEnvironment('environment', defaultValue: 'default');
     final EnvController envController = Get.put(EnvController(environment));
     Log.info(
       'Env Type: ${envController.config.envType}',
@@ -192,6 +194,7 @@ class EnvironmentConfig {
     PusherConfig? pusherConfig,
     bool? showDebugPanel,
     Color? debugPanelColor,
+    HiveConfig? hiveConfig,
   }) {
     return EnvironmentConfig(
       appTitle: appTitle ?? this.appTitle,
@@ -207,18 +210,18 @@ class EnvironmentConfig {
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
       enableCloudLogs: enableCloudLogs ?? this.enableCloudLogs,
       sentryConfig: sentryConfig ?? this.sentryConfig,
-      enableApiLogInterceptor:
-          enableApiLogInterceptor ?? this.enableApiLogInterceptor,
+      enableApiLogInterceptor: enableApiLogInterceptor ?? this.enableApiLogInterceptor,
       pushNotificationsServiceType:
           pushNotificationsServiceType ?? this.pushNotificationsServiceType,
-      internalNotificationsServiceType: internalNotificationsServiceType ??
-          this.internalNotificationsServiceType,
+      internalNotificationsServiceType:
+          internalNotificationsServiceType ?? this.internalNotificationsServiceType,
       localStorageType: localStorageType ?? this.localStorageType,
       networkStorageType: networkStorageType ?? this.networkStorageType,
       oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
       pusherConfig: pusherConfig ?? this.pusherConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
+      hiveConfig: hiveConfig ?? this.hiveConfig,
     );
   }
 
@@ -270,8 +273,7 @@ class SentryConfig {
           enableAutoPerformanceTracing ?? this.enableAutoPerformanceTracing,
       enableUserInteractionTracing:
           enableUserInteractionTracing ?? this.enableUserInteractionTracing,
-      enableAssetsInstrumentation:
-          enableAssetsInstrumentation ?? this.enableAssetsInstrumentation,
+      enableAssetsInstrumentation: enableAssetsInstrumentation ?? this.enableAssetsInstrumentation,
     );
   }
 }
@@ -309,5 +311,19 @@ class PusherConfig {
       apiKey: apiKey ?? this.apiKey,
       cluster: cluster ?? this.cluster,
     );
+  }
+}
+
+class HiveConfig {
+  String directoryName = 'dir';
+  final Future<Directory> _appDocDirectory = getApplicationDocumentsDirectory();
+
+  HiveConfig({required this.directoryName});
+  void init() async {
+    await _appDocDirectory;
+    Directory dir = await _appDocDirectory;
+    await Directory('${dir.path}/dir').create(recursive: true).then((Directory directory) async {
+      Hive.init(directory.path);
+    });
   }
 }

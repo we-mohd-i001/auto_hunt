@@ -51,10 +51,8 @@ class BaseController extends GetxController {
             ..dsn = config.sentryConfig!.dsn
             ..autoAppStart = config.sentryConfig!.autoAppStart
             ..tracesSampleRate = config.sentryConfig!.tracesSampleRate
-            ..enableAutoPerformanceTracing =
-                config.sentryConfig!.enableAutoPerformanceTracing
-            ..enableUserInteractionTracing =
-                config.sentryConfig!.enableUserInteractionTracing
+            ..enableAutoPerformanceTracing = config.sentryConfig!.enableAutoPerformanceTracing
+            ..enableUserInteractionTracing = config.sentryConfig!.enableUserInteractionTracing
             ..environment = config.envType,
         );
         Widget child = app;
@@ -70,6 +68,9 @@ class BaseController extends GetxController {
             ),
             child: child,
           );
+        }
+        if (config.hiveConfig != null) {
+          config.hiveConfig!.init();
         }
         // Running main app
         runApp(child);
