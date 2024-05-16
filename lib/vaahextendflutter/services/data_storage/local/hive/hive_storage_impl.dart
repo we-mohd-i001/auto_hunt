@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import '../../storage.dart';
@@ -31,7 +30,10 @@ class HiveStorageImpl implements Storage {
       } else if (key is String && value is String) {
         _box!.put(key, value);
       } else {
-        throw ArgumentError('key must be String, value must be String, or Map<String, String>');
+        throw ArgumentError(
+          'To save a single entry, the key and the value must be of type String,'
+          'To save multiple entries pass only the value as Map<Sring, String>',
+        );
       }
     } else {
       throw Exception('Box is null, not initialized.');
@@ -47,17 +49,17 @@ class HiveStorageImpl implements Storage {
   @override
   Future<dynamic> read({dynamic key}) async {
     if (_box != null) {
-      if (key is List<String>) {
+      if (key is String) {
+        if (_box!.containsKey(key)) {
+          String result = await _box!.get(key);
+          return result;
+        }
+      } else if (key is List<String>) {
         Map<String, String> result = {};
         for (String k in key) {
           result[k] = (_box!.get(k));
         }
         return result;
-      } else if (key is String) {
-        if (_box!.containsKey(key)) {
-          String result = await _box!.get(key);
-          return result;
-        }
       } else if (key == null) {
         Map<dynamic, dynamic> result = _box!.toMap();
         return result;
@@ -72,12 +74,12 @@ class HiveStorageImpl implements Storage {
   @override
   void delete({dynamic key}) async {
     if (_box != null) {
-      if (key is List<String>) {
-        _box!.deleteAll(key);
-      } else if (key is String) {
+      if (key is String) {
         if (_box!.containsKey(key)) {
           await _box!.delete(key);
         }
+      } else if (key is List<String>) {
+        _box!.deleteAll(key);
       } else if (key == null) {
         await _box!.clear();
       } else {
