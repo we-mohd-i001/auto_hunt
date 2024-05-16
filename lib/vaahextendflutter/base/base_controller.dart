@@ -70,7 +70,7 @@ class BaseController extends GetxController {
           );
         }
         if (config.hiveConfig != null) {
-          config.hiveConfig!.init();
+          await config.hiveConfig!.init();
         }
         // Running main app
         runApp(child);

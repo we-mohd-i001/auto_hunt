@@ -319,7 +319,7 @@ class HiveConfig {
   final Future<Directory> _appDocDirectory = getApplicationDocumentsDirectory();
 
   HiveConfig({required this.directoryName});
-  void init() async {
+  Future<void> init() async {
     await _appDocDirectory;
     Directory dir = await _appDocDirectory;
     await Directory('${dir.path}/dir').create(recursive: true).then((Directory directory) async {
