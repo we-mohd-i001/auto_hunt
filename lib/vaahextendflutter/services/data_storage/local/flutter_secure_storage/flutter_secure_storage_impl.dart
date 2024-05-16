@@ -3,41 +3,39 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../storage.dart';
 
 class FlutterSecureStorageImpl implements Storage {
-  final storage = const FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
   @override
   Future<void> init() async {}
 
   @override
   Future<void> create({dynamic key, dynamic value}) async {
-    if ((key is List<String>) && (value is List<String>)) {
-      bool isKeyDataLengthEqual = (key.length == value.length);
-      if (isKeyDataLengthEqual) {
-        for (int i = 0; i < key.length; i++) {
-          await storage.write(key: key[i], value: value[i]);
-        }
+    if (key == null && value is Map<String, String>) {
+      for (String k in value.keys) {
+        await _storage.write(key: k, value: value[k]);
       }
     } else if (key is String && value is String) {
-      await storage.write(key: key, value: value);
+      await _storage.write(key: key, value: value);
     } else {
       throw ArgumentError(
-          'key must be String or List<String>, data must be String, or List<String>');
+        'To save a single entry, the key and the value must be of type String,'
+        'To save multiple entries pass only the value as Map<Sring, String>',
+      );
     }
   }
 
   @override
   Future<dynamic> read({dynamic key}) async {
-    dynamic result;
     if (key is String) {
-      result = await storage.read(key: key);
+      String? result = await _storage.read(key: key);
       return result;
     } else if (key is List<String>) {
-      result = List.empty(growable: true);
-      for (int i = 0; i < key.length; i++) {
-        result.add(await storage.read(key: key[i]));
+      Map<String, dynamic> result = {};
+      for (String k in key) {
+        result[k] = await _storage.read(key: k);
       }
       return result;
     } else if (key == null) {
-      result = await storage.readAll();
+      Map<String, String> result = await _storage.readAll();
       return result;
     } else {
       throw ArgumentError('key must be of type String or List<String>');
@@ -53,14 +51,13 @@ class FlutterSecureStorageImpl implements Storage {
   @override
   void delete({dynamic key}) async {
     if (key is String) {
-      await storage.delete(key: key);
+      await _storage.delete(key: key);
     } else if (key is List<String>) {
-      for (int i = 0; i < key.length; i++) {
-        await storage.delete(key: key[i]);
-        storage.readAll();
+      for (String k in key) {
+        await _storage.delete(key: k);
       }
     } else if (key == null) {
-      await storage.deleteAll();
+      await _storage.deleteAll();
     } else {
       throw ArgumentError(
         'key must be of type String or List<String>',

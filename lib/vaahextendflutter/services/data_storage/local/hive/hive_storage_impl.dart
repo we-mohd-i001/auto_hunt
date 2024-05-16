@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../storage.dart';
 
@@ -9,7 +6,7 @@ import '../../storage.dart';
 class HiveStorageImpl implements Storage {
   final String name;
   HiveCipher? encryptionCypher;
-  Box? box;
+  Box? _box;
   HiveStorageImpl({
     required this.name,
     this.encryptionCypher,
@@ -17,13 +14,7 @@ class HiveStorageImpl implements Storage {
 
   @override
   Future<void> init() async {
-    final Directory appDocDirectory = await getApplicationDocumentsDirectory();
-    await Directory('${appDocDirectory.path}/dir')
-        .create(recursive: true)
-        .then((Directory directory) async {
-      Hive.init(directory.path);
-    });
-    box = await Hive.openBox(
+    _box = await Hive.openBox(
       name,
       encryptionCipher: encryptionCypher,
     );
@@ -31,25 +22,19 @@ class HiveStorageImpl implements Storage {
 
   @override
   Future<void> create({dynamic key, dynamic value}) async {
-    if (box != null) {
-      if (value is Map<String, String>) {
-        box!.putAll(value);
-      } else if ((value is List<String>) && (key is List<String>)) {
-        for (int i = 0; i < key.length; i++) {
-          box!.put(key[i], value[i]);
-        }
+    if (_box != null) {
+      if (key == null && value is Map<String, String>) {
+        _box!.putAll(value);
       } else if (key is String && value is String) {
-        if (!box!.containsKey(key)) {
-          box!.put(key, value);
-        } else {
-          box!.put(key, value);
-        }
+        _box!.put(key, value);
       } else {
         throw ArgumentError(
-            'key must be String or List<String>, data must be String, List<String>, or Map<String, String>');
+          'To save a single entry, the key and the value must be of type String,'
+          'To save multiple entries pass only the value as Map<Sring, String>',
+        );
       }
     } else {
-      throw Exception('Box is null, not initiized.');
+      throw Exception('Box is null, not initialized.');
     }
   }
 
@@ -61,42 +46,40 @@ class HiveStorageImpl implements Storage {
 
   @override
   Future<dynamic> read({dynamic key}) async {
-    dynamic value;
-    if (box != null) {
-      if (key is List<String>) {
-        value = List<dynamic>.empty(growable: true);
-        for (int i = 0; i < key.length; i++) {
-          value.add((box!.get(key[i])));
+    if (_box != null) {
+      if (key is String) {
+        if (_box!.containsKey(key)) {
+          String result = await _box!.get(key);
+          return result;
         }
-        return value;
-      } else if (key is String) {
-        if (box!.containsKey(key)) {
-          value = await box!.get(key);
-          return value;
+      } else if (key is List<String>) {
+        Map<String, String> result = {};
+        for (String k in key) {
+          result[k] = (_box!.get(k));
         }
+        return result;
       } else if (key == null) {
-        value = box!.toMap();
-        return value;
+        Map<dynamic, dynamic> result = _box!.toMap();
+        return result;
       } else {
         throw ArgumentError('key must be of type String or List<String>');
       }
     } else {
       throw Exception('Box is null, not initiized.');
     }
-    return value;
   }
 
   @override
   void delete({dynamic key}) async {
-    if (box != null) {
-      if (key is List<String>) {
-        box!.deleteAll(key);
-      } else if (key is String) {
-        if (box!.containsKey(key)) {
-          await box!.delete(key);
+    if (_box != null) {
+      if (key is String) {
+        if (_box!.containsKey(key)) {
+          await _box!.delete(key);
         }
+      } else if (key is List<String>) {
+        _box!.deleteAll(key);
       } else if (key == null) {
-        await box!.clear();
+        await _box!.clear();
       } else {
         throw ArgumentError('key must be of type String or List<String>');
       }

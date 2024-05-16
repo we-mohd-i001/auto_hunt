@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:io';
 
@@ -15,22 +14,22 @@ import 'vaahextendflutter/services/data_storage/storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Supabase.initialize(
-    url: 'https://embgcnouywpgunriudxi.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtYmdjbm91eXdwZ3Vucml1ZHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4OTk3NDMsImV4cCI6MjAyNTQ3NTc0M30.kRmshqh_welj6_fv-CE5sIDv5h3PzwofGOJseqnGHwI',
-  );
+  // await Supabase.initialize(
+  //   url: 'https://embgcnouywpgunriudxi.supabase.co',
+  //   anonKey:
+  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtYmdjbm91eXdwZ3Vucml1ZHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4OTk3NDMsImV4cCI6MjAyNTQ3NTc0M30.kRmshqh_welj6_fv-CE5sIDv5h3PzwofGOJseqnGHwI',
+  // );
 
-  final db = Database(useFirestore: false, collectionName: 'countries');
-  var iVlue = await db.getCollection(
-      filter: Filter(column: 'name', operator: Operator.neq, value: 'South Korea'));
-  var iVlueq =
-      await db.getDocument(filter: Filter(column: 'name', operator: Operator.eq, value: 'USA'));
-  //await db.setDocument({'id': 6, 'name': 'Jamaica'});
-  // await db.updateDocument({'name': 'Dummy Country'},
-  //     neq: Neq(column: 'name', value: 'Manhattan'));
-  print('~~~> $iVlue, Type: ${iVlue.runtimeType}');
-  print('~~~> $iVlueq, Type: ${iVlueq.runtimeType}');
+  // final db = Database(useFirestore: false, collectionName: 'countries');
+  // var iVlue = await db.getCollection(
+  //     filter: Filter(column: 'name', operator: Operator.neq, value: 'South Korea'));
+  // var iVlueq =
+  //     await db.getDocument(filter: Filter(column: 'name', operator: Operator.eq, value: 'USA'));
+  // //await db.setDocument({'id': 6, 'name': 'Jamaica'});
+  // // await db.updateDocument({'name': 'Dummy Country'},
+  // //     neq: Neq(column: 'name', value: 'Manhattan'));
+  // print('~~~> $iVlue, Type: ${iVlue.runtimeType}');
+  // print('~~~> $iVlueq, Type: ${iVlueq.runtimeType}');
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
 
@@ -69,6 +68,19 @@ class _MyTestAppState extends State<MyTestApp> {
   UserLucky emptyUser = UserLucky(name: 'null', age: 'null');
   createUsingFirebase() async {
     user1 = UserLucky(name: 'Firebase Check', age: '12');
+  }
+
+  createUsingMap() async {
+    Map<String, dynamic> map1 = <String, dynamic>{
+      'key': 'value',
+      'key2': 'value2',
+      'key3': ['value1arr', 'value2arr'],
+    };
+    await storage.create(key: 'map1', value: json.encode(map1));
+    String result = await storage.read(key: 'map1');
+    final map2 = json.decode(result);
+
+    print('~~~> ' '$map2');
   }
 
   updateAndGet() async {
@@ -115,11 +127,12 @@ class _MyTestAppState extends State<MyTestApp> {
                       UserLucky(name: 'List H', age: '2')
                     ];
                     final friends = Friends(userLucky: users);
-                    await updateAndGet();
-                    storage.create(
-                      key: 'friends',
-                      value: friends.toJson(),
-                    );
+                    // await updateAndGet();
+                    // storage.create(
+                    //   key: 'friends',
+                    //   value: friends.toJson(),
+                    // );
+
                     final storedData = await storage.read(key: 'friends');
                     print('~~~>{$storedData}');
                     // user = UserLucky.fromJson(storedData ?? '');
@@ -131,10 +144,11 @@ class _MyTestAppState extends State<MyTestApp> {
                 ),
                 ElevatedButton(
                     onPressed: () async {
-                      await getData();
-                      setState(() {
-                        value = user1.name;
-                      });
+                      await createUsingMap();
+                      // await getData();
+                      // setState(() {
+                      //   value = user1.name;
+                      // });
                     },
                     child: const Text('Show')),
                 ElevatedButton(
