@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../storage.dart';
@@ -33,8 +31,7 @@ class FlutterSecureStorageImpl implements Storage {
     } else if (key is List<String>) {
       Map<String, dynamic> result = {};
       for (String k in key) {
-        final jsonValue = await _storage.read(key: k);
-        result[k] = jsonValue;
+        result[k] = await _storage.read(key: k);
       }
       return result;
     } else if (key == null) {

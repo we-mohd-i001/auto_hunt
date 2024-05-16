@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import '../../storage.dart';
@@ -22,23 +23,15 @@ class HiveStorageImpl implements Storage {
 
   @override
   Future<void> create({dynamic key, dynamic value}) async {
-    assert(_box != null);
     if (_box != null) {
-      if (value is Map<String, String>) {
+      if (key != null && value is Map<String, dynamic>) {
+        _box!.put(key, value);
+      } else if (key == null && value is Map<String, String>) {
         _box!.putAll(value);
-      } else if ((value is List<String>) && (key is List<String>)) {
-        for (int i = 0; i < key.length; i++) {
-          _box!.put(key[i], value[i]);
-        }
       } else if (key is String && value is String) {
-        if (!_box!.containsKey(key)) {
-          _box!.put(key, value);
-        } else {
-          _box!.put(key, value);
-        }
+        _box!.put(key, value);
       } else {
-        throw ArgumentError(
-            'key must be String or List<String>, data must be String, List<String>, or Map<String, String>');
+        throw ArgumentError('key must be String, value must be String, or Map<String, String>');
       }
     } else {
       throw Exception('Box is null, not initialized.');
@@ -53,29 +46,27 @@ class HiveStorageImpl implements Storage {
 
   @override
   Future<dynamic> read({dynamic key}) async {
-    dynamic value;
     if (_box != null) {
       if (key is List<String>) {
-        value = List<dynamic>.empty(growable: true);
-        for (int i = 0; i < key.length; i++) {
-          value.add((_box!.get(key[i])));
+        Map<String, String> result = {};
+        for (String k in key) {
+          result[k] = (_box!.get(k));
         }
-        return value;
+        return result;
       } else if (key is String) {
         if (_box!.containsKey(key)) {
-          value = await _box!.get(key);
-          return value;
+          String result = await _box!.get(key);
+          return result;
         }
       } else if (key == null) {
-        value = _box!.toMap();
-        return value;
+        Map<dynamic, dynamic> result = _box!.toMap();
+        return result;
       } else {
         throw ArgumentError('key must be of type String or List<String>');
       }
     } else {
       throw Exception('Box is null, not initiized.');
     }
-    return value;
   }
 
   @override
