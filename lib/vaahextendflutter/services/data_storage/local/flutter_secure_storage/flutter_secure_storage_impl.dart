@@ -9,35 +9,31 @@ class FlutterSecureStorageImpl implements Storage {
 
   @override
   Future<void> create({dynamic key, dynamic value}) async {
-    if ((key is List<String>) && (value is List<String>)) {
-      bool isKeyDataLengthEqual = (key.length == value.length);
-      if (isKeyDataLengthEqual) {
-        for (int i = 0; i < key.length; i++) {
-          await storage.write(key: key[i], value: value[i]);
-        }
+    if (key == null && value is Map<String, String>) {
+      for (String k in value.keys) {
+        await storage.write(key: k, value: value[k]);
       }
     } else if (key is String && value is String) {
       await storage.write(key: key, value: value);
     } else {
-      throw ArgumentError(
-          'key must be String or List<String>, data must be String, or List<String>');
+      throw ArgumentError('To save a single entry key and value must be of type String',
+          'To save multiple entries only provide value as Map<Sring, String>, ');
     }
   }
 
   @override
   Future<dynamic> read({dynamic key}) async {
-    dynamic result;
     if (key is String) {
-      result = await storage.read(key: key);
+      String? result = await storage.read(key: key);
       return result;
     } else if (key is List<String>) {
-      result = List.empty(growable: true);
-      for (int i = 0; i < key.length; i++) {
-        result.add(await storage.read(key: key[i]));
+      List<dynamic> result = [];
+      for (String k in key) {
+        result.add(await storage.read(key: k));
       }
       return result;
     } else if (key == null) {
-      result = await storage.readAll();
+      Map<String, String> result = await storage.readAll();
       return result;
     } else {
       throw ArgumentError('key must be of type String or List<String>');
@@ -55,9 +51,8 @@ class FlutterSecureStorageImpl implements Storage {
     if (key is String) {
       await storage.delete(key: key);
     } else if (key is List<String>) {
-      for (int i = 0; i < key.length; i++) {
-        await storage.delete(key: key[i]);
-        storage.readAll();
+      for (String k in key) {
+        await storage.delete(key: k);
       }
     } else if (key == null) {
       await storage.deleteAll();
