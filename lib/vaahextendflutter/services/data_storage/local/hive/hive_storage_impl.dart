@@ -23,9 +23,7 @@ class HiveStorageImpl implements Storage {
   @override
   Future<void> create({dynamic key, dynamic value}) async {
     if (_box != null) {
-      if (key != null && value is Map<String, dynamic>) {
-        _box!.put(key, value);
-      } else if (key == null && value is Map<String, String>) {
+      if (key == null && value is Map<String, String>) {
         _box!.putAll(value);
       } else if (key is String && value is String) {
         _box!.put(key, value);

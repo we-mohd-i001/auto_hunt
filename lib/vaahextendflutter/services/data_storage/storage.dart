@@ -59,7 +59,7 @@ abstract class Storage {
 
   Storage();
 
-  ///This methos is used to initialize the Storage.
+  ///This method is used to initialize the  [Storage].
   ///Its not required in case of [FlutterSecureStorageImpl].
   ///In case of [HiveStorageImpl] it creates a [Directory] using pat_provide package,
   ///initializes hive at that directory, and opens a box with name [name] provided
@@ -71,28 +71,32 @@ abstract class Storage {
 
   ///Creates new item or items in the database.
   ///
-  ///It can take String or List<String> as [key], and the [value] can be of type,
-  ///String, List of String this String could be a Json String or a simple text accourding to your requirement.
+  ///To save as single key value pair pass [key] as String, and the [value] as String, the String
+  ///could be a Json String or a simple text according to your requirement.
   ///
-  ///In case of Hive you can only provide the value as Map<String, String> where Map's key will be used as
-  ///[key] and Map's value will be used as [value].
+  ///If you want to save multiple data pass the value as Map<String, String>, then Map's key will
+  ///be used as [key] and corresponding value at that [key] will be used as [value].
   Future<void> create({dynamic key, dynamic value});
 
-  ///Reads the value of the item with [key] from the database and returns the value according to type of [key]
-  ///provided.
+  ///Reads the value of the item at [key] from the [Storage] and returns the value according to type
+  ///of [key] provided.
   ///
-  ///It can take the [key] parameter as String and will return [value] as String.
-  ///If the [key] is List of String it will return [value] as List of String.
+  ///Read single value by passing [key] as String, it will return the value as String,
+  ///Read multiple values by passing List of String containing all the keys you want to read as
+  ///[key], it will return the value as Map<String, String>.
   ///
-  ///When the key is not provided it will return all the values from that [Storage] as Map<[key], [value]>
+  ///When the key is not passed it will return all the values from that [Storage] as
+  ///Map<String, String>
   Future<dynamic> read({dynamic key});
 
-  ///Updates an item with the [key], and [value].
-  ///for data types refer [create].
+  ///Updates an item at [key] with [value].
+  ///
+  ///For data types refer [create].
   Future<dynamic> update({dynamic key, dynamic value});
 
-  ///Deletes an item matching with the [key].
-  ///for data types refer [read].
+  ///Deletes an item at [key].
+  ///
+  ///For data types refer [read].
   void delete({dynamic key});
 }
 
