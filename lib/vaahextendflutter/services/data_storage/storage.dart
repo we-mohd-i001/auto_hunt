@@ -73,103 +73,120 @@ abstract class Storage {
   ///
   ///To save as a single key-value pair pass [key] as String, and the [value] as String, the String
   ///could be a JSON String or a simple text according to your requirement.
-  ///
+  Future<void> create({required String key, required String value});
+
+  ///Creates new items in the database.
   ///If you want to save multiple data pass the value as Map<String, String>, then it will save all
-  ///the key-value pairs in the [value] map.
-  Future<void> create({dynamic key, dynamic value});
+  ///the key-value pairs in the [values] map.
+  Future<void> createAll({Map<String, String>? values});
 
-  ///Reads the value of the item at [key] from the [Storage] and returns the value according to type
-  ///of [key] provided.
+  ///Reads the value of the item at [key] from the [Storage] and returns the value.
   ///
-  ///Read a single value by passing [key] as String, it will return the value as String,
-  ///Read multiple values by passing a List of String containing all the keys you want to read as
-  ///[key], it will return the value as Map<String, String>.
-  ///
-  ///When the key is not passed it will return all the values from that [Storage] as
-  ///Map<String, String>
-  Future<dynamic> read({dynamic key});
+  ///Read a single value by passing [key] as String, it will return the value as String.
+  Future<String> read({required String key});
 
-  ///Updates an item at [key] with [value].
+  ///Reads multiple values by passing a List of String containing all the keys you want to read as
+  ///[keys], it will return the value as Map<String, String>.
   ///
-  ///For data types refer [create].
-  Future<dynamic> update({dynamic key, dynamic value});
+  ///When the keys is not passed it will return all the values from that [Storage] as
+  ///Map<String, String?>
+  Future<Map<String, String?>> readAll({List<String>? keys});
 
   ///Deletes an item at [key].
-  ///
-  ///For data types refer [read].
-  void delete({dynamic key});
+  Future<void> delete({required String key});
+
+  ///Deletes all items at a key from [keys].
+  Future<void> deleteAll({List<String>? keys});
 }
 
-abstract class NetworkStorage extends Storage {
-  @override
-  Future<void> init();
-
-  @override
-  Future<void> create({
-    dynamic key,
-    dynamic value,
-  });
-
-  @override
-  Future<dynamic> read({dynamic key, List<String>? filters});
-
-  @override
-  Future<dynamic> update({dynamic key, dynamic value});
-
-  @override
-  void delete({dynamic key});
-}
+abstract class NetworkStorage extends Storage {}
 
 class SupabaseImpl implements NetworkStorage {
   final instance = Supabase.instance.client;
 
   @override
-  Future<void> create({
-    key,
-    value,
-  }) {
-    instance.from(key).insert(value);
+  Future<void> create({String? key, String? value}) async {
+    // TODO: implement create
     throw UnimplementedError();
   }
 
   @override
-  void delete({key}) {
-    instance.from(key).delete();
+  Future<void> createAll({Map<String, String>? values}) {
+    // TODO: implement createAll
+    throw UnimplementedError();
   }
 
   @override
-  Future<void> init() async {}
-
-  @override
-  Future<dynamic> read({key, List<String>? filters}) {
-    return instance.from('key').select();
+  Future<void> delete({String? key}) {
+    // TODO: implement delete
+    throw UnimplementedError();
   }
 
   @override
-  Future<dynamic> update({key, value}) {
-    return instance.from(key).update(value);
+  Future<void> deleteAll({List<String>? keys}) {
+    // TODO: implement deleteAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> init() {
+    // TODO: implement init
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> read({String? key}) {
+    // TODO: implement read
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, String?>> readAll({List<String>? keys}) {
+    // TODO: implement readAll
+    throw UnimplementedError();
   }
 }
 
 class NullStorage implements Storage {
   @override
-  void delete({dynamic key}) {}
-
-  @override
-  Future<void> init() async {}
-
-  @override
-  Future<String?> read({dynamic key}) {
+  Future<void> create({required String key, required String value}) {
+    // TODO: implement create
     throw UnimplementedError();
   }
 
   @override
-  Future<String?> update({dynamic key, dynamic value}) {
+  Future<void> createAll({Map<String, String>? values}) {
+    // TODO: implement createAll
     throw UnimplementedError();
   }
 
   @override
-  Future<void> create({dynamic key, dynamic value}) {
+  Future<void> delete({required String key}) {
+    // TODO: implement delete
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteAll({List<String>? keys}) {
+    // TODO: implement deleteAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> init() {
+    // TODO: implement init
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> read({required String key}) {
+    // TODO: implement read
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, String?>> readAll({List<String>? keys}) {
+    // TODO: implement readAll
     throw UnimplementedError();
   }
 }
