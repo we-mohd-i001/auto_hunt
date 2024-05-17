@@ -69,21 +69,23 @@ abstract class Storage {
   /// ```
   Future<void> init();
 
-  ///Creates new item or items in the database.
+  ///Creates or updates new item or items in the database.
   ///
-  ///To save as a single key-value pair pass [key] as String, and the [value] as String, the String
+  ///To save or update as a single key-value pair pass [key] as String, and the [value] as String, the String
   ///could be a JSON String or a simple text according to your requirement.
+  ///If the key is already present in the [Storage] it's vlaue will be overwritten.
   Future<void> create({required String key, required String value});
 
   ///Creates new items in the database.
   ///If you want to save multiple data pass the value as Map<String, String>, then it will save all
   ///the key-value pairs in the [values] map.
-  Future<void> createAll({Map<String, String>? values});
+  ///If any key fromthe [values] is already present in the [Storage] it's vlaue will be overwritten.
+  Future<void> createAll({required Map<String, String> values});
 
   ///Reads the value of the item at [key] from the [Storage] and returns the value.
   ///
   ///Read a single value by passing [key] as String, it will return the value as String.
-  Future<String> read({required String key});
+  Future<String?> read({required String key});
 
   ///Reads multiple values by passing a List of String containing all the keys you want to read as
   ///[keys], it will return the value as Map<String, String>.
@@ -95,7 +97,7 @@ abstract class Storage {
   ///Deletes an item at [key].
   Future<void> delete({required String key});
 
-  ///Deletes all items at a key from [keys].
+  ///Deletes all items at a key from [keys] if keys is not passed all the values will be deleted.
   Future<void> deleteAll({List<String>? keys});
 }
 
@@ -135,7 +137,7 @@ class SupabaseImpl implements NetworkStorage {
   }
 
   @override
-  Future<String> read({String? key}) {
+  Future<String?> read({String? key}) {
     // TODO: implement read
     throw UnimplementedError();
   }
