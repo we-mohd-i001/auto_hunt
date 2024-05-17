@@ -34,7 +34,7 @@ class FlutterSecureStorageImpl implements Storage {
       }
       return result;
     } else {
-      Map<String, String> result = await _storage.readAll();
+      final Map<String, String> result = await _storage.readAll();
       return result;
     }
   }
