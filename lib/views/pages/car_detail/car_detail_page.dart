@@ -4,21 +4,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../../helpers/constants/strings/strings.dart';
-import '../../../controllers/brand_detail_controller.dart';
-import '../../../controllers/home_controller.dart';
-import '../../../controllers/search_controller.dart';
+import '../../../controllers/brand/brand_detail_controller.dart';
+import '../../../controllers/home/home_controller.dart';
+import '../../../controllers/search/search_controller.dart';
 import '../../../models/car/car_model.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 import '../../../vaahextendflutter/helpers/enums.dart';
 import '../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../helpers/commons.dart';
+import '../../../controllers/car/car_detail_controller.dart';
 import '../chat/chat_page.dart';
 import '../common_widgets/custom_appbar.dart';
-import '../common_widgets/learn_more_with_title.dart';
+import '../common_widgets/list_heading.dart';
 import '../common_widgets/my_custom_button.dart';
 import '../rent_checkout/rent_checkout_page.dart';
-import '../../../controllers/car_detail_controller.dart';
 import 'widgets/car_information_widget.dart';
 import 'widgets/carousel_image_car.dart';
 import 'widgets/like_button.dart';
@@ -31,7 +31,7 @@ class CarDetailPage extends StatelessWidget {
   const CarDetailPage({super.key, required this.carModel, required this.user});
 
   static Route<void> route(User? user, CarModel carModel) {
-    initializeController(user, carModel);
+    _initialize(user, carModel);
     return MaterialPageRoute(
       settings: const RouteSettings(name: '/details'),
       builder: (_) => CarDetailPage(
@@ -41,7 +41,7 @@ class CarDetailPage extends StatelessWidget {
     );
   }
 
-  static initializeController(User? user, CarModel carModel) {
+  static _initialize(User? user, CarModel carModel) {
     return Get.isRegistered<CarDetailController>()
         ? Get.find<CarDetailController>()
         : Get.put(
@@ -62,7 +62,7 @@ class CarDetailPage extends StatelessWidget {
         onPressed: () {
           Navigator.pop(context);
           Get.delete<CarDetailController>();
-          Get.find<HomeController>().fetchMostPopularCarList();
+          Get.find<HomeController>().fetchMostPopularCars();
           Get.find<BrandDetailController>()
               .fetchCarList(carModel.carBrand.toString());
           SearchCarsController searchCarsController =
@@ -78,12 +78,12 @@ class CarDetailPage extends StatelessWidget {
               isCarLiked: carDetailController.isCarLiked.value,
               onPressedToLike: () {
                 carDetailController.isCarLiked(true);
-                carDetailController.addToLikedCarsList(
+                carDetailController.addToLikedCars(
                     carId: carModel.id, currentId: user!.uid);
               },
               onPressedToUnlike: () {
                 carDetailController.isCarLiked(false);
-                carDetailController.removeFromLikedCarsList(
+                carDetailController.removeFromLikedCars(
                     carId: carModel.id, currentId: user!.uid);
               },
             ),
@@ -100,13 +100,14 @@ class CarDetailPage extends StatelessWidget {
                     verticalMargin8,
                     CarouselImageCar(
                       heroTag: '${carModel.carName}',
-                      carImagesList: carModel.carImages,
+                      carImages: carModel.carImages,
                     ),
                     Visibility(
-                        // condition dependent vertical margin
-                        visible:
-                            !carDetailController.areExtraDetailsVisible.value,
-                        child: verticalMargin24),
+                      // conditional vertical margin
+                      visible:
+                          !carDetailController.areExtraDetailsVisible.value,
+                      child: verticalMargin24,
+                    ),
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -120,26 +121,30 @@ class CarDetailPage extends StatelessWidget {
                           MessageButton(
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  ChatPage.route(
-                                      carModel.carOwner, carModel.carOwnerId));
+                                context,
+                                ChatPage.route(
+                                  carModel.carOwner,
+                                  carModel.carOwnerId,
+                                ),
+                              );
                             },
                           ),
                         ],
                       ),
                     ),
                     Visibility(
-                        // condition dependent vertical margin
-                        visible:
-                            !carDetailController.areExtraDetailsVisible.value,
-                        child: verticalMargin24),
+                      // condition dependent vertical margin
+                      visible:
+                          !carDetailController.areExtraDetailsVisible.value,
+                      child: verticalMargin24,
+                    ),
                     GestureDetector(
                       onTap: () {
                         carDetailController.toggleAreExtraDetailsVisible();
                       },
-                      child: const LearnMoreWithTitle(
-                          title: Strings.carInfo,
-                          changeLearnMore: Strings.viewDetail),
+                      child: const ListHeading(
+                          heading: Strings.carInfo,
+                          subHeadingRight: Strings.viewDetail),
                     ),
                     verticalMargin12,
                     Padding(
@@ -167,11 +172,12 @@ class CarDetailPage extends StatelessWidget {
                       ),
                     ),
                     Visibility(
-                        // condition dependent vertical margin
-                        visible:
-                            carDetailController.areExtraDetailsVisible.value,
-                        child: verticalMargin12),
+                      // condition dependent vertical margin
+                      visible: carDetailController.areExtraDetailsVisible.value,
+                      child: verticalMargin12,
+                    ),
                     Visibility(
+                      //car's more details
                       visible: carDetailController.areExtraDetailsVisible.value,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 20, left: 20),
@@ -185,27 +191,30 @@ class CarDetailPage extends StatelessWidget {
                               size: size.width - 30,
                             ),
                             CarInformationWidget(
-                                icon: FontAwesomeIcons.peopleGroup,
-                                informationType: Strings.seatCapacity,
-                                value: '${carModel.carSeatingCapacity}',
-                                size: size.width - 30),
+                              icon: FontAwesomeIcons.peopleGroup,
+                              informationType: Strings.seatCapacity,
+                              value: '${carModel.carSeatingCapacity}',
+                              size: size.width - 30,
+                            ),
                             CarInformationWidget(
-                                icon: FontAwesomeIcons.carRear,
-                                informationType: Strings.wheelType,
-                                value: '${carModel.carWheelType}',
-                                size: size.width - 30),
+                              icon: FontAwesomeIcons.carRear,
+                              informationType: Strings.wheelType,
+                              value: '${carModel.carWheelType}',
+                              size: size.width - 30,
+                            ),
                           ],
                         ),
                       ),
                     ),
                     Visibility(
-                        // condition dependent vertical margin
-                        visible:
-                            !carDetailController.areExtraDetailsVisible.value,
-                        child: verticalMargin24),
-                    const LearnMoreWithTitle(
-                        title: Strings.carLocation,
-                        changeLearnMore: Strings.distance),
+                      // condition dependent vertical margin
+                      visible:
+                          !carDetailController.areExtraDetailsVisible.value,
+                      child: verticalMargin24,
+                    ),
+                    const ListHeading(
+                        heading: Strings.carLocation,
+                        subHeadingRight: Strings.distance),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
@@ -237,12 +246,13 @@ class CarDetailPage extends StatelessWidget {
                 ),
               ),
               MyCustomButton(
-                  type: ButtonType.primary,
-                  tag: 'hero-1',
-                  onPressed: () {
-                    Navigator.push(context, RentCheckoutPage.route(carModel));
-                  },
-                  text: Strings.rentThisCar)
+                type: ButtonType.primary,
+                tag: 'hero-1',
+                onPressed: () {
+                  Navigator.push(context, RentCheckoutPage.route(carModel));
+                },
+                text: Strings.rentThisCar,
+              )
             ],
           ),
         ),

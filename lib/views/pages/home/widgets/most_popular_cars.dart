@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../controllers/brand_detail_controller.dart';
+import '../../../../controllers/brand/brand_detail_controller.dart';
 import '../../../../models/car/car_model.dart';
 import '../../car_detail/car_detail_page.dart';
 import '../../common_widgets/car_detail_widget.dart';

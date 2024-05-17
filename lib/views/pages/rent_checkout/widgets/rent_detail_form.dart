@@ -9,9 +9,9 @@ import '../../../../vaahextendflutter/widgets/atoms/input_date_time.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_slider.dart';
 import '../../../../vaahextendflutter/widgets/atoms/input_text.dart';
 import '../../../../helpers/commons.dart';
-import '../../common_widgets/learn_more_with_title.dart';
-import '../../../../controllers/rent_checkout_controller.dart';
-import 'car_detail_input_form.dart';
+import '../../common_widgets/list_heading.dart';
+import '../../../../controllers/rent/rent_checkout_controller.dart';
+import 'card_detail_input_form.dart';
 import 'price_detail_widget.dart';
 
 class RentDetailForm extends StatelessWidget {
@@ -54,7 +54,9 @@ class RentDetailForm extends StatelessWidget {
             callback: (data) {
               rentCheckoutController.rentCheckoutFormKey.currentState!
                   .validate();
-              rentCheckoutController.updateStartDate(data);
+              if (data != null) {
+                rentCheckoutController.updateStartDate(data);
+              }
               rentCheckoutController.userDateAndTime.value =
                   rentCheckoutController.startDate.value.toFullDateTimeString;
             },
@@ -64,10 +66,11 @@ class RentDetailForm extends StatelessWidget {
             children: [
               Text(
                 'Select days from the below slider.',
-                style: normal,
+                style: normalBlack,
               ),
               horizontalMargin8,
-              Container(
+              Obx(
+                () => Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       border: const Border(
@@ -79,7 +82,10 @@ class RentDetailForm extends StatelessWidget {
                   height: 40,
                   width: 50,
                   child: Center(
-                      child: Text('${rentCheckoutController.rentDays.value}')))
+                    child: Text('${rentCheckoutController.rentDays.value}'),
+                  ),
+                ),
+              ),
             ],
           ),
           InputSlider(
@@ -88,7 +94,7 @@ class RentDetailForm extends StatelessWidget {
             max: 10,
             initialValue: rentCheckoutController.rentDays.value,
             step: 1,
-            onChanged: (value) => rentCheckoutController.rentDays.value = value,
+            onChanged: (value) => rentCheckoutController.rentDays(value),
           ),
           InputText(
               readOnly: true,
@@ -107,23 +113,24 @@ class RentDetailForm extends StatelessWidget {
               suffixIcon: FontAwesomeIcons.pencil,
               suffixOnTap: () {
                 Get.bottomSheet(
-                  CarDetailInputForm(
+                  CardDetailInputForm(
                     rentCheckoutController: rentCheckoutController,
                   ),
                 );
               },
               label: Strings.enterCardDetails),
           verticalMargin16,
-          const LearnMoreWithTitle(
-              title: Strings.priceDetails, changeLearnMore: ''),
+          const ListHeading(heading: Strings.priceDetails, subHeadingRight: ''),
           verticalMargin16,
-          PriceDetailWidget(
-            rentPrice: rentCheckoutController.carModel.carRentPricePerDay,
-            days: rentCheckoutController.rentDays.value,
-            tax: rentCheckoutController.carModel.carRentTax,
-            total: rentCheckoutController.totalRentPrice(
-                rentCheckoutController.carModel.carRentPricePerDay,
-                rentCheckoutController.carModel.carRentTax),
+          Obx(
+            () => PriceDetailWidget(
+              rentPrice: rentCheckoutController.carModel.carRentPricePerDay,
+              days: rentCheckoutController.rentDays.value,
+              tax: rentCheckoutController.carModel.carRentTax,
+              total: rentCheckoutController.getTotalRentPrice(
+                  rentCheckoutController.carModel.carRentPricePerDay,
+                  rentCheckoutController.carModel.carRentTax),
+            ),
           ),
           verticalMargin48,
           verticalMargin32,

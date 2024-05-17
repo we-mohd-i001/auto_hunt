@@ -11,7 +11,7 @@ import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/alerts.dart';
 import '../../../vaahextendflutter/widgets/atoms/buttons.dart';
 import '../../../vaahextendflutter/widgets/atoms/input_text.dart';
-import '../../../controllers/profile_controller.dart';
+import '../../../controllers/profile/profile_controller.dart';
 import '../../../helpers/commons.dart';
 
 class ProfileEditPage extends StatelessWidget {
@@ -55,11 +55,11 @@ class ProfileEditPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   profileController.profileImagePath.isEmpty
-                      ? ProfilePictureContainer(
+                      ? ProfilePictureWidget(
                           image: NetworkImage(data['imageUrl']),
                           radius: 44.0,
                         )
-                      : ProfilePictureContainer(
+                      : ProfilePictureWidget(
                           image: FileImage(
                               File(profileController.profileImagePath.value)),
                           radius: 44.0,
@@ -116,7 +116,7 @@ class ProfileEditPage extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
-                          child: Text('Change Name', style: subheading),
+                          child: Text('Change Name', style: subheadingBlack),
                         ),
                         Align(
                           alignment: Alignment.topLeft,
@@ -162,7 +162,8 @@ class ProfileEditPage extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
-                          child: Text('Change Password', style: subheading),
+                          child:
+                              Text('Change Password', style: subheadingBlack),
                         ),
                         Align(
                             alignment: Alignment.topLeft,

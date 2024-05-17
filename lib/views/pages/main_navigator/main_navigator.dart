@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../controllers/auth_controller.dart';
-import '../../../controllers/main_navigator_controller.dart';
-import '../../../controllers/profile_controller.dart';
-import '../../../controllers/search_controller.dart';
+import '../../../controllers/authentication/auth_controller.dart';
+import '../../../controllers/main_navigator/main_navigator_controller.dart';
+import '../../../controllers/profile/profile_controller.dart';
+import '../../../controllers/search/search_controller.dart';
 import '../../../vaahextendflutter/app_theme.dart';
-import '../../../controllers/brands_controller.dart';
+import '../../../controllers/brand/brands_controller.dart';
 import '../chat_list/chat_list_page.dart';
 import '../home/home_page.dart';
 import '../profile/profile_page.dart';

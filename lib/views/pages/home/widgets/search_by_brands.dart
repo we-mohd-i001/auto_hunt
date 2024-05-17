@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../../helpers/constants/others/other_consts.dart';
 import '../../brands_detail/brands_detail_page.dart';
-import '../../../../controllers/brands_controller.dart';
+import '../../../../controllers/brand/brands_controller.dart';
 import '../../../../helpers/commons.dart';
 
 class SearchByBrands extends StatelessWidget {
@@ -33,7 +33,7 @@ class SearchByBrands extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0)),
                   onPressed: () {
                     brandsController
-                        .getCarsList(brandsController.brandsList[index].name);
+                        .getCars(brandsController.brandsList[index].name);
                     Navigator.push(
                       context,
                       BrandsDetailPage.route(

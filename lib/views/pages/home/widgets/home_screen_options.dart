@@ -37,9 +37,12 @@ class HomeScreenOptions extends StatelessWidget {
             endIndent: 10,
           ),
           const Expanded(
-              flex: 0,
-              child: OptionsHomeScreen(
-                  icon: Icons.car_crash_rounded, text: Strings.sellCar)),
+            flex: 0,
+            child: OptionsHomeScreen(
+              icon: Icons.car_crash_rounded,
+              text: Strings.sellCar,
+            ),
+          ),
         ],
       ),
     );
