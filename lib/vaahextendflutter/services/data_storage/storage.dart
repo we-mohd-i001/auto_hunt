@@ -60,9 +60,9 @@ abstract class Storage {
   Storage();
 
   ///This method is used to initialize the  [Storage].
-  ///Its not required in case of [FlutterSecureStorageImpl].
-  ///In case of [HiveStorageImpl] it creates a [Directory] using pat_provide package,
-  ///initializes hive at that directory, and opens a box with name [name] provided
+  ///It's not required in the case of [FlutterSecureStorageImpl].
+  ///In the case of [HiveStorageImpl], it creates a [Directory] using the path_provide package,
+  ///initializes hive at that directory and opens a box with name [name] provided
   ///during [Storage] creation.
   ///```dart
   /// Storage.createLocal('name')
@@ -71,18 +71,18 @@ abstract class Storage {
 
   ///Creates new item or items in the database.
   ///
-  ///To save as single key value pair pass [key] as String, and the [value] as String, the String
-  ///could be a Json String or a simple text according to your requirement.
+  ///To save as a single key-value pair pass [key] as String, and the [value] as String, the String
+  ///could be a JSON String or a simple text according to your requirement.
   ///
-  ///If you want to save multiple data pass the value as Map<String, String>, then Map's key will
-  ///be used as [key] and corresponding value at that [key] will be used as [value].
+  ///If you want to save multiple data pass the value as Map<String, String>, then it will save all
+  ///the key-value pairs in the [value] map.
   Future<void> create({dynamic key, dynamic value});
 
   ///Reads the value of the item at [key] from the [Storage] and returns the value according to type
   ///of [key] provided.
   ///
-  ///Read single value by passing [key] as String, it will return the value as String,
-  ///Read multiple values by passing List of String containing all the keys you want to read as
+  ///Read a single value by passing [key] as String, it will return the value as String,
+  ///Read multiple values by passing a List of String containing all the keys you want to read as
   ///[key], it will return the value as Map<String, String>.
   ///
   ///When the key is not passed it will return all the values from that [Storage] as

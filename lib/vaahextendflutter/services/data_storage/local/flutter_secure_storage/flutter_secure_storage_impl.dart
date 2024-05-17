@@ -18,7 +18,7 @@ class FlutterSecureStorageImpl implements Storage {
     } else {
       throw ArgumentError(
         'To save a single entry, the key and the value must be of type String,'
-        'To save multiple entries pass only the value as Map<Sring, String>',
+        'To save multiple entries, pass only the value as Map<String, String>',
       );
     }
   }
@@ -38,18 +38,18 @@ class FlutterSecureStorageImpl implements Storage {
       Map<String, String> result = await _storage.readAll();
       return result;
     } else {
-      throw ArgumentError('key must be of type String or List<String>');
+      throw ArgumentError('The key must be of type String or List<String>.');
     }
   }
 
   @override
-  Future<dynamic> update({dynamic key, dynamic value}) {
-    create(key: key, value: value);
-    return read(key: key);
+  Future<dynamic> update({dynamic key, dynamic value}) async {
+    await create(key: key, value: value);
+    return await read(key: key);
   }
 
   @override
-  void delete({dynamic key}) async {
+  Future<void> delete({dynamic key}) async {
     if (key is String) {
       await _storage.delete(key: key);
     } else if (key is List<String>) {
@@ -60,7 +60,7 @@ class FlutterSecureStorageImpl implements Storage {
       await _storage.deleteAll();
     } else {
       throw ArgumentError(
-        'key must be of type String or List<String>',
+        'The key must be of type String or List<String>.',
       );
     }
   }

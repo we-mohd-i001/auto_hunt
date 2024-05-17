@@ -30,7 +30,7 @@ class HiveStorageImpl implements Storage {
       } else {
         throw ArgumentError(
           'To save a single entry, the key and the value must be of type String,'
-          'To save multiple entries pass only the value as Map<Sring, String>',
+          'To save multiple entries, pass only the value as Map<String, String>',
         );
       }
     } else {
@@ -39,9 +39,9 @@ class HiveStorageImpl implements Storage {
   }
 
   @override
-  Future<dynamic> update({dynamic key, dynamic value}) {
-    create(key: key, value: value);
-    return read(key: key);
+  Future<dynamic> update({dynamic key, dynamic value}) async {
+    await create(key: key, value: value);
+    return await read(key: key);
   }
 
   @override
@@ -55,14 +55,14 @@ class HiveStorageImpl implements Storage {
       } else if (key is List<String>) {
         Map<String, String> result = {};
         for (String k in key) {
-          result[k] = (_box!.get(k));
+          result[k] = await _box!.get(k);
         }
         return result;
       } else if (key == null) {
         Map<dynamic, dynamic> result = _box!.toMap();
         return result;
       } else {
-        throw ArgumentError('key must be of type String or List<String>');
+        throw ArgumentError('The key must be of type String or List<String>.');
       }
     } else {
       throw Exception('Box is null, not initiized.');
@@ -70,7 +70,7 @@ class HiveStorageImpl implements Storage {
   }
 
   @override
-  void delete({dynamic key}) async {
+  Future<void> delete({dynamic key}) async {
     if (_box != null) {
       if (key is String) {
         if (_box!.containsKey(key)) {
@@ -81,7 +81,7 @@ class HiveStorageImpl implements Storage {
       } else if (key == null) {
         await _box!.clear();
       } else {
-        throw ArgumentError('key must be of type String or List<String>');
+        throw ArgumentError('The key must be of type String or List<String>.');
       }
     } else {
       throw Exception('Box is null, not initiized.');
