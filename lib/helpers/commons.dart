@@ -103,3 +103,7 @@ TextStyle message = TextStyle(
   fontWeight: FontWeight.w400,
   color: AppTheme.colors['black'],
 );
+
+void smartPrint(Object? obj) {
+  print('>>> $obj');
+}

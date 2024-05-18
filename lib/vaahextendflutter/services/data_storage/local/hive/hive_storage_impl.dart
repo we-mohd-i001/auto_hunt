@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import '../../storage.dart';
 
 /// A class implementing Storage interface using Hive as storage backend.
-class HiveStorageImpl implements Storage {
+class HiveStorageImpl extends Storage {
   final String name;
   HiveCipher? encryptionCypher;
   Box? _box;
@@ -43,7 +43,7 @@ class HiveStorageImpl implements Storage {
   @override
   Future<String?> read({required String key}) async {
     if (_box != null) {
-      String? result = await _box!.get(key);
+      String? result = _box!.get(key);
       return result;
     } else {
       throw Exception('Box is null, not initiized.');
@@ -54,13 +54,18 @@ class HiveStorageImpl implements Storage {
   Future<Map<String, String?>> readAll({List<String>? keys}) async {
     if (_box != null) {
       if (keys is List<String>) {
-        Map<String, String> result = {};
+        Map<String, String?> result = {};
         for (String k in keys) {
-          result[k] = await _box!.get(k);
+          if (_box!.containsKey(k)) {
+            result[k] = _box!.get(k);
+          } else {
+            //assert(_box!.containsKey(k));
+          }
         }
         return result;
       } else {
-        final result = _box!.toMap() as Map<String, String?>;
+        Map<String, String?> result =
+            _box!.toMap().map((key, value) => MapEntry(key.toString(), value?.toString()));
         return result;
       }
     } else {
