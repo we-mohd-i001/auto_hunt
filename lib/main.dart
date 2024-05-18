@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:yourtasks/helpers/commons.dart';
 
 import 'app_config.dart';
 import 'firebase_options.dart';
@@ -43,8 +44,6 @@ Future<void> main() async {
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
   //await baseController.init(app: const MyTestApp(), errorApp: const MyTestApp());
-  final Storage storage = Storage.createLocal(name: 'UserData');
-  await storage.init();
 
   runApp(MaterialApp(
     routes: {
@@ -69,13 +68,11 @@ class MyTestApp extends StatefulWidget {
 // class _MyTestAppState1 extends State<MyTestApp> {
 //   @override
 //   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     throw UnimplementedError();
 //   }
 // }
 
 class _MyTestAppState extends State<MyTestApp> {
-  final Storage storage = Storage.createLocal(name: 'UserData');
+  final Storage storage = Storage.createEncryptedLocal('vaultBox');
 
   String value = 'Data';
   String updatedData = 'Updated Data';
@@ -85,12 +82,55 @@ class _MyTestAppState extends State<MyTestApp> {
   late UserLucky user2;
   UserLucky emptyUser = UserLucky(name: 'null', age: 'null');
   checkAssertion() async {
-    storage.create(value: {'key1': 'value1'});
-    print(await storage.read(key: 'key1'));
+    // await storage.createAll(values: {
+    //   'key2': 'Value2',
+    //   'key3': 'Value3',
+    //   'key4': 'Value4',
+    //   'key5': 'Value5',
+    // });
+    print('>>> ${await storage.readAll()}');
+  }
+
+  create() async {
+    await storage.create(key: 'key34', value: '34');
+  }
+
+  createAll() async {
+    await storage.createAll(values: {
+      'key2': 'Value2',
+      'key3': 'Value3',
+      'key4': 'Value4',
+      'key5': 'Value5',
+    });
+  }
+
+  read() async {
+    smartPrint(await storage.read(key: 'key34'));
+    final value1 = await storage.read(key: 'key1');
+    setState(() {
+      storedData = value1;
+    });
+  }
+
+  readAll() async {
+    smartPrint(await storage.readAll(keys: ['key1', 'key2', 'key3', 'key34']));
+    final value1 = await storage.readAll(keys: ['key1', 'key2', 'key3', 'key34']);
+    setState(() {
+      storedData = '$value1';
+    });
+  }
+
+  delete() async {
+    await storage.delete(key: 'key34');
+  }
+
+  deleteAll() async {
+    await storage.deleteAll(keys: ['key1', 'key2', 'key3']);
   }
 
   @override
   void initState() {
+    storage.init();
     // _initialize();
     super.initState();
   }
@@ -106,24 +146,33 @@ class _MyTestAppState extends State<MyTestApp> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    checkAssertion();
+                    readAll();
+                    //read();
+                    //delete();
+                    //deleteAll();
+                    //create();
+                    //createAll();
                   },
                   child: const Text('Create'),
                 ),
                 ElevatedButton(onPressed: () async {}, child: const Text('Show')),
                 ElevatedButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    readAll();
+                  },
                   child: const Text('Update'),
                 ),
                 ElevatedButton(
-                  onPressed: () async {},
-                  child: const Text('Read All'),
+                  onPressed: () async {
+                    await storage.deleteAll();
+                  },
+                  child: const Text('Delete All'),
                 ),
               ],
             ),
             Column(
               children: [
-                Text(value),
+                Text('$storedData'),
                 Text(updatedData),
               ],
             )
