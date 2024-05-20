@@ -1,45 +1,57 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import '../storage.dart';
 
 class FlutterSecureStorageEncryptedImpl implements Storage {
+  final _storage = const FlutterSecureStorage();
   @override
-  Future<void> create({required String key, required String value}) {
-    // TODO: implement create
-    throw UnimplementedError();
+  Future<void> init() async {}
+
+  @override
+  Future<void> create({required String key, required String value}) async {
+    await _storage.write(key: key, value: value);
   }
 
   @override
-  Future<void> createAll({required Map<String, String> values}) {
-    // TODO: implement createAll
-    throw UnimplementedError();
+  Future<void> createAll({required Map<String, String> values}) async {
+    for (String k in values.keys) {
+      await _storage.write(key: k, value: values[k]);
+    }
   }
 
   @override
-  Future<void> delete({required String key}) {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<String?> read({required String key}) async {
+    String? result = await _storage.read(key: key);
+    return result;
   }
 
   @override
-  Future<void> deleteAll({List<String>? keys}) {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
+  Future<Map<String, String?>> readAll({List<String>? keys}) async {
+    if (keys is List<String>) {
+      Map<String, String?> result = {};
+      for (String k in keys) {
+        result[k] = await _storage.read(key: k);
+      }
+      return result;
+    } else {
+      final Map<String, String> result = await _storage.readAll();
+      return result;
+    }
   }
 
   @override
-  Future<void> init() {
-    // TODO: implement init
-    throw UnimplementedError();
+  Future<void> delete({dynamic key}) async {
+    await _storage.delete(key: key);
   }
 
   @override
-  Future<String?> read({required String key}) {
-    // TODO: implement read
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Map<String, String?>> readAll({List<String>? keys}) {
-    // TODO: implement readAll
-    throw UnimplementedError();
+  Future<void> deleteAll({List<String>? keys}) async {
+    if (keys is List<String>) {
+      for (String k in keys) {
+        await _storage.delete(key: k);
+      }
+    } else if (keys == null) {
+      await _storage.deleteAll();
+    }
   }
 }
