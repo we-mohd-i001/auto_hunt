@@ -72,7 +72,7 @@ class MyTestApp extends StatefulWidget {
 // }
 
 class _MyTestAppState extends State<MyTestApp> {
-  final Storage storage = Storage.createEncryptedLocal('vaultBox');
+  final Storage storage = Storage.createEncryptedLocal();
 
   String value = 'Data';
   String updatedData = 'Updated Data';
@@ -114,10 +114,10 @@ class _MyTestAppState extends State<MyTestApp> {
 
   readAll() async {
     smartPrint(await storage.readAll(keys: ['key1', 'key2', 'key3', 'key34']));
-    final value1 = await storage.readAll(keys: ['key1', 'key2', 'key3', 'key34']);
-    setState(() {
-      storedData = '$value1';
-    });
+    //final value1 = await storage.readAll(keys: ['key1', 'key2', 'key3', 'key34']);
+    // setState(() {
+    //   storedData = '$value1';
+    // });
   }
 
   delete() async {
@@ -125,7 +125,7 @@ class _MyTestAppState extends State<MyTestApp> {
   }
 
   deleteAll() async {
-    await storage.deleteAll(keys: ['key1', 'key2', 'key3']);
+    await storage.deleteAll();
   }
 
   @override
@@ -147,7 +147,7 @@ class _MyTestAppState extends State<MyTestApp> {
                 ElevatedButton(
                   onPressed: () async {
                     readAll();
-                    //read();
+                    // read();
                     //delete();
                     //deleteAll();
                     //create();

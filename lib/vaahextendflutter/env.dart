@@ -29,7 +29,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   enableApiLogInterceptor: true,
   pushNotificationsServiceType: PushNotificationsServiceType.remote,
   internalNotificationsServiceType: InternalNotificationsServiceType.none,
-  localStorageType: LocalStorageType.hive,
+  localStorageType: LocalStorageType.flutterSecureStorage,
   networkStorageType: NetworkStorageType.firebase,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
@@ -315,10 +315,11 @@ class PusherConfig {
 }
 
 class HiveConfig {
-  String directoryName = 'dir';
+  final String directoryName;
   final Future<Directory> _appDocDirectory = getApplicationDocumentsDirectory();
 
-  HiveConfig({required this.directoryName});
+  HiveConfig({this.directoryName = 'dir'});
+
   Future<void> init() async {
     await _appDocDirectory;
     Directory dir = await _appDocDirectory;

@@ -4,6 +4,7 @@ import '../../storage.dart';
 
 class FlutterSecureStorageImpl implements Storage {
   final _storage = const FlutterSecureStorage();
+
   @override
   Future<void> init() async {}
 
@@ -26,32 +27,32 @@ class FlutterSecureStorageImpl implements Storage {
   }
 
   @override
-  Future<Map<String, String?>> readAll({List<String>? keys}) async {
-    if (keys is List<String>) {
+  Future<Map<String, String?>> readAll({List<String> keys = const []}) async {
+    if (keys.isEmpty) {
+      final Map<String, String> result = await _storage.readAll();
+      return result;
+    } else {
       Map<String, String?> result = {};
       for (String k in keys) {
         result[k] = await _storage.read(key: k);
       }
       return result;
-    } else {
-      final Map<String, String> result = await _storage.readAll();
-      return result;
     }
   }
 
   @override
-  Future<void> delete({dynamic key}) async {
+  Future<void> delete({required String key}) async {
     await _storage.delete(key: key);
   }
 
   @override
-  Future<void> deleteAll({List<String>? keys}) async {
-    if (keys is List<String>) {
+  Future<void> deleteAll({List<String> keys = const []}) async {
+    if (keys.isEmpty) {
+      await _storage.deleteAll();
+    } else {
       for (String k in keys) {
         await _storage.delete(key: k);
       }
-    } else if (keys == null) {
-      await _storage.deleteAll();
     }
   }
 }

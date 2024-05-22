@@ -17,10 +17,10 @@ abstract class Storage {
   ///The argument [name] is used to open Hive box with that name.
   ///
   ///If you don't provide [name], 'default' will be used.
-  factory Storage.createLocal({String? name}) {
+  factory Storage.createLocal({String name = 'default'}) {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
-        final hive = HiveStorageImpl(name: name ?? 'default');
+        final hive = HiveStorageImpl(name: name);
         hive.init();
         return hive;
       case LocalStorageType.flutterSecureStorage:
@@ -31,10 +31,10 @@ abstract class Storage {
   }
 
   ///Creates a new Network Storage [FirestoreStorageImpl] or [SupabaseImpl]
-  factory Storage.createNetwork({String? name}) {
+  factory Storage.createNetwork({String name = 'default'}) {
     switch (_envConfig.networkStorageType) {
       case NetworkStorageType.firebase:
-        final firestore = FirestoreStorageImpl(collectionName: name ?? 'default');
+        final firestore = FirestoreStorageImpl(collectionName: name);
         firestore.init();
         return NullStorage();
       case NetworkStorageType.supabase:
@@ -45,10 +45,10 @@ abstract class Storage {
   }
 
   ///Creates a new Encrypted Local Storage [HiveEncryptedStorage] or [FlutterSecureStorageEncryptedImpl]
-  factory Storage.createEncryptedLocal(String? name) {
+  factory Storage.createEncryptedLocal({String name = 'default'}) {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
-        final hive = HiveEncryptedStorage(name: name ?? 'default');
+        final hive = HiveEncryptedStorage(name: name);
         return hive;
       case LocalStorageType.flutterSecureStorage:
         return FlutterSecureStorageEncryptedImpl();
@@ -60,10 +60,12 @@ abstract class Storage {
   Storage();
 
   ///Initializes the [Storage].
-  ///It's not required in the case of [FlutterSecureStorageImpl].
   ///In the case of [HiveStorageImpl], it creates a [Directory] using the path_provide package,
   ///initializes hive at that directory and opens a box with name [name] provided
   ///during [Storage] creation.
+  ///In case of encrypted storages it initializes the encryption tecniques.
+  ///It's not required in the case of [FlutterSecureStorageImpl].
+  /// example:
   ///```dart
   /// Storage.createLocal('name')
   /// ```
@@ -104,8 +106,8 @@ abstract class Storage {
   ///```
   Future<String?> read({required String key});
 
-  ///Reads multiple values by passing a List of String containing all the keys you want to read as
-  ///[keys], it will return the value as Map<String, String>.
+  ///Reads multiple values, pass the List of [keys] as argument. It will return the value as
+  ///Map<String, String?>.
   ///
   ///When the keys is not passed it will return all the values from that [Storage] as
   ///Map<String, String?>
@@ -117,7 +119,7 @@ abstract class Storage {
   ///  ],
   ///);
   ///```
-  Future<Map<String, String?>> readAll({List<String>? keys});
+  Future<Map<String, String?>> readAll({List<String> keys = const []});
 
   ///Deletes an item at [key].
   ///```dart
@@ -125,7 +127,8 @@ abstract class Storage {
   ///```
   Future<void> delete({required String key});
 
-  ///Deletes all items at a key from [keys] if keys is not passed all the values will be deleted.
+  ///Deletes item at a key present in [keys], if keys is not passed all the values will be deleted
+  ///from that [Storage].
   ///```dart
   ///await storage.deleteAll(keys: [
   ///   'key1',
@@ -134,7 +137,7 @@ abstract class Storage {
   ///  ],
   ///);
   ///```
-  Future<void> deleteAll({List<String>? keys});
+  Future<void> deleteAll({List<String> keys = const []});
 }
 
 abstract class NetworkStorage extends Storage {}

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../storage.dart';
 
-class FirestoreStorageImpl implements Storage {
+class FirestoreStorageImpl {
   final String collectionName;
   FirestoreStorageImpl({required this.collectionName});
 
@@ -28,10 +28,7 @@ class FirestoreStorageImpl implements Storage {
           throw Exception('key list and value list Length mismatch.');
         }
       } else if (key is String && value is String) {
-        await _firestore
-            .collection(collectionName)
-            .doc(key)
-            .set({'data': value});
+        await _firestore.collection(collectionName).doc(key).set({'data': value});
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -109,5 +106,23 @@ class FirestoreStorageImpl implements Storage {
     } catch (e) {
       throw Exception();
     }
+  }
+
+  @override
+  Future<void> createAll({required Map<String, String> values}) {
+    // TODO: implement createAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteAll({List<String>? keys}) {
+    // TODO: implement deleteAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, String?>> readAll({List<String>? keys}) {
+    // TODO: implement readAll
+    throw UnimplementedError();
   }
 }
