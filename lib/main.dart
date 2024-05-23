@@ -25,22 +25,6 @@ Future<void> main() async {
   }
 
   await initHive();
-  // await Supabase.initialize(
-  //   url: 'https://embgcnouywpgunriudxi.supabase.co',
-  //   anonKey:
-  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtYmdjbm91eXdwZ3Vucml1ZHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4OTk3NDMsImV4cCI6MjAyNTQ3NTc0M30.kRmshqh_welj6_fv-CE5sIDv5h3PzwofGOJseqnGHwI',
-  // );
-
-  // final db = Database(useFirestore: false, collectionName: 'countries');
-  // var iVlue = await db.getCollection(
-  //     filter: Filter(column: 'name', operator: Operator.neq, value: 'South Korea'));
-  // var iVlueq =
-  //     await db.getDocument(filter: Filter(column: 'name', operator: Operator.eq, value: 'USA'));
-  // //await db.setDocument({'id': 6, 'name': 'Jamaica'});
-  // // await db.updateDocument({'name': 'Dummy Country'},
-  // //     neq: Neq(column: 'name', value: 'Manhattan'));
-  // print('~~~> $iVlue, Type: ${iVlue.runtimeType}');
-  // print('~~~> $iVlueq, Type: ${iVlueq.runtimeType}');
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
   //await baseController.init(app: const MyTestApp(), errorApp: const MyTestApp());
@@ -65,34 +49,16 @@ class MyTestApp extends StatefulWidget {
   State<MyTestApp> createState() => _MyTestAppState();
 }
 
-// class _MyTestAppState1 extends State<MyTestApp> {
-//   @override
-//   Widget build(BuildContext context) {
-//   }
-// }
-
 class _MyTestAppState extends State<MyTestApp> {
-  final Storage storage = Storage.createEncryptedLocal();
+  final Storage storage = Storage.createEncryptedLocal(name: 'local');
 
-  String value = 'Data';
-  String updatedData = 'Updated Data';
-  String? storedData;
-
-  late UserLucky user1;
-  late UserLucky user2;
-  UserLucky emptyUser = UserLucky(name: 'null', age: 'null');
-  checkAssertion() async {
-    // await storage.createAll(values: {
-    //   'key2': 'Value2',
-    //   'key3': 'Value3',
-    //   'key4': 'Value4',
-    //   'key5': 'Value5',
-    // });
-    print('>>> ${await storage.readAll()}');
-  }
+  late CustomUser user1;
+  late CustomUser user2;
+  CustomUser emptyUser = CustomUser(name: 'null', age: 'null');
 
   create() async {
     await storage.create(key: 'key34', value: '34');
+    smartPrint('Saving entry.');
   }
 
   createAll() async {
@@ -102,36 +68,30 @@ class _MyTestAppState extends State<MyTestApp> {
       'key4': 'Value4',
       'key5': 'Value5',
     });
+    smartPrint('Saving multiple entries.');
   }
 
   read() async {
     smartPrint(await storage.read(key: 'key34'));
-    final value1 = await storage.read(key: 'key1');
-    setState(() {
-      storedData = value1;
-    });
   }
 
   readAll() async {
-    smartPrint(await storage.readAll(keys: ['key1', 'key2', 'key3', 'key34']));
-    //final value1 = await storage.readAll(keys: ['key1', 'key2', 'key3', 'key34']);
-    // setState(() {
-    //   storedData = '$value1';
-    // });
+    smartPrint(await storage.readAll());
   }
 
   delete() async {
     await storage.delete(key: 'key34');
+    smartPrint('Deleting entry.');
   }
 
   deleteAll() async {
     await storage.deleteAll();
+    smartPrint('Deleting multiple entries.');
   }
 
   @override
   void initState() {
     storage.init();
-    // _initialize();
     super.initState();
   }
 
@@ -139,43 +99,44 @@ class _MyTestAppState extends State<MyTestApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    readAll();
-                    // read();
-                    //delete();
-                    //deleteAll();
-                    //create();
-                    //createAll();
-                  },
-                  child: const Text('Create'),
-                ),
-                ElevatedButton(onPressed: () async {}, child: const Text('Show')),
-                ElevatedButton(
-                  onPressed: () async {
-                    readAll();
-                  },
-                  child: const Text('Update'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await storage.deleteAll();
-                  },
-                  child: const Text('Delete All'),
-                ),
-              ],
+            ElevatedButton(
+              onPressed: () async {
+                create();
+              },
+              child: const Text('Create'),
             ),
-            Column(
-              children: [
-                Text('$storedData'),
-                Text(updatedData),
-              ],
-            )
+            ElevatedButton(
+              onPressed: () async {
+                createAll();
+              },
+              child: const Text('CreateAll'),
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  read();
+                },
+                child: const Text('Read')),
+            ElevatedButton(
+              onPressed: () async {
+                readAll();
+              },
+              child: const Text('ReadAll'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                delete();
+              },
+              child: const Text('Delete'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                deleteAll();
+              },
+              child: const Text('Delete All'),
+            ),
           ],
         ),
       ),
@@ -183,47 +144,19 @@ class _MyTestAppState extends State<MyTestApp> {
   }
 }
 
-class Friends {
-  final List<UserLucky> userLucky;
-  Friends({
-    required this.userLucky,
-  });
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'userLucky': userLucky.map((x) => x.toMap()).toList(),
-    };
-  }
-
-  factory Friends.fromMap(Map<String, dynamic> map) {
-    return Friends(
-      userLucky: List<UserLucky>.from(
-        (map['userLucky'] as List<dynamic>).map<UserLucky>(
-          (x) => UserLucky.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Friends.fromJson(String source) =>
-      Friends.fromMap(json.decode(source) as Map<String, dynamic>);
-}
-
-class UserLucky {
+class CustomUser {
   String name;
   String age;
-  UserLucky({
+  CustomUser({
     required this.name,
     required this.age,
   });
 
-  UserLucky copyWith({
+  CustomUser copyWith({
     String? name,
     String? age,
   }) {
-    return UserLucky(
+    return CustomUser(
       name: name ?? this.name,
       age: age ?? this.age,
     );
@@ -236,8 +169,8 @@ class UserLucky {
     };
   }
 
-  factory UserLucky.fromMap(Map<dynamic, dynamic> map) {
-    return UserLucky(
+  factory CustomUser.fromMap(Map<dynamic, dynamic> map) {
+    return CustomUser(
       name: map['name'].toString(),
       age: map['age'].toString(),
     );
@@ -245,19 +178,6 @@ class UserLucky {
 
   String toJson() => json.encode(toMap());
 
-  factory UserLucky.fromJson(String source) =>
-      UserLucky.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() => 'User(name: $name, age: $age)';
-
-  @override
-  bool operator ==(covariant UserLucky other) {
-    if (identical(this, other)) return true;
-
-    return other.name == name && other.age == age;
-  }
-
-  @override
-  int get hashCode => name.hashCode ^ age.hashCode;
+  factory CustomUser.fromJson(String source) =>
+      CustomUser.fromMap(json.decode(source) as Map<String, dynamic>);
 }

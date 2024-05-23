@@ -91,6 +91,7 @@ class FlutterSecureStorageEncryptedImpl implements Storage {
 
   @override
   Future<void> deleteAll({List<String> keys = const []}) async {
+    assert(!keys.contains(vaahFlutterIv));
     if (keys.isEmpty) {
       await _storage.deleteAll();
     } else {

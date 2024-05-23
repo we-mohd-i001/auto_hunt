@@ -44,7 +44,6 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
     enableAssetsInstrumentation: true,
     tracesSampleRate: 0.6,
   ),
-  hiveConfig: HiveConfig(directoryName: 'dir'),
 );
 
 // To add new configuration add new key, value pair in envConfigs

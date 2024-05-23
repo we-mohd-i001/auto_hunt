@@ -105,5 +105,5 @@ TextStyle message = TextStyle(
 );
 
 void smartPrint(Object? obj) {
-  print('>>> $obj');
+  print('---> $obj');
 }

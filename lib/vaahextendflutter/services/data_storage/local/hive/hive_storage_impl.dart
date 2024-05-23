@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import '../../storage.dart';
 
 /// A class implementing Storage interface using Hive as storage backend.
-class HiveStorageImpl extends Storage {
+class HiveStorageImpl implements Storage {
   final String name;
 
   Box? _box;
@@ -40,20 +40,20 @@ class HiveStorageImpl extends Storage {
   }
 
   @override
-  Future<Map<String, String?>> readAll({List<String>? keys}) async {
+  Future<Map<String, String?>> readAll({List<String> keys = const []}) async {
     assert(_box != null, 'Box is null, not initiized.');
 
-    if (keys is List<String>) {
+    if (keys.isEmpty) {
+      Map<String, String?> result =
+          _box!.toMap().map((key, value) => MapEntry(key.toString(), value?.toString()));
+      return result;
+    } else {
       Map<String, String?> result = {};
       for (String k in keys) {
         if (_box!.containsKey(k)) {
           result[k] = _box!.get(k);
         }
       }
-      return result;
-    } else {
-      Map<String, String?> result =
-          _box!.toMap().map((key, value) => MapEntry(key.toString(), value?.toString()));
       return result;
     }
   }
@@ -66,13 +66,13 @@ class HiveStorageImpl extends Storage {
   }
 
   @override
-  Future<void> deleteAll({List<String>? keys}) async {
+  Future<void> deleteAll({List<String> keys = const []}) async {
     assert(_box != null, 'Box is null, not initiized.');
 
-    if (keys is List<String>) {
-      _box!.deleteAll(keys);
-    } else {
+    if (keys.isEmpty) {
       await _box!.clear();
+    } else {
+      _box!.deleteAll(keys);
     }
   }
 }

@@ -140,6 +140,43 @@ abstract class Storage {
   Future<void> deleteAll({List<String> keys = const []});
 }
 
+class NullStorage implements Storage {
+  @override
+  Future<void> create({required String key, required String value}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> createAll({Map<String, String>? values}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> delete({required String key}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteAll({List<String>? keys}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> init() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> read({required String key}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, String?>> readAll({List<String>? keys}) {
+    throw UnimplementedError();
+  }
+}
+
 abstract class NetworkStorage extends Storage {}
 
 class SupabaseImpl implements NetworkStorage {
@@ -177,50 +214,6 @@ class SupabaseImpl implements NetworkStorage {
 
   @override
   Future<String?> read({String? key}) {
-    // TODO: implement read
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Map<String, String?>> readAll({List<String>? keys}) {
-    // TODO: implement readAll
-    throw UnimplementedError();
-  }
-}
-
-class NullStorage implements Storage {
-  @override
-  Future<void> create({required String key, required String value}) {
-    // TODO: implement create
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> createAll({Map<String, String>? values}) {
-    // TODO: implement createAll
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> delete({required String key}) {
-    // TODO: implement delete
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> deleteAll({List<String>? keys}) {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> init() {
-    // TODO: implement init
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String> read({required String key}) {
     // TODO: implement read
     throw UnimplementedError();
   }
