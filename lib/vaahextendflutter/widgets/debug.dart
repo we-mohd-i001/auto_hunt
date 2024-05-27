@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // *****************************************
 // Dev helper panel that comes from bottom
 // example: https://img-v4.getdemo.dev/screenshot/qemu-system-x86_64_9g9eFWHZK5.mp4
@@ -278,6 +279,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                 verticalMargin24,
                                                 _NotificationSection(config: _environmentConfig),
                                                 verticalMargin24,
+                                                const _DevDefinedSection(),
                                               ],
                                             ),
                                           ),
@@ -641,4 +643,72 @@ class Data {
     this.tooltip,
     this.color,
   });
+}
+
+class CustomData {
+  final String title;
+  final List<Field> fields;
+
+  CustomData({
+    required this.title,
+    required this.fields,
+  });
+}
+
+CustomData section1 =
+    CustomData(title: 'section1', fields: [Field(title: 'title1', description: 'description1')]);
+CustomData section2 =
+    CustomData(title: 'section2', fields: [Field(title: 'title2', description: 'description2')]);
+CustomData section3 =
+    CustomData(title: 'section3', fields: [Field(title: 'title3', description: 'description3')]);
+CustomData section4 =
+    CustomData(title: 'section4', fields: [Field(title: 'title4', description: 'description4')]);
+
+List<CustomData> customs = [section1, section2, section3, section4];
+
+class Field {
+  final String title;
+  final String description;
+
+  Field({required this.title, required this.description});
+}
+
+class _DevDefinedSection extends StatefulWidget {
+  const _DevDefinedSection({Key? key}) : super(key: key);
+
+  @override
+  State<_DevDefinedSection> createState() => _DevDefinedSectionState();
+}
+
+class _DevDefinedSectionState extends State<_DevDefinedSection> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: 4,
+      itemBuilder: (BuildContext context, int index) {
+        List<Field> filds = customs[index].fields;
+        Map<String, Data> userMap = {};
+        filds.forEach((fild) => (MapEntry(fild.title, Data(value: fild.description))));
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(customs[index].title),
+            verticalMargin8,
+            _ShowDetails(
+              contentHolder: PanelDataContentHolder(
+                content: userMap,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

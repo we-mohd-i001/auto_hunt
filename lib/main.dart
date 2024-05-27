@@ -16,30 +16,14 @@ import 'vaahextendflutter/services/data_storage/storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final Directory appDocDirectory = await getApplicationDocumentsDirectory();
-  Future<void> initHive() async {
-    Directory dir = appDocDirectory;
-    await Directory('${dir.path}/dir').create(recursive: true).then((Directory directory) async {
-      Hive.init(directory.path);
-    });
-  }
-
-  await initHive();
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
-  //await baseController.init(app: const MyTestApp(), errorApp: const MyTestApp());
 
-  runApp(MaterialApp(
-    routes: {
-      '/': (context) => const MyTestApp(),
-    },
-  ));
-
-  // await baseController.init(
-  //   firebaseOptions: DefaultFirebaseOptions.currentPlatform,
-  //   app: const AppConfig(),
-  //   errorApp: const ErrorAppConfig(),
-  // ); // Pass main app as argument in init method
+  await baseController.init(
+    firebaseOptions: DefaultFirebaseOptions.currentPlatform,
+    app: const AppConfig(),
+    errorApp: const ErrorAppConfig(),
+  ); // Pass main app as argument in init method
 }
 
 class MyTestApp extends StatefulWidget {
