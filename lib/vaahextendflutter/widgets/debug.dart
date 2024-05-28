@@ -279,7 +279,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                 verticalMargin24,
                                                 _NotificationSection(config: _environmentConfig),
                                                 verticalMargin24,
-                                                const _DevDefinedSection(),
+                                                // const _DevDefinedSection(),
                                               ],
                                             ),
                                           ),

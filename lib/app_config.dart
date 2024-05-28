@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:yourtasks/vaahextendflutter/widgets/debug.dart';
 
 import 'routes/middleware.dart';
 import 'vaahextendflutter/app_theme.dart';
@@ -14,16 +15,19 @@ class AppConfig extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     EnvironmentConfig env = EnvironmentConfig.getEnvConfig();
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: env.appTitle,
-      theme: ThemeData(
-        primarySwatch: AppTheme.colors['primary'],
+    return DebugWidget(
+      navigatorKey: _navigatorKey,
+      child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: env.appTitle,
+        theme: ThemeData(
+          primarySwatch: AppTheme.colors['primary'],
+        ),
+        navigatorObservers: [
+          SentryNavigatorObserver(),
+        ],
+        onGenerateRoute: routeMiddleware,
       ),
-      navigatorObservers: [
-        SentryNavigatorObserver(),
-      ],
-      onGenerateRoute: routeMiddleware,
     );
   }
 }
