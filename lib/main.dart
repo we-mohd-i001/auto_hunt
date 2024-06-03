@@ -15,15 +15,15 @@ import 'vaahextendflutter/services/data_storage/storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final Directory appDocDirectory = await getApplicationDocumentsDirectory();
-  Future<void> initHive() async {
-    Directory dir = appDocDirectory;
-    await Directory('${dir.path}/dir').create(recursive: true).then((Directory directory) async {
-      Hive.init(directory.path);
-    });
-  }
+  // final Directory appDocDirectory = await getApplicationDocumentsDirectory();
+  // Future<void> initHive() async {
+  //   Directory dir = appDocDirectory;
+  //   await Directory('${dir.path}/dir').create(recursive: true).then((Directory directory) async {
+  //     Hive.init(directory.path);
+  //   });
+  // }
 
-  await initHive();
+  // await initHive();
   // await Supabase.initialize(
   //   url: 'https://embgcnouywpgunriudxi.supabase.co',
   //   anonKey:
@@ -43,20 +43,20 @@ Future<void> main() async {
   BaseController baseController = Get.put(BaseController());
   HttpOverrides.global = SelfSignedHttps();
   //await baseController.init(app: const MyTestApp(), errorApp: const MyTestApp());
-  final Storage storage = Storage.createLocal(name: 'UserData');
-  await storage.init();
+  // final Storage storage = Storage.createLocal(name: 'UserData');
+  // await storage.init();
 
-  runApp(MaterialApp(
-    routes: {
-      '/': (context) => const MyTestApp(),
-    },
-  ));
+  // runApp(MaterialApp(
+  //   routes: {
+  //     '/': (context) => const MyTestApp(),
+  //   },
+  // ));
 
-  // await baseController.init(
-  //   firebaseOptions: DefaultFirebaseOptions.currentPlatform,
-  //   app: const AppConfig(),
-  //   errorApp: const ErrorAppConfig(),
-  // ); // Pass main app as argument in init method
+  await baseController.init(
+    firebaseOptions: DefaultFirebaseOptions.currentPlatform,
+    app: const AppConfig(),
+    errorApp: const ErrorAppConfig(),
+  ); // Pass main app as argument in init method
 }
 
 class MyTestApp extends StatefulWidget {
