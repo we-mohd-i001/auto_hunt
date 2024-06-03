@@ -3,10 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../storage.dart';
 
-class FirestoreStorageImpl implements Storage {
+class FirestoreStorageImpl extends Storage {
   final String collectionName;
-  FirestoreStorageImpl({required this.collectionName});
+  FirestoreStorageImpl(this._firestoreRepository, {required this.collectionName});
 
+  final FirestoreRepository _firestoreRepository;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? currentUser;
@@ -28,10 +29,7 @@ class FirestoreStorageImpl implements Storage {
           throw Exception('key list and value list Length mismatch.');
         }
       } else if (key is String && value is String) {
-        await _firestore
-            .collection(collectionName)
-            .doc(key)
-            .set({'data': value});
+        await _firestore.collection(collectionName).doc(key).set({'data': value});
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -109,5 +107,54 @@ class FirestoreStorageImpl implements Storage {
     } catch (e) {
       throw Exception();
     }
+  }
+}
+
+abstract class FirestoreRepository {
+  Future<void> setData(String path, Map<String, dynamic> data);
+  Future<void> updateData(String path, Map<String, dynamic> data);
+  Future<void> deleteData(String path);
+  Future<DocumentSnapshot> getData(String path);
+  Stream<DocumentSnapshot> getDocumentStream(String path);
+  Future<QuerySnapshot> getCollection(String path);
+  Stream<QuerySnapshot> getCollectionStream(String path);
+}
+
+class FirestoreRepositoryImpl implements FirestoreRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  @override
+  Future<void> setData(String path, Map<String, dynamic> data) async {
+    await _firestore.doc(path).set(data);
+  }
+
+  @override
+  Future<void> updateData(String path, Map<String, dynamic> data) async {
+    await _firestore.doc(path).update(data);
+  }
+
+  @override
+  Future<void> deleteData(String path) async {
+    await _firestore.doc(path).delete();
+  }
+
+  @override
+  Future<DocumentSnapshot> getData(String path) async {
+    return await _firestore.doc(path).get();
+  }
+
+  @override
+  Stream<DocumentSnapshot> getDocumentStream(String path) {
+    return _firestore.doc(path).snapshots();
+  }
+
+  @override
+  Future<QuerySnapshot> getCollection(String path) async {
+    return await _firestore.collection(path).get();
+  }
+
+  @override
+  Stream<QuerySnapshot> getCollectionStream(String path) {
+    return _firestore.collection(path).snapshots();
   }
 }

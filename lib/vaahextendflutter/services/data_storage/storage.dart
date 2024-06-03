@@ -32,9 +32,10 @@ abstract class Storage {
 
   ///Creates a new Network Storage [FirestoreStorageImpl] or [SupabaseImpl]
   factory Storage.createNetwork({String? name}) {
+    final impl = FirestoreRepositoryImpl();
     switch (_envConfig.networkStorageType) {
       case NetworkStorageType.firebase:
-        final firestore = FirestoreStorageImpl(collectionName: name ?? 'default');
+        final firestore = FirestoreStorageImpl(impl, collectionName: name ?? 'default');
         firestore.init();
         return firestore;
       case NetworkStorageType.supabase:
