@@ -5,14 +5,27 @@ class HiveEncryptedStorage implements Storage {
   HiveEncryptedStorage({this.name = 'default'});
 
   @override
-  Future<void> create({key, value}) {
+  Future<void> create({required String key, required String value}) {
     // TODO: implement create
     throw UnimplementedError();
   }
 
   @override
-  void delete({key}) {
+  Future<void> createAll({required Map<String, String> values}) {
+    // TODO: implement createAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> delete({required String key}) {
     // TODO: implement delete
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteAll({List<String> keys = const []}) {
+    // TODO: implement deleteAll
+    throw UnimplementedError();
   }
 
   @override
@@ -22,14 +35,14 @@ class HiveEncryptedStorage implements Storage {
   }
 
   @override
-  Future read({key}) {
+  Future<String?> read({required String key}) {
     // TODO: implement read
     throw UnimplementedError();
   }
 
   @override
-  Future update({key, value}) {
-    // TODO: implement update
+  Future<Map<String, String?>> readAll({List<String> keys = const []}) {
+    // TODO: implement readAll
     throw UnimplementedError();
   }
 }

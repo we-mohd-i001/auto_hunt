@@ -21,70 +21,63 @@ class HiveStorageImpl implements Storage {
   }
 
   @override
-  Future<void> create({dynamic key, dynamic value}) async {
-    if (_box != null) {
-      if (key == null && value is Map<String, String>) {
-        _box!.putAll(value);
-      } else if (key is String && value is String) {
-        _box!.put(key, value);
-      } else {
-        throw ArgumentError(
-          'To save a single entry, the key and the value must be of type String,'
-          'To save multiple entries, pass only the value as Map<String, String>',
-        );
-      }
-    } else {
-      throw Exception('Box is null, not initialized.');
+  Future<void> create({required String key, required String value}) async {
+    assert(_box != null, 'Box is null, not initiized.');
+
+    _box!.put(key, value);
+  }
+
+  @override
+  Future<void> createAll({required Map<String, String> values}) async {
+    assert(_box != null, 'Box is null, not initiized.');
+
+    for (String k in values.keys) {
+      await _box!.put(k, values[k]);
     }
   }
 
   @override
-  Future<dynamic> update({dynamic key, dynamic value}) async {
-    await create(key: key, value: value);
-    return await read(key: key);
+  Future<String?> read({required String key}) async {
+    assert(_box != null, 'Box is null, not initiized.');
+
+    String? result = _box!.get(key);
+    return result;
   }
 
   @override
-  Future<dynamic> read({dynamic key}) async {
-    if (_box != null) {
-      if (key is String) {
-        if (_box!.containsKey(key)) {
-          String result = await _box!.get(key);
-          return result;
-        }
-      } else if (key is List<String>) {
-        Map<String, String> result = {};
-        for (String k in key) {
-          result[k] = await _box!.get(k);
-        }
-        return result;
-      } else if (key == null) {
-        Map<dynamic, dynamic> result = _box!.toMap();
-        return result;
-      } else {
-        throw ArgumentError('The key must be of type String or List<String>.');
-      }
+  Future<Map<String, String?>> readAll({List<String> keys = const []}) async {
+    assert(_box != null, 'Box is null, not initiized.');
+
+    if (keys.isEmpty) {
+      Map<String, String?> result =
+          _box!.toMap().map((key, value) => MapEntry(key.toString(), value?.toString()));
+      return result;
     } else {
-      throw Exception('Box is null, not initiized.');
+      Map<String, String?> result = {};
+      for (String k in keys) {
+        if (_box!.containsKey(k)) {
+          result[k] = _box!.get(k);
+        }
+      }
+      return result;
     }
   }
 
   @override
   Future<void> delete({dynamic key}) async {
-    if (_box != null) {
-      if (key is String) {
-        if (_box!.containsKey(key)) {
-          await _box!.delete(key);
-        }
-      } else if (key is List<String>) {
-        _box!.deleteAll(key);
-      } else if (key == null) {
-        await _box!.clear();
-      } else {
-        throw ArgumentError('The key must be of type String or List<String>.');
-      }
+    assert(_box != null, 'Box is null, not initiized.');
+
+    await _box!.delete(key);
+  }
+
+  @override
+  Future<void> deleteAll({List<String> keys = const []}) async {
+    assert(_box != null, 'Box is null, not initiized.');
+
+    if (keys.isEmpty) {
+      await _box!.clear();
     } else {
-      throw Exception('Box is null, not initiized.');
+      _box!.deleteAll(keys);
     }
   }
 }

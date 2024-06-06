@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:yourtasks/vaahextendflutter/services/data_storage/network/firebase/firestore_storage_impl.dart';
 
 import '../../env.dart';
-import 'encrypted/flutter_secure_storage_encrypted.dart';
-import 'encrypted/hive_encrypted_data_storage.dart';
 import 'local/flutter_secure_storage/flutter_secure_storage_impl.dart';
 import 'local/hive/hive_storage_impl.dart';
-import 'network/firebase/firestore_storage_impl.dart';
-import 'network/helpers/filter.dart';
 
 abstract class Storage {
   static final EnvironmentConfig _envConfig = EnvironmentConfig.getEnvConfig();
@@ -17,162 +14,142 @@ abstract class Storage {
   ///The argument [name] is used to open Hive box with that name.
   ///
   ///If you don't provide [name], 'default' will be used.
-  factory Storage.createLocal({String? name}) {
+  factory Storage.createLocal({String name = 'default'}) {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
-        final hive = HiveStorageImpl(name: name ?? 'default');
+        final hive = HiveStorageImpl(name: name);
         hive.init();
         return hive;
       case LocalStorageType.flutterSecureStorage:
         return FlutterSecureStorageImpl();
       default:
-        return NullStorage();
+        return NoOpStorage();
     }
   }
 
-  ///Creates a new Network Storage [FirestoreStorageImpl] or [SupabaseImpl]
-  factory Storage.createNetwork({String? name}) {
-    final impl = FirestoreRepositoryImpl();
+  factory Storage.createNetwork({String name = 'default', bool isShared = false}) {
     switch (_envConfig.networkStorageType) {
       case NetworkStorageType.firebase:
-        final firestore = FirestoreStorageImpl(impl, collectionName: name ?? 'default');
-        firestore.init();
-        return firestore;
+        return FirestoreStorageImpl(collectionName: name, isShared: isShared);
       case NetworkStorageType.supabase:
-        return NullStorage();
-      case NetworkStorageType.none:
-        return NullStorage();
-    }
-  }
-
-  ///Creates a new Encrypted Local Storage [HiveEncryptedStorage] or [FlutterSecureStorageEncryptedImpl]
-  factory Storage.createEncryptedLocal(String? name) {
-    switch (_envConfig.localStorageType) {
-      case LocalStorageType.hive:
-        final hive = HiveEncryptedStorage(name: name ?? 'default');
-        return hive;
-      case LocalStorageType.flutterSecureStorage:
-        return FlutterSecureStorageEncryptedImpl();
+        return NoOpStorage();
       default:
-        return NullStorage();
+        return NoOpStorage();
     }
   }
 
-  Storage();
-
-  ///This method is used to initialize the  [Storage].
-  ///It's not required in the case of [FlutterSecureStorageImpl].
+  ///Initializes the [Storage].
   ///In the case of [HiveStorageImpl], it creates a [Directory] using the path_provide package,
-  ///initializes hive at that directory and opens a box with name [name] provided
-  ///during [Storage] creation.
+  ///initializes hive at that directory and opens a box with name [name] provided during [Storage]
+  ///creation.
+  ///It's not required in the case of [FlutterSecureStorageImpl].
+  /// example:
   ///```dart
   /// Storage.createLocal('name')
   /// ```
   Future<void> init();
 
-  ///Creates new item or items in the database.
+  ///Creates or updates new item in the [Storage].
   ///
-  ///To save as a single key-value pair pass [key] as String, and the [value] as String, the String
-  ///could be a JSON String or a simple text according to your requirement.
-  ///
-  ///If you want to save multiple data pass the value as Map<String, String>, then it will save all
-  ///the key-value pairs in the [value] map.
-  Future<void> create({dynamic key, dynamic value});
+  ///To save or update a single key-value pair pass [key] as String, and the [value] as String, the
+  ///String could be a JSON String or a simple text according to your requirement.
+  ///If the key is already present in the [Storage] it's vlaue will be overwritten.
+  ///```dart
+  ///await storage.create(key: 'key', value: 'value');
+  /// ```
+  Future<void> create({required String key, required String value});
 
-  ///Reads the value of the item at [key] from the [Storage] and returns the value according to type
-  ///of [key] provided.
-  ///
-  ///Read a single value by passing [key] as String, it will return the value as String,
-  ///Read multiple values by passing a List of String containing all the keys you want to read as
-  ///[key], it will return the value as Map<String, String>.
-  ///
-  ///When the key is not passed it will return all the values from that [Storage] as
-  ///Map<String, String>
-  Future<dynamic> read({dynamic key});
+  ///Creates new items in the [Storage].
+  ///If you want to save multiple entries pass the [values] as a Map<String, String>, then it will
+  ///save all the key-value pairs in the [values] map.
+  ///If any key from the [values] is already present in the [Storage] it's value will be overwritten.
+  ///```dart
+  ///await storage.createAll(values: {
+  ///   'key1': 'Value1',
+  ///   'key2': 'Value2',
+  ///   'key3': 'Value3',
+  ///   'key4': 'Value4',
+  ///   'key5': 'Value5',
+  ///   //...
+  ///   },
+  /// );
+  /// ```
+  Future<void> createAll({required Map<String, String> values});
 
-  ///Updates an item at [key] with [value].
+  ///Reads the value of the item at [key] from the [Storage] and returns the value.
   ///
-  ///For data types refer [create].
-  Future<dynamic> update({dynamic key, dynamic value});
+  ///Read a single value by passing [key] as String, it will return the value as String?.
+  ///```dart
+  ///await storage.read(key: 'key');
+  ///```
+  Future<String?> read({required String key});
+
+  ///Reads multiple values, pass the List of [keys] as argument. It will return the value as
+  ///Map<String, String?>.
+  ///
+  ///When the keys is not passed it will return all the values from that [Storage] as
+  ///Map<String, String?>
+  ///```dart
+  ///await storage.readAll(keys: [
+  ///   'key1',
+  ///   'key2',
+  ///   //...
+  ///  ],
+  ///);
+  ///```
+  Future<Map<String, String?>> readAll({List<String> keys = const []});
 
   ///Deletes an item at [key].
-  ///
-  ///For data types refer [read].
-  void delete({dynamic key});
+  ///```dart
+  ///await storage.delete(key: 'key');
+  ///```
+  Future<void> delete({required String key});
+
+  ///Deletes item at a key present in [keys], if keys is not passed all the values will be deleted
+  ///from that [Storage].
+  ///```dart
+  ///await storage.deleteAll(keys: [
+  ///   'key1',
+  ///   'key2',
+  ///   //...
+  ///  ],
+  ///);
+  ///```
+  Future<void> deleteAll({List<String> keys = const []});
 }
 
-abstract class NetworkStorage extends Storage {
-  @override
-  Future<void> init();
-
-  @override
-  Future<void> create({
-    dynamic key,
-    dynamic value,
-  });
-
-  @override
-  Future<dynamic> read({dynamic key, List<String>? filters});
-
-  @override
-  Future<dynamic> update({dynamic key, dynamic value});
-
-  @override
-  void delete({dynamic key});
-}
-
-class SupabaseImpl implements NetworkStorage {
-  final instance = Supabase.instance.client;
-
-  @override
-  Future<void> create({
-    key,
-    value,
-  }) {
-    instance.from(key).insert(value);
-    throw UnimplementedError();
-  }
-
-  @override
-  void delete({key}) {
-    instance.from(key).delete();
-  }
-
+///A placeholder storage class when [LocalStorageType.none] is selected in env.dart.
+class NoOpStorage implements Storage {
   @override
   Future<void> init() async {}
 
   @override
-  Future<dynamic> read({key, List<String>? filters}) {
-    return instance.from('key').select();
+  Future<void> create({required String key, required String value}) async {}
+
+  @override
+  Future<void> createAll({required Map<String, String> values}) async {}
+
+  @override
+  Future<String?> read({required String key}) async {
+    throw InvalidStorageException();
   }
 
   @override
-  Future<dynamic> update({key, value}) {
-    return instance.from(key).update(value);
+  Future<Map<String, String?>> readAll({List<String> keys = const []}) {
+    throw InvalidStorageException();
   }
+
+  @override
+  Future<void> delete({required String key}) async {}
+
+  @override
+  Future<void> deleteAll({List<String> keys = const []}) async {}
 }
 
-class NullStorage implements Storage {
-  @override
-  void delete({dynamic key}) {}
-
-  @override
-  Future<void> init() async {}
-
-  @override
-  Future<String?> read({dynamic key}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String?> update({dynamic key, dynamic value}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> create({dynamic key, dynamic value}) {
-    throw UnimplementedError();
-  }
+class InvalidStorageException implements Exception {
+  final String message =
+      'The Selected storage is not valid please select a valid storage in environment '
+      'configuration via any config json file.';
 }
 
 //   @override

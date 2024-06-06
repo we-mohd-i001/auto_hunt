@@ -3,11 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../storage.dart';
 
-class FirestoreStorageImpl extends Storage {
+class FirestoreStorageImpl implements Storage {
   final String collectionName;
-  FirestoreStorageImpl(this._firestoreRepository, {required this.collectionName});
+  final bool isShared;
+  FirestoreStorageImpl({
+    required this.collectionName,
+    required this.isShared,
+  });
 
-  final FirestoreRepository _firestoreRepository;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? currentUser;
@@ -16,44 +19,8 @@ class FirestoreStorageImpl extends Storage {
   ///and List<jsonData> as argument and returns List<jsonResult>
 
   @override
-  Future<void> create({dynamic key, dynamic value}) async {
-    try {
-      if (value is List<String> && key is List<String>) {
-        if (key.length == value.length) {
-          for (int i = 0; i < key.length; i++) {
-            await _firestore.collection(collectionName).doc(key[i]).set({
-              'data': value[i],
-            });
-          }
-        } else {
-          throw Exception('key list and value list Length mismatch.');
-        }
-      } else if (key is String && value is String) {
-        await _firestore.collection(collectionName).doc(key).set({'data': value});
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  @override
-  void delete({dynamic key}) {
-    try {
-      if (key is List<String>) {
-        for (int i = 0; i < key.length; i++) {
-          _firestore.collection(collectionName).doc(key[i]).delete();
-        }
-      } else {
-        _firestore.collection(collectionName).doc(key).delete();
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  @override
   Future<void> init() async {
-    if (_auth.currentUser != null) {
+    if (_auth.currentUser != null && !isShared) {
       currentUser = _auth.currentUser;
     } else {
       throw FirebaseAuthException(
@@ -64,24 +31,51 @@ class FirestoreStorageImpl extends Storage {
   }
 
   @override
-  Future<dynamic> read({dynamic key}) async {
+  Future<void> create({required String key, required String value}) async {
     try {
-      dynamic value;
-      if (key is List<String>) {
-        for (int i = 0; i < key.length; i++) {
-          await _firestore
+      isShared
+          ? await _firestore.collection('shared').doc(collectionName).set(
+              {key: value},
+              SetOptions(merge: true),
+            )
+          : await _firestore
+              .collection('separate')
+              .doc('user-id')
               .collection(collectionName)
-              .doc(key[i])
+              .doc(key)
+              .set(
+              {'data': value},
+              SetOptions(merge: true),
+            );
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<void> createAll({required Map<String, String> values}) async {
+    values.forEach((key, value) async {
+      create(key: key, value: value);
+    });
+  }
+
+  @override
+  Future<String?> read({required String key}) async {
+    try {
+      String? value;
+      isShared
+          ? await _firestore
+              .collection('shared')
+              .doc(collectionName)
               .get()
-              .then((v) => value = v.data());
-          return value;
-        }
-      }
-      await _firestore
-          .collection(collectionName)
-          .doc(key)
-          .get()
-          .then((v) => value = v.data()!['data']);
+              .then((v) => value = v.data()?[key])
+          : await _firestore
+              .collection('separate')
+              .doc('user-id')
+              .collection(collectionName)
+              .doc(key)
+              .get()
+              .then((v) => value = v.data()?['data']);
       return value;
     } catch (e) {
       throw Exception(e.toString());
@@ -89,23 +83,34 @@ class FirestoreStorageImpl extends Storage {
   }
 
   @override
-  Future<dynamic> update({dynamic key, dynamic value}) async {
+  Future<Map<String, String?>> readAll({List<String> keys = const []}) async {
+    Map<String, String?> values = {};
+    for (int i = 0; i < keys.length; i++) {
+      values[keys[i]] = await read(key: keys[i]);
+    }
+    return values;
+  }
+
+  @override
+  Future<void> delete({required String key}) async {
     try {
-      if (key is List<String> && value is List<String>) {
-        for (int i = 0; i < key.length; i++) {
-          await _firestore
+      isShared
+          ? _firestore.collection('shared').doc(collectionName).update({key: FieldValue.delete()})
+          : await _firestore
+              .collection('separate')
+              .doc('userp-id')
               .collection(collectionName)
-              .doc(key[i])
-              .set({'data': value[i]}, SetOptions(merge: true));
-        }
-      } else if (key is String && value is String) {
-        await _firestore
-            .collection(collectionName)
-            .doc(key)
-            .set({'data': value}, SetOptions(merge: true));
-      }
+              .doc(key)
+              .delete();
     } catch (e) {
-      throw Exception();
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<void> deleteAll({List<String> keys = const []}) async {
+    for (int i = 0; i < keys.length; i++) {
+      delete(key: keys[i]);
     }
   }
 }

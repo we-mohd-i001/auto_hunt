@@ -3,9 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app_config.dart';
 import 'firebase_options.dart';
@@ -60,38 +57,59 @@ Future<void> main() async {
 }
 
 class MyTestApp extends StatefulWidget {
+  static const String routePath = '/test';
+  static Route<void> route() {
+    return MaterialPageRoute(
+      settings: const RouteSettings(name: routePath),
+      builder: (_) => const MyTestApp(),
+    );
+  }
+
   const MyTestApp({super.key});
 
   @override
   State<MyTestApp> createState() => _MyTestAppState();
 }
 
-// class _MyTestAppState1 extends State<MyTestApp> {
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     throw UnimplementedError();
-//   }
-// }
-
 class _MyTestAppState extends State<MyTestApp> {
-  final Storage storage = Storage.createLocal(name: 'UserData');
+  final Storage storage = Storage.createNetwork(name: 'local', isShared: true);
 
-  String value = 'Data';
-  String updatedData = 'Updated Data';
-  String? storedData;
+  create() async {
+    await storage.create(key: 'key34', value: '34');
+    smartPrint('Saving entry.');
+  }
 
-  late UserLucky user1;
-  late UserLucky user2;
-  UserLucky emptyUser = UserLucky(name: 'null', age: 'null');
-  checkAssertion() async {
-    storage.create(value: {'key1': 'value1'});
-    print(await storage.read(key: 'key1'));
+  createAll() async {
+    await storage.createAll(values: {
+      'key2': 'Value2',
+      'key3': 'Value3',
+      'key4': 'Value4',
+      'key5': 'Value5',
+    });
+    smartPrint('Saving multiple entries.');
+  }
+
+  read() async {
+    smartPrint(await storage.read(key: 'key34'));
+  }
+
+  readAll() async {
+    smartPrint(await storage.readAll(keys: ['key2', 'key3', 'key34', 'key5']));
+  }
+
+  delete() async {
+    await storage.delete(key: 'key34');
+    smartPrint('Deleting entry.');
+  }
+
+  deleteAll() async {
+    await storage.deleteAll(keys: ['key1', 'key2', 'key3']);
+    smartPrint('Deleting multiple entries.');
   }
 
   @override
   void initState() {
-    // _initialize();
+    storage.init();
     super.initState();
   }
 
@@ -99,39 +117,53 @@ class _MyTestAppState extends State<MyTestApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    checkAssertion();
-                  },
-                  child: const Text('Create'),
-                ),
-                ElevatedButton(onPressed: () async {}, child: const Text('Show')),
-                ElevatedButton(
-                  onPressed: () async {},
-                  child: const Text('Update'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {},
-                  child: const Text('Read All'),
-                ),
-              ],
+            ElevatedButton(
+              onPressed: () async {
+                create();
+              },
+              child: const Text('Create'),
             ),
-            Column(
-              children: [
-                Text(value),
-                Text(updatedData),
-              ],
-            )
+            ElevatedButton(
+              onPressed: () async {
+                createAll();
+              },
+              child: const Text('CreateAll'),
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  read();
+                },
+                child: const Text('Read')),
+            ElevatedButton(
+              onPressed: () async {
+                readAll();
+              },
+              child: const Text('ReadAll'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                delete();
+              },
+              child: const Text('Delete'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                deleteAll();
+              },
+              child: const Text('Delete All'),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+void smartPrint(Object? s) {
+  print('---> $s');
 }
 
 class Friends {
