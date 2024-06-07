@@ -290,8 +290,8 @@ class SupabaseService implements DatabaseService {
       final Map<String, dynamic> document = response;
       return document;
     } catch (e) {
-      throw Exception('''$e'''
-          ''' Possible Reason : The document(column: ${filter.column}, value: ${filter.value}) you queried for might not exists in the Database.''');
+      throw Exception('$e'
+          ' Possible Reason : The document(column: ${filter.column}, value: ${filter.value}) you queried for might not exists in the Database.');
     }
   }
 
@@ -410,8 +410,17 @@ class SupabaseService implements DatabaseService {
 }
 
 class Database {
-  final DatabaseService _service;
-  final String collectionName;
+  static Database get instance {
+    assert(
+      _instance._initialized,
+      'You must initialize the database instance before calling Database.instance',
+    );
+    return _instance;
+  }
+
+  late SupabaseService supabaseService;
+  late DatabaseService _service;
+  late String collectionName;
 
   ///Creates a new Storage object for either [FirebaseFirestore] or [Supabase]
   ///
@@ -427,6 +436,25 @@ class Database {
       : _service = useFirestore
             ? FirestoreService(collectionName: collectionName)
             : SupabaseService(collectionName: collectionName);
+
+  Future<Database> initialize({
+    required String collectionName,
+    required DatabaseService service,
+  }) async {
+    _instance._init(service, collectionName);
+    return _instance;
+  }
+
+  Database._();
+  static final Database _instance = Database._();
+
+  bool _initialized = false;
+
+  void _init(DatabaseService service, String collection) {
+    _service = service;
+    collectionName = collection;
+    _initialized = true;
+  }
 
   ///Returns a single document from a collection stored in [Supabase] or [FirebaseFirestore],
   ///

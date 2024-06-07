@@ -45,6 +45,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
     tracesSampleRate: 0.6,
   ),
   hiveConfig: HiveConfig(directoryName: 'dir'),
+  supabaseConfig: SupabaseConfig(anonKey: '', url: ''),
 );
 
 // To add new configuration add new key, value pair in envConfigs
@@ -122,6 +123,7 @@ class EnvironmentConfig {
   final bool showDebugPanel;
   final Color debugPanelColor;
   final HiveConfig? hiveConfig;
+  final SupabaseConfig? supabaseConfig;
 
   const EnvironmentConfig({
     required this.appTitle,
@@ -147,6 +149,7 @@ class EnvironmentConfig {
     required this.showDebugPanel,
     required this.debugPanelColor,
     this.hiveConfig,
+    this.supabaseConfig,
   });
 
   static EnvironmentConfig getEnvConfig() {
@@ -195,6 +198,7 @@ class EnvironmentConfig {
     bool? showDebugPanel,
     Color? debugPanelColor,
     HiveConfig? hiveConfig,
+    SupabaseConfig? supabaseConfig,
   }) {
     return EnvironmentConfig(
       appTitle: appTitle ?? this.appTitle,
@@ -222,6 +226,7 @@ class EnvironmentConfig {
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
       hiveConfig: hiveConfig ?? this.hiveConfig,
+      supabaseConfig: supabaseConfig ?? this.supabaseConfig,
     );
   }
 
@@ -326,4 +331,11 @@ class HiveConfig {
       Hive.init(directory.path);
     });
   }
+}
+
+class SupabaseConfig {
+  final String url;
+  final String anonKey;
+
+  SupabaseConfig({required this.url, required this.anonKey});
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../app_theme.dart';
 import '../env.dart';
@@ -71,6 +72,13 @@ class BaseController extends GetxController {
         }
         if (config.hiveConfig != null) {
           await config.hiveConfig!.init();
+        }
+
+        if (config.supabaseConfig != null) {
+          await Supabase.initialize(
+            url: config.supabaseConfig!.url,
+            anonKey: config.supabaseConfig!.anonKey,
+          );
         }
         // Running main app
         runApp(child);
