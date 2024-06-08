@@ -37,13 +37,12 @@ class AuthController extends GetxController {
     return user;
   }
 
-  //signup wiwth Email & and password
+  //signup with Email & and password
   Future<UserCredential?> signUp(String email, String password) async {
     UserCredential? userCredential;
     try {
       isLoading(true);
-      userCredential = await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      userCredential = await auth.createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (_) {
       Alerts.showErrorToast!(content: 'SignUp unsuccessful!');
     } catch (e) {
@@ -58,8 +57,7 @@ class AuthController extends GetxController {
   //storing data to cloud
   Future<void> storeUserData(String name, String password, String email) async {
     try {
-      DocumentReference store =
-          firestore.collection(usersCollection).doc(auth.currentUser!.uid);
+      DocumentReference store = firestore.collection(usersCollection).doc(auth.currentUser!.uid);
       store.set(
         {
           'name': name,

@@ -38,33 +38,33 @@ abstract class Storage {
     }
   }
 
-  ///Initializes the [Storage].
-  ///In the case of [HiveStorageImpl], it creates a [Directory] using the path_provide package,
-  ///initializes hive at that directory and opens a box with name [name] provided during [Storage]
-  ///creation.
-  ///It's not required in the case of [FlutterSecureStorageImpl].
+  /// Initializes the [Storage].
+  /// In the case of [HiveStorageImpl], it creates a [Directory] using the path_provide package,
+  /// initializes hive at that directory and opens a box with name [name] provided during [Storage]
+  /// creation.
+  /// It's not required in the case of [FlutterSecureStorageImpl].
   /// example:
-  ///```dart
-  /// Storage.createLocal('name')
+  /// ```dart
+  ///  Storage.createLocal('name')
   /// ```
   Future<void> init();
 
-  ///Creates or updates new item in the [Storage].
+  /// Creates or updates new item in the [Storage].
   ///
-  ///To save or update a single key-value pair pass [key] as String, and the [value] as String, the
-  ///String could be a JSON String or a simple text according to your requirement.
-  ///If the key is already present in the [Storage] it's vlaue will be overwritten.
-  ///```dart
-  ///await storage.create(key: 'key', value: 'value');
+  /// To save or update a single key-value pair pass [key] as String, and the [value] as String, the
+  /// String could be a JSON String or a simple text according to your requirement.
+  /// If the key is already present in the [Storage] it's vlaue will be overwritten.
+  /// ```dart
+  /// await storage.create(key: 'key', value: 'value');
   /// ```
   Future<void> create({required String key, required String value});
 
-  ///Creates new items in the [Storage].
-  ///If you want to save multiple entries pass the [values] as a Map<String, String>, then it will
-  ///save all the key-value pairs in the [values] map.
-  ///If any key from the [values] is already present in the [Storage] it's value will be overwritten.
-  ///```dart
-  ///await storage.createAll(values: {
+  /// Creates new items in the [Storage].
+  /// If you want to save multiple entries pass the [values] as a Map<String, String>, then it will
+  /// save all the key-value pairs in the [values] map.
+  /// If any key from the [values] is already present in the [Storage] it's value will be overwritten.
+  /// ```dart
+  /// await storage.createAll(values: {
   ///   'key1': 'Value1',
   ///   'key2': 'Value2',
   ///   'key3': 'Value3',
@@ -76,12 +76,12 @@ abstract class Storage {
   /// ```
   Future<void> createAll({required Map<String, String> values});
 
-  ///Reads the value of the item at [key] from the [Storage] and returns the value.
+  /// Reads the value of the item at [key] from the [Storage] and returns the value.
   ///
-  ///Read a single value by passing [key] as String, it will return the value as String?.
-  ///```dart
-  ///await storage.read(key: 'key');
-  ///```
+  /// Read a single value by passing [key] as String, it will return the value as String?.
+  /// ```dart
+  /// await storage.read(key: 'key');
+  /// ```
   Future<String?> read({required String key});
 
   ///Reads multiple values, pass the List of [keys] as argument. It will return the value as

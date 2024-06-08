@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:yourtasks/main.dart';
 
@@ -34,8 +33,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserLocationController userLocationController =
-        Get.put(UserLocationController());
+    UserLocationController userLocationController = Get.put(UserLocationController());
     HomeController homeController = Get.put(HomeController());
     LikedCarsController likedCarsController = Get.put(LikedCarsController());
     Size size = MediaQuery.of(context).size;
@@ -55,8 +53,7 @@ class HomePage extends StatelessWidget {
                   color: AppTheme.colors['black'],
                   child: StreamBuilder(
                       stream: profileController.imageUrls(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
                           return Center(
                             child: Text('Error!', style: normal),
@@ -69,8 +66,7 @@ class HomePage extends StatelessWidget {
                                 image: !snapshot.hasData
                                     ? OtherConsts.profilePlaceHolder
                                     : snapshot.data!.docs[0]['imageUrl'],
-                                location: userLocationController
-                                    .currentLocation.value,
+                                location: userLocationController.currentLocation.value,
                               ),
                             ),
                             verticalMargin8,
@@ -128,8 +124,8 @@ class HomePage extends StatelessWidget {
                   ),
                   StreamBuilder(
                     stream: likedCarsController.getLikedCars(user!.uid),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot<CarModel>> snapshot) {
+                    builder:
+                        (BuildContext context, AsyncSnapshot<QuerySnapshot<CarModel>> snapshot) {
                       if (!snapshot.hasData) {
                         return const SizedBox(
                           height: 280,
@@ -148,8 +144,7 @@ class HomePage extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (BuildContext context, int index) {
-                              CarModel carModel =
-                                  snapshot.data!.docs[index].data.call();
+                              CarModel carModel = snapshot.data!.docs[index].data.call();
                               return CarDetailWidget(
                                 name: carModel.carName,
                                 fuelAndType: carModel.carFuelType,
