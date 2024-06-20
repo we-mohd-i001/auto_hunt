@@ -25,8 +25,8 @@ class FirestoreStorageImpl implements Storage {
     } else {
       throw FirebaseAuthException(
           code: '',
-          message:
-              'The FirebaseAuth.intance.currentUser returns null, User not authenticated. Handle this exception to ensure unauthorized access to firestore.');
+          message: 'The FirebaseAuth.intance.currentUser returns null, User not authenticated. '
+              'Handle this exception to ensure unauthorized access to firestore.');
     }
   }
 

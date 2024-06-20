@@ -8,7 +8,7 @@ import 'app_config.dart';
 import 'firebase_options.dart';
 import 'vaahextendflutter/base/base_controller.dart';
 import 'vaahextendflutter/services/api_self_signed.dart';
-import 'vaahextendflutter/services/data_storage/storage.dart';
+import 'vaahextendflutter/services/storage/network/storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,15 +72,13 @@ class MyTestApp extends StatefulWidget {
 }
 
 class _MyTestAppState extends State<MyTestApp> {
-  final Storage storage = Storage.createNetwork(name: 'local', isShared: true);
-
   create() async {
-    await storage.create(key: 'key34', value: '34');
+    await NetworkStorage.create(key: 'key34', value: '34');
     smartPrint('Saving entry.');
   }
 
   createAll() async {
-    await storage.createAll(values: {
+    await NetworkStorage.createMany(values: {
       'key2': 'Value2',
       'key3': 'Value3',
       'key4': 'Value4',
@@ -90,26 +88,25 @@ class _MyTestAppState extends State<MyTestApp> {
   }
 
   read() async {
-    smartPrint(await storage.read(key: 'key34'));
+    smartPrint(await NetworkStorage.read(key: 'key34'));
   }
 
   readAll() async {
-    smartPrint(await storage.readAll(keys: ['key2', 'key3', 'key34', 'key5']));
+    smartPrint(await NetworkStorage.readMany(keys: ['key2', 'key3', 'key34', 'key5']));
   }
 
   delete() async {
-    await storage.delete(key: 'key34');
+    await NetworkStorage.delete(key: 'key34');
     smartPrint('Deleting entry.');
   }
 
   deleteAll() async {
-    await storage.deleteAll(keys: ['key1', 'key2', 'key3']);
+    await NetworkStorage.deleteMany(keys: ['key1', 'key2', 'key3']);
     smartPrint('Deleting multiple entries.');
   }
 
   @override
   void initState() {
-    storage.init();
     super.initState();
   }
 

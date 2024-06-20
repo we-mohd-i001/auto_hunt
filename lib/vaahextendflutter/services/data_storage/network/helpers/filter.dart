@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 abstract class FilterItr1 {
   factory FilterItr1.firestore(
     Eq? eq,
@@ -143,3 +144,27 @@ class Like {
     required this.pattern,
   });
 }
+
+class TestClass {
+  String? test;
+  int? integerValue;
+  TestClass({this.test, this.integerValue});
+
+  TestClass perform(newname) {
+    TestClass testClass = TestClass(test: newname);
+
+    return testClass;
+  }
+
+  TestClass convertToInt() {
+    int? converted = int.tryParse(test.toString());
+    TestClass testClass = TestClass(integerValue: converted);
+    return testClass;
+  }
+}
+
+// void main() {
+//   TestClass testClass = TestClass(test: '35');
+//   final map = testClass.convertToInt().integerValue;
+//   print('${map} : ${testClass.test}');
+// }
