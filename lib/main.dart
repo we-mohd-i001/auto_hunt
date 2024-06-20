@@ -126,38 +126,39 @@ class _MyTestAppState extends State<MyTestApp> {
 
   void updateMany() async {
     smartPrint('Updating multiple entries...');
-    // await NetworkStorage.updateMany(
-    //   collectionName: 'separate-test-collection',
-    //   values: {
-    //     'key2': 'Value2Updated',
-    //     'key3': 'Value3Updated',
-    //     'key4': 'Value4Updated',
-    //     'key5': 'Value5Updated',
-    //   },
-    // );
+    await NetworkStorage.updateMany(
+      collectionName: 'separate-test-collection',
+      values: {
+        'key2': 'Value2Updated',
+        'key3': 'Value3Updated',
+        'key4': 'Value4Updated',
+        'key5': 'Value5Updated',
+      },
+    );
     smartPrint('Updated multiple entries.');
   }
 
   void createOrUpdate() async {
     smartPrint('Creating or updating entry...');
-    //NetworkStorage.createOrUpdate(collectionName: 'separate-test-collection', key: 'key34', value: '98');
+    NetworkStorage.createOrUpdate(
+        collectionName: 'separate-test-collection', key: 'key34', value: '98');
     smartPrint('Created Or updated the entry.');
   }
 
   void createOrUpdateMany() async {
     smartPrint('Creating or updating multiple entries...');
-    // NetworkStorage.createOrUpdateMany(
-    //   collectionName: 'separate-test-collection',
-    //   values: {
-    //     'key2': 'Value2UpdatedAgain',
-    //     'key3': 'Value3UpdatedAgain',
-    //     'key4': 'Value4UpdatedAgain',
-    //     'key5': 'Value5UpdatedAgain',
-    //     'key6': 'Value5UpdatedAgain',
-    //     'key7': 'Value5UpdatedAgain',
-    //     'key8': 'Value5UpdatedAgain',
-    //   },
-    // );
+    NetworkStorage.createOrUpdateMany(
+      collectionName: 'separate-test-collection',
+      values: {
+        'key2': 'Value2UpdatedAgain',
+        'key3': 'Value3UpdatedAgain',
+        'key4': 'Value4UpdatedAgain',
+        'key5': 'Value5UpdatedAgain',
+        'key6': 'Value5UpdatedAgain',
+        'key7': 'Value5UpdatedAgain',
+        'key8': 'Value5UpdatedAgain',
+      },
+    );
     smartPrint('Created Or updated multiple entries.');
   }
 

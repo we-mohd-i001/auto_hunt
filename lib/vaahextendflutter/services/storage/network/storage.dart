@@ -64,6 +64,27 @@ abstract class NetworkStorage {
     return _instanceNetwork.update(collectionName: collectionName, key: key, value: value);
   }
 
+  static Future<void> updateMany(
+      {String collectionName = 'vaah-flutter-collection',
+      required Map<String, String> values}) async {
+    return _instanceNetwork.updateMany(collectionName: collectionName, values: values);
+  }
+
+  static Future<void> createOrUpdate({
+    String collectionName = 'vaah-flutter-collection',
+    required String key,
+    required String value,
+  }) async {
+    return _instanceNetwork.createOrUpdate(collectionName: collectionName, key: key, value: value);
+  }
+
+  static Future<void> createOrUpdateMany({
+    String collectionName = 'vaah-flutter-collection',
+    required Map<String, String> values,
+  }) async {
+    return _instanceNetwork.createOrUpdateMany(collectionName: collectionName, values: values);
+  }
+
   static Future<void> delete({
     String collectionName = 'vaah-flutter-collection',
     required String key,

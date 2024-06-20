@@ -148,9 +148,35 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   }
 
   @override
-  Future<void> updateMany({required String collectionName, required Map<String, String> values}) {
-    // TODO: implement updateMany
-    throw UnimplementedError();
+  Future<void> updateMany({
+    required String collectionName,
+    required Map<String, String> values,
+  }) async {
+    values.forEach(
+        (key, value) async => await update(collectionName: collectionName, key: key, value: value));
+  }
+
+  @override
+  Future<void> createOrUpdate({
+    required String collectionName,
+    required String key,
+    required String value,
+  }) async {
+    try {
+      if (_collections[collectionName]!.isShared) {
+        await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').set({
+          key: value,
+        }, SetOptions(merge: true));
+      } else {
+        await _firestore
+            .doc('separate/user-id/${_collections[collectionName]!.collectionName}/$key')
+            .set({
+          'data': value,
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
@@ -193,17 +219,12 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   }
 
   @override
-  Future<void> createOrUpdate(
-      {required String collectionName, required String key, required String value}) {
-    // TODO: implement createOrUpdate
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> createOrUpdateMany(
-      {required String collectionName, required Map<String, String> values}) {
-    // TODO: implement createOrUpdateMany
-    throw UnimplementedError();
+  Future<void> createOrUpdateMany({
+    required String collectionName,
+    required Map<String, String> values,
+  }) async {
+    values.forEach((key, value) async =>
+        await createOrUpdate(collectionName: collectionName, key: key, value: value));
   }
 }
 
