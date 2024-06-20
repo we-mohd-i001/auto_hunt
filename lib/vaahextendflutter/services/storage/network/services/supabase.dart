@@ -76,4 +76,10 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
     // TODO: implement deleteAll
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> deleteAll({required String collectionName}) {
+    // TODO: implement deleteAll
+    throw UnimplementedError();
+  }
 }

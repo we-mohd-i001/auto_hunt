@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'app_config.dart';
 import 'firebase_options.dart';
 import 'vaahextendflutter/base/base_controller.dart';
+import 'vaahextendflutter/helpers/constants.dart';
 import 'vaahextendflutter/services/api_self_signed.dart';
 import 'vaahextendflutter/services/storage/network/storage.dart';
 
@@ -72,87 +73,250 @@ class MyTestApp extends StatefulWidget {
 }
 
 class _MyTestAppState extends State<MyTestApp> {
-  create() async {
-    await NetworkStorage.create(key: 'key34', value: '34');
-    smartPrint('Saving entry.');
+  void create() async {
+    smartPrint('Creating entry...');
+    await NetworkStorage.create(
+        collectionName: 'separate-test-collection', key: 'key34', value: '98');
+    smartPrint('Entry created.');
   }
 
-  createAll() async {
-    await NetworkStorage.createMany(values: {
-      'key2': 'Value2',
-      'key3': 'Value3',
-      'key4': 'Value4',
-      'key5': 'Value5',
-    });
-    smartPrint('Saving multiple entries.');
+  void createMany() async {
+    smartPrint('Creating multiple entries...');
+    await NetworkStorage.createMany(
+      collectionName: 'separate-test-collection',
+      values: {
+        'key2': 'Value2',
+        'key3': 'Value3',
+        'key4': 'Value4',
+        'key5': 'Value5',
+      },
+    );
+    smartPrint('Multiple entries created.');
   }
 
-  read() async {
-    smartPrint(await NetworkStorage.read(key: 'key34'));
+  void read() async {
+    smartPrint(
+      await NetworkStorage.read(collectionName: 'separate-test-collection', key: 'key34'),
+    );
   }
 
-  readAll() async {
-    smartPrint(await NetworkStorage.readMany(keys: ['key2', 'key3', 'key34', 'key5']));
+  void readMany() async {
+    smartPrint(
+      await NetworkStorage.readMany(
+        collectionName: 'separate-test-collection',
+        keys: ['key3', 'key2', 'key4', 'key5'],
+      ),
+    );
   }
 
-  delete() async {
-    await NetworkStorage.delete(key: 'key34');
-    smartPrint('Deleting entry.');
+  void readAll() async {
+    smartPrint(
+      await NetworkStorage.readAll(
+        collectionName: 'separate-test-collection',
+      ),
+    );
   }
 
-  deleteAll() async {
-    await NetworkStorage.deleteMany(keys: ['key1', 'key2', 'key3']);
-    smartPrint('Deleting multiple entries.');
+  void update() async {
+    smartPrint('Updating entry...');
+    await NetworkStorage.update(
+        collectionName: 'separate-test-collection', key: 'key34', value: '10000');
+    smartPrint('Entry updated.');
+  }
+
+  void updateMany() async {
+    smartPrint('Updating multiple entries...');
+    // await NetworkStorage.updateMany(
+    //   collectionName: 'separate-test-collection',
+    //   values: {
+    //     'key2': 'Value2Updated',
+    //     'key3': 'Value3Updated',
+    //     'key4': 'Value4Updated',
+    //     'key5': 'Value5Updated',
+    //   },
+    // );
+    smartPrint('Updated multiple entries.');
+  }
+
+  void createOrUpdate() async {
+    smartPrint('Creating or updating entry...');
+    //NetworkStorage.createOrUpdate(collectionName: 'separate-test-collection', key: 'key34', value: '98');
+    smartPrint('Created Or updated the entry.');
+  }
+
+  void createOrUpdateMany() async {
+    smartPrint('Creating or updating multiple entries...');
+    // NetworkStorage.createOrUpdateMany(
+    //   collectionName: 'separate-test-collection',
+    //   values: {
+    //     'key2': 'Value2UpdatedAgain',
+    //     'key3': 'Value3UpdatedAgain',
+    //     'key4': 'Value4UpdatedAgain',
+    //     'key5': 'Value5UpdatedAgain',
+    //     'key6': 'Value5UpdatedAgain',
+    //     'key7': 'Value5UpdatedAgain',
+    //     'key8': 'Value5UpdatedAgain',
+    //   },
+    // );
+    smartPrint('Created Or updated multiple entries.');
+  }
+
+  void delete() async {
+    smartPrint('Deleting entry...');
+    await NetworkStorage.delete(collectionName: 'separate-test-collection', key: 'key34');
+    smartPrint('Entry Deleted.');
+  }
+
+  void deleteMany() async {
+    smartPrint('Deleting multiple entries...');
+    await NetworkStorage.deleteMany(
+      collectionName: 'separate-test-collection',
+      keys: ['key3', 'key2', 'key4', 'key5'],
+    );
+    smartPrint('Multiple entries deleted.');
+  }
+
+  void deleteAll() async {
+    smartPrint('Deleting All entries...');
+    await NetworkStorage.deleteAll(
+      collectionName: 'separate-test-collection',
+    );
+    smartPrint('All entries deleted.');
   }
 
   @override
   void initState() {
     super.initState();
+    NetworkStorage.addCollection('separate-test-collection', false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                create();
-              },
-              child: const Text('Create'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                createAll();
-              },
-              child: const Text('CreateAll'),
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  read();
-                },
-                child: const Text('Read')),
-            ElevatedButton(
-              onPressed: () async {
-                readAll();
-              },
-              child: const Text('ReadAll'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                delete();
-              },
-              child: const Text('Delete'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                deleteAll();
-              },
-              child: const Text('Delete All'),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                color: Colors.green,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        create();
+                      },
+                      child: const Text('Create'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        createMany();
+                      },
+                      child: const Text('CreateMany'),
+                    ),
+                  ],
+                ),
+              ),
+              verticalMargin16,
+              Container(
+                color: Colors.blueGrey,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        read();
+                      },
+                      child: const Text('Read'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        readMany();
+                      },
+                      child: const Text('ReadMany'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        readAll();
+                      },
+                      child: const Text('ReadAll'),
+                    ),
+                  ],
+                ),
+              ),
+              verticalMargin16,
+              Container(
+                color: Colors.amber,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        update();
+                      },
+                      child: const Text('Update'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        updateMany();
+                      },
+                      child: const Text('UpdateMany'),
+                    ),
+                  ],
+                ),
+              ),
+              verticalMargin16,
+              Container(
+                color: Colors.lime,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        createOrUpdate();
+                      },
+                      child: const Text('CreateOrUpdate'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        createOrUpdateMany();
+                      },
+                      child: const Text('CreateOrUpdateMany'),
+                    ),
+                  ],
+                ),
+              ),
+              verticalMargin16,
+              Container(
+                color: Colors.red,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        delete();
+                      },
+                      child: const Text('Delete'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        deleteMany();
+                      },
+                      child: const Text('DeleteMany'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        deleteAll();
+                      },
+                      child: const Text('Delete All'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -97,6 +97,63 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   }
 
   @override
+  Future<Map<String, String?>> readAll({required String collectionName}) async {
+    try {
+      final Map<String, String?> result;
+      if (_collections[collectionName]!.isShared) {
+        final documentSnapshot =
+            await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').get();
+        result = documentSnapshot.data()!.map(
+              (key, value) => MapEntry(key, value?.toString()),
+            );
+
+        return result;
+      } else {
+        final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+            await _firestore.collection('separate').doc('user-id').collection(collectionName).get();
+        final Map<String, String?> result = Map.fromEntries(
+          querySnapshot.docs.map(
+            (e) => MapEntry(e.id, e.data()['data']?.toString()),
+          ),
+        );
+
+        return result;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<void> update({
+    required String collectionName,
+    required String key,
+    required String value,
+  }) async {
+    try {
+      if (_collections[collectionName]!.isShared) {
+        await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').update({
+          key: value,
+        });
+      } else {
+        await _firestore
+            .doc('separate/user-id/${_collections[collectionName]!.collectionName}/$key')
+            .update({
+          'data': value,
+        });
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<void> updateMany({required String collectionName, required Map<String, String> values}) {
+    // TODO: implement updateMany
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> delete({required String collectionName, required String key}) async {
     try {
       _collections[collectionName]!.isShared
@@ -119,6 +176,23 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   }
 
   @override
+  Future<void> deleteAll({required collectionName}) async {
+    try {
+      if (_collections[collectionName]!.isShared) {
+        await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').delete();
+      } else {
+        QuerySnapshot querySnapshot =
+            await _firestore.collection('separate').doc('user-id').collection(collectionName).get();
+        for (DocumentSnapshot doc in querySnapshot.docs) {
+          await doc.reference.delete();
+        }
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
   Future<void> createOrUpdate(
       {required String collectionName, required String key, required String value}) {
     // TODO: implement createOrUpdate
@@ -129,25 +203,6 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   Future<void> createOrUpdateMany(
       {required String collectionName, required Map<String, String> values}) {
     // TODO: implement createOrUpdateMany
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Map<String, String?>> readAll({required String collectionName}) {
-    // TODO: implement readAll
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> update(
-      {required String collectionName, required String key, required String value}) {
-    // TODO: implement update
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateMany({required String collectionName, required Map<String, String> values}) {
-    // TODO: implement updateMany
     throw UnimplementedError();
   }
 }

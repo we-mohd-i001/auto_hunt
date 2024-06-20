@@ -32,4 +32,6 @@ abstract class NetworkStorageService {
   Future<void> delete({required String collectionName, required String key});
 
   Future<void> deleteMany({required String collectionName, required List<String> keys});
+
+  Future<void> deleteAll({required String collectionName});
 }

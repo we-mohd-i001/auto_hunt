@@ -67,4 +67,10 @@ class NoOpNetworkStorage implements NetworkStorageService {
 
   @override
   Future<void> deleteMany({required String collectionName, required List<String> keys}) async {}
+
+  @override
+  Future<void> deleteAll({required String collectionName}) {
+    // TODO: implement deleteAll
+    throw UnimplementedError();
+  }
 }

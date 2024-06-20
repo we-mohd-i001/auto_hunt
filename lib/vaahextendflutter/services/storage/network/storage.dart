@@ -52,6 +52,18 @@ abstract class NetworkStorage {
     return _instanceNetwork.readMany(collectionName: collectionName, keys: keys);
   }
 
+  static Future<Map<String, String?>> readAll({required String collectionName}) {
+    return _instanceNetwork.readAll(collectionName: collectionName);
+  }
+
+  static Future<void> update({
+    required String collectionName,
+    required String key,
+    required String value,
+  }) async {
+    return _instanceNetwork.update(collectionName: collectionName, key: key, value: value);
+  }
+
   static Future<void> delete({
     String collectionName = 'vaah-flutter-collection',
     required String key,
@@ -64,5 +76,11 @@ abstract class NetworkStorage {
     required List<String> keys,
   }) async {
     return _instanceNetwork.deleteMany(collectionName: collectionName, keys: keys);
+  }
+
+  static Future<void> deleteAll({
+    String collectionName = 'vaah-flutter-collection',
+  }) async {
+    return _instanceNetwork.deleteAll(collectionName: collectionName);
   }
 }
