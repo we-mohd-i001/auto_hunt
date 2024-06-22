@@ -30,7 +30,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   pushNotificationsServiceType: PushNotificationsServiceType.remote,
   internalNotificationsServiceType: InternalNotificationsServiceType.none,
   localStorageType: LocalStorageType.hive,
-  networkStorageType: NetworkStorageType.firebase,
+  networkStorageType: NetworkStorageType.supabase,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
   firebaseId: 'mohd-i001@webreinvent.com',
@@ -45,7 +45,11 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
     tracesSampleRate: 0.6,
   ),
   hiveConfig: HiveConfig(directoryName: 'dir'),
-  supabaseConfig: SupabaseConfig(anonKey: '', url: ''),
+  supabaseConfig: SupabaseConfig(
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtYmdjbm91eXdwZ3Vucml1ZHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4OTk3NDMsImV4cCI6MjAyNTQ3NTc0M30.kRmshqh_welj6_fv-CE5sIDv5h3PzwofGOJseqnGHwI',
+    url: 'https://embgcnouywpgunriudxi.supabase.co',
+  ),
 );
 
 // To add new configuration add new key, value pair in envConfigs

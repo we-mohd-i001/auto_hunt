@@ -1,14 +1,24 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:yourtasks/vaahextendflutter/services/storage/network/storage.dart';
 
 import 'base_service.dart';
 
 class NetworkStorageWithSupabase implements NetworkStorageService {
+  final supabase = Supabase.instance.client;
+
   @override
   Future<void> create({
     required String collectionName,
     required String key,
     required Map<String, dynamic> value,
-  }) async {}
+  }) async {
+    try {
+      value['key'] = key;
+      await supabase.from(collectionName).insert(value);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
   @override
   Future<void> createMany(
