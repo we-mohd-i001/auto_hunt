@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../env.dart';
 import 'services/base_service.dart';
@@ -138,6 +139,11 @@ class GetFirestoreData implements GetData {
 }
 
 class GetSupabaseData implements GetData {
+  final String collectionName;
+  final String key;
+
+  GetSupabaseData({required this.collectionName, required this.key});
+
   @override
   stream() {
     // TODO: implement stream
@@ -145,9 +151,12 @@ class GetSupabaseData implements GetData {
   }
 
   @override
-  Future<Map<String, dynamic>?> call() {
-    // TODO: implement call
-    throw UnimplementedError();
+  Future<Map<String, dynamic>?> call() async {
+    final supabase = Supabase.instance.client;
+    final data = await supabase.from(collectionName).select();
+    Map<String, dynamic> map = data[0];
+    map.remove('key');
+    return map;
   }
 }
 

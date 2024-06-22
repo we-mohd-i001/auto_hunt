@@ -114,11 +114,8 @@ class _MyTestAppState extends State<MyTestApp> {
   }
 
   void read() async {
-    final data =
-        await NetworkStorage.read(collectionName: 'users-collection', key: 'dave').stream();
-    data!.listen((event) {
-      smartPrint(event);
-    });
+    final data = await NetworkStorage.read(collectionName: 'users-collection', key: 'dave').call();
+    smartPrint(data);
   }
 
   void readMany() async {
@@ -142,9 +139,9 @@ class _MyTestAppState extends State<MyTestApp> {
     smartPrint('Updating entry...');
     await NetworkStorage.update(
       collectionName: 'users-collection',
-      key: 'dave',
+      key: 'sean',
       value: {
-        'age': 33,
+        'name': 'Sean',
       },
     );
     smartPrint('Entry updated.');

@@ -21,29 +21,49 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
   }
 
   @override
-  Future<void> createMany(
-      {String collectionName = '', required Map<String, Map<String, dynamic>> values}) {
-    // TODO: implement createAll
-    throw UnimplementedError();
+  Future<void> createMany({
+    required String collectionName,
+    required Map<String, Map<String, dynamic>> values,
+  }) async {
+    List<Map<String, dynamic>> valuesMapToList = [];
+    values.forEach((key, value) {
+      Map<String, dynamic> newMap = Map<String, dynamic>.from(value);
+      newMap['key'] = key;
+      valuesMapToList.add(newMap);
+    });
+    await supabase.from(collectionName).insert(valuesMapToList);
   }
 
   @override
-  GetData read({String collectionName = '', required String key}) {
-    // TODO: implement read
-    throw UnimplementedError();
+  GetData read({required String collectionName, required String key}) {
+    final GetData getData = GetSupabaseData(collectionName: collectionName, key: key);
+    return getData;
   }
 
   @override
   Future<Map<String, GetData>> readMany(
       {required String collectionName, List<String> keys = const []}) {
-    // TODO: implement readAll
     throw UnimplementedError();
   }
 
   @override
-  Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) {
-    // TODO: implement readAll
-    throw UnimplementedError();
+  Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) async {
+    try {
+      final listResult = await supabase.from(collectionName).select();
+      Map<String, Map<String, dynamic>> map = {};
+
+      for (Map<String, dynamic> item in listResult) {
+        String key = item['key'];
+
+        Map<String, dynamic> value = Map<String, dynamic>.from(item);
+        value.remove('key');
+
+        map[key] = value;
+      }
+      return map;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
@@ -51,18 +71,22 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
     required String collectionName,
     required String key,
     required Map<String, dynamic> value,
-  }) {
-    // TODO: implement update
-    throw UnimplementedError();
+  }) async {
+    try {
+      await supabase.from(collectionName).update(value).eq('key', key);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
   Future<void> updateMany({
     required String collectionName,
     required Map<String, Map<String, dynamic>> values,
-  }) {
-    // TODO: implement updateMany
-    throw UnimplementedError();
+  }) async {
+    values.forEach((key, value) async {
+      await update(collectionName: collectionName, key: key, value: value);
+    });
   }
 
   @override
