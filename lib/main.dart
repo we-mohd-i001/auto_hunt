@@ -75,36 +75,57 @@ class MyTestApp extends StatefulWidget {
 class _MyTestAppState extends State<MyTestApp> {
   void create() async {
     smartPrint('Creating entry...');
-    await NetworkStorage.create(
-        collectionName: 'separate-test-collection', key: 'key34', value: '98');
+    await NetworkStorage.create(collectionName: 'users-collection', key: 'dave', value: {
+      'name': 'Dave',
+      'age': 30,
+      'email': 'gmail.com',
+    });
     smartPrint('Entry created.');
   }
 
   void createMany() async {
     smartPrint('Creating multiple entries...');
     await NetworkStorage.createMany(
-      collectionName: 'separate-test-collection',
+      collectionName: 'users-collection',
       values: {
-        'key2': 'Value2',
-        'key3': 'Value3',
-        'key4': 'Value4',
-        'key5': 'Value5',
+        'john': {
+          'name': 'John',
+          'age': 30,
+          'email': 'gmail.com',
+        },
+        'sina': {
+          'name': 'Sina',
+          'age': 30,
+          'email': 'gmail.com',
+        },
+        'rock': {
+          'name': 'Rock',
+          'age': 30,
+          'email': 'gmail.com',
+        },
+        'sean': {
+          'name': 'sean',
+          'age': 30,
+          'email': 'gmail.com',
+        },
       },
     );
     smartPrint('Multiple entries created.');
   }
 
   void read() async {
-    smartPrint(
-      await NetworkStorage.read(collectionName: 'separate-test-collection', key: 'key34'),
-    );
+    final data =
+        await NetworkStorage.read(collectionName: 'users-collection', key: 'dave').stream();
+    data!.listen((event) {
+      smartPrint(event);
+    });
   }
 
   void readMany() async {
     smartPrint(
       await NetworkStorage.readMany(
-        collectionName: 'separate-test-collection',
-        keys: ['key3', 'key2', 'key4', 'key5'],
+        collectionName: 'users-collection',
+        keys: ['dave', 'john', 'sina', 'sean'],
       ),
     );
   }
@@ -112,7 +133,7 @@ class _MyTestAppState extends State<MyTestApp> {
   void readAll() async {
     smartPrint(
       await NetworkStorage.readAll(
-        collectionName: 'separate-test-collection',
+        collectionName: 'users-collection',
       ),
     );
   }
@@ -120,19 +141,40 @@ class _MyTestAppState extends State<MyTestApp> {
   void update() async {
     smartPrint('Updating entry...');
     await NetworkStorage.update(
-        collectionName: 'separate-test-collection', key: 'key34', value: '10000');
+      collectionName: 'users-collection',
+      key: 'dave',
+      value: {
+        'age': 33,
+      },
+    );
     smartPrint('Entry updated.');
   }
 
   void updateMany() async {
     smartPrint('Updating multiple entries...');
     await NetworkStorage.updateMany(
-      collectionName: 'separate-test-collection',
+      collectionName: 'users-collection',
       values: {
-        'key2': 'Value2Updated',
-        'key3': 'Value3Updated',
-        'key4': 'Value4Updated',
-        'key5': 'Value5Updated',
+        'dave': {
+          'name': 'Dave',
+          'age': 31,
+          'email': 'gmail.com',
+        },
+        'sina': {
+          'name': 'Sina',
+          'age': 31,
+          'email': 'gmail.com',
+        },
+        'rock': {
+          'name': 'Rock',
+          'age': 31,
+          'email': 'gmail.com',
+        },
+        'sean': {
+          'name': 'sean',
+          'age': 31,
+          'email': 'gmail.com',
+        },
       },
     );
     smartPrint('Updated multiple entries.');
@@ -141,22 +183,40 @@ class _MyTestAppState extends State<MyTestApp> {
   void createOrUpdate() async {
     smartPrint('Creating or updating entry...');
     NetworkStorage.createOrUpdate(
-        collectionName: 'separate-test-collection', key: 'key34', value: '98');
+      collectionName: 'users-collection',
+      key: 'dave',
+      value: {
+        'age': 34,
+      },
+    );
     smartPrint('Created Or updated the entry.');
   }
 
   void createOrUpdateMany() async {
     smartPrint('Creating or updating multiple entries...');
     NetworkStorage.createOrUpdateMany(
-      collectionName: 'separate-test-collection',
+      collectionName: 'users-collection',
       values: {
-        'key2': 'Value2UpdatedAgain',
-        'key3': 'Value3UpdatedAgain',
-        'key4': 'Value4UpdatedAgain',
-        'key5': 'Value5UpdatedAgain',
-        'key6': 'Value5UpdatedAgain',
-        'key7': 'Value5UpdatedAgain',
-        'key8': 'Value5UpdatedAgain',
+        'dave': {
+          'name': 'Dave',
+          'age': 38,
+          'email': 'gmail.com',
+        },
+        'sina': {
+          'name': 'Sina',
+          'age': 31,
+          'email': 'gmail.com',
+        },
+        'rock': {
+          'name': 'Rock',
+          'age': 31,
+          'email': 'gmail.com',
+        },
+        'sean': {
+          'name': 'sean',
+          'age': 31,
+          'email': 'gmail.com',
+        },
       },
     );
     smartPrint('Created Or updated multiple entries.');
@@ -188,7 +248,6 @@ class _MyTestAppState extends State<MyTestApp> {
   @override
   void initState() {
     super.initState();
-    NetworkStorage.addCollection('separate-test-collection', false);
   }
 
   @override

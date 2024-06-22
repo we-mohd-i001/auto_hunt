@@ -1,29 +1,28 @@
+import 'package:yourtasks/vaahextendflutter/services/storage/network/storage.dart';
+
 import 'base_service.dart';
 
 class NoOpNetworkStorage implements NetworkStorageService {
   @override
-  Future<void> addCollection(String collectionName, bool isShared) async {}
-
-  @override
   Future<void> create({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {}
 
   @override
   Future<void> createMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {}
 
   @override
-  Future<String?> read({required String collectionName, required String key}) async {
-    return null;
+  GetData read({required String collectionName, required String key}) {
+    return GetNoData();
   }
 
   @override
-  Future<Map<String, String?>> readMany({
+  Future<Map<String, GetData>> readMany({
     required String collectionName,
     List<String> keys = const [],
   }) async {
@@ -31,7 +30,7 @@ class NoOpNetworkStorage implements NetworkStorageService {
   }
 
   @override
-  Future<Map<String, String?>> readAll({
+  Future<Map<String, Map<String, dynamic>?>> readAll({
     required String collectionName,
   }) async {
     return {};
@@ -41,26 +40,26 @@ class NoOpNetworkStorage implements NetworkStorageService {
   Future<void> update({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {}
 
   @override
   Future<void> updateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {}
 
   @override
   Future<void> createOrUpdate({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {}
 
   @override
   Future<void> createOrUpdateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {}
   @override
   Future<void> delete({required String collectionName, required String key}) async {}
@@ -69,8 +68,5 @@ class NoOpNetworkStorage implements NetworkStorageService {
   Future<void> deleteMany({required String collectionName, required List<String> keys}) async {}
 
   @override
-  Future<void> deleteAll({required String collectionName}) {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
-  }
+  Future<void> deleteAll({required String collectionName}) async {}
 }

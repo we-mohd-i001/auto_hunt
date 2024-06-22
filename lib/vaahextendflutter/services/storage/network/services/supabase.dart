@@ -1,66 +1,72 @@
+import 'package:yourtasks/vaahextendflutter/services/storage/network/storage.dart';
+
 import 'base_service.dart';
 
 class NetworkStorageWithSupabase implements NetworkStorageService {
   @override
-  Future<void> addCollection(String collectionName, bool isShared) {
-    // TODO: implement addCollection
-    throw UnimplementedError();
-  }
+  Future<void> create({
+    required String collectionName,
+    required String key,
+    required Map<String, dynamic> value,
+  }) async {}
 
   @override
-  Future<void> create({String collectionName = '', required String key, required String value}) {
-    // TODO: implement create
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> createMany({String collectionName = '', required Map<String, String> values}) {
+  Future<void> createMany(
+      {String collectionName = '', required Map<String, Map<String, dynamic>> values}) {
     // TODO: implement createAll
     throw UnimplementedError();
   }
 
   @override
-  Future<String?> read({String collectionName = '', required String key}) {
+  GetData read({String collectionName = '', required String key}) {
     // TODO: implement read
     throw UnimplementedError();
   }
 
   @override
-  Future<Map<String, String?>> readMany(
+  Future<Map<String, GetData>> readMany(
       {required String collectionName, List<String> keys = const []}) {
     // TODO: implement readAll
     throw UnimplementedError();
   }
 
   @override
-  Future<Map<String, String?>> readAll({required String collectionName}) {
+  Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) {
     // TODO: implement readAll
     throw UnimplementedError();
   }
 
   @override
-  Future<void> update(
-      {required String collectionName, required String key, required String value}) {
+  Future<void> update({
+    required String collectionName,
+    required String key,
+    required Map<String, dynamic> value,
+  }) {
     // TODO: implement update
     throw UnimplementedError();
   }
 
   @override
-  Future<void> updateMany({required String collectionName, required Map<String, String> values}) {
+  Future<void> updateMany({
+    required String collectionName,
+    required Map<String, Map<String, dynamic>> values,
+  }) {
     // TODO: implement updateMany
     throw UnimplementedError();
   }
 
   @override
   Future<void> createOrUpdate(
-      {required String collectionName, required String key, required String value}) {
+      {required String collectionName, required String key, required Map<String, dynamic> value}) {
     // TODO: implement createOrUpdate
     throw UnimplementedError();
   }
 
   @override
-  Future<void> createOrUpdateMany(
-      {required String collectionName, required Map<String, String> values}) {
+  Future<void> createOrUpdateMany({
+    required String collectionName,
+    required Map<String, Map<String, dynamic>> values,
+  }) {
     // TODO: implement createOrUpdateMany
     throw UnimplementedError();
   }
