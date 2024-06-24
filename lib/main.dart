@@ -181,10 +181,8 @@ class _MyTestAppState extends State<MyTestApp> {
     smartPrint('Creating or updating entry...');
     NetworkStorage.createOrUpdate(
       collectionName: 'users-collection',
-      key: 'dave',
-      value: {
-        'age': 34,
-      },
+      key: 'sean',
+      value: {'age': 34, 'email': 't@email.com'},
     );
     smartPrint('Created Or updated the entry.');
   }
@@ -201,18 +199,16 @@ class _MyTestAppState extends State<MyTestApp> {
         },
         'sina': {
           'name': 'Sina',
-          'age': 31,
+          'age': 32,
           'email': 'gmail.com',
         },
         'rock': {
           'name': 'Rock',
-          'age': 31,
+          'age': 32,
           'email': 'gmail.com',
         },
         'sean': {
-          'name': 'sean',
-          'age': 31,
-          'email': 'gmail.com',
+          'name': 'Sean',
         },
       },
     );
@@ -221,15 +217,15 @@ class _MyTestAppState extends State<MyTestApp> {
 
   void delete() async {
     smartPrint('Deleting entry...');
-    await NetworkStorage.delete(collectionName: 'separate-test-collection', key: 'key34');
+    await NetworkStorage.delete(collectionName: 'users-collection', key: 'john');
     smartPrint('Entry Deleted.');
   }
 
   void deleteMany() async {
     smartPrint('Deleting multiple entries...');
     await NetworkStorage.deleteMany(
-      collectionName: 'separate-test-collection',
-      keys: ['key3', 'key2', 'key4', 'key5'],
+      collectionName: 'users-collection',
+      keys: ['dave', 'sean', 'sina'],
     );
     smartPrint('Multiple entries deleted.');
   }
@@ -237,7 +233,7 @@ class _MyTestAppState extends State<MyTestApp> {
   void deleteAll() async {
     smartPrint('Deleting All entries...');
     await NetworkStorage.deleteAll(
-      collectionName: 'separate-test-collection',
+      collectionName: 'users-collection',
     );
     smartPrint('All entries deleted.');
   }

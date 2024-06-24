@@ -27,9 +27,9 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
   }) async {
     List<Map<String, dynamic>> valuesMapToList = [];
     values.forEach((key, value) {
-      Map<String, dynamic> newMap = Map<String, dynamic>.from(value);
-      newMap['key'] = key;
-      valuesMapToList.add(newMap);
+      Map<String, dynamic> entry = Map<String, dynamic>.from(value);
+      entry['key'] = key;
+      valuesMapToList.add(entry);
     });
     await supabase.from(collectionName).insert(valuesMapToList);
   }
@@ -50,17 +50,17 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
   Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) async {
     try {
       final listResult = await supabase.from(collectionName).select();
-      Map<String, Map<String, dynamic>> map = {};
+      Map<String, Map<String, dynamic>> result = {};
 
       for (Map<String, dynamic> item in listResult) {
         String key = item['key'];
 
-        Map<String, dynamic> value = Map<String, dynamic>.from(item);
-        value.remove('key');
+        Map<String, dynamic> entry = Map<String, dynamic>.from(item);
+        entry.remove('key');
 
-        map[key] = value;
+        result[key] = entry;
       }
-      return map;
+      return result;
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -90,36 +90,41 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
   }
 
   @override
-  Future<void> createOrUpdate(
-      {required String collectionName, required String key, required Map<String, dynamic> value}) {
-    // TODO: implement createOrUpdate
-    throw UnimplementedError();
+  Future<void> createOrUpdate({
+    required String collectionName,
+    required String key,
+    required Map<String, dynamic> value,
+  }) async {
+    try {
+      value['key'] = key;
+      await supabase.from(collectionName).upsert(value);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
   Future<void> createOrUpdateMany({
     required String collectionName,
     required Map<String, Map<String, dynamic>> values,
-  }) {
-    // TODO: implement createOrUpdateMany
-    throw UnimplementedError();
+  }) async {
+    values.forEach((key, value) async {
+      await createOrUpdate(collectionName: collectionName, key: key, value: value);
+    });
   }
 
   @override
-  Future<void> delete({required String collectionName, required String key}) {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<void> delete({required String collectionName, required String key}) async {
+    await supabase.from(collectionName).delete().eq('key', key);
   }
 
   @override
-  Future<void> deleteMany({required String collectionName, required List<String> keys}) {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
+  Future<void> deleteMany({required String collectionName, required List<String> keys}) async {
+    await supabase.from(collectionName).delete().inFilter('key', keys);
   }
 
   @override
-  Future<void> deleteAll({required String collectionName}) {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
+  Future<void> deleteAll({required String collectionName}) async {
+    await supabase.from(collectionName).delete().neq('key', '');
   }
 }
