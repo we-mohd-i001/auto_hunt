@@ -1,5 +1,3 @@
-import 'package:yourtasks/vaahextendflutter/services/storage/network/storage.dart';
-
 import 'base_service.dart';
 
 class NoOpNetworkStorage implements NetworkStorageService {
@@ -17,14 +15,14 @@ class NoOpNetworkStorage implements NetworkStorageService {
   }) async {}
 
   @override
-  GetData read({required String collectionName, required String key}) {
-    return GetNoData();
+  Future<Map<String, dynamic>?> read({required String collectionName, required String key}) async {
+    return null;
   }
 
   @override
-  Future<Map<String, GetData>> readMany({
+  Future<Map<String, Map<String, dynamic>?>> readMany({
     required String collectionName,
-    List<String> keys = const [],
+    required List<String> keys,
   }) async {
     return {};
   }

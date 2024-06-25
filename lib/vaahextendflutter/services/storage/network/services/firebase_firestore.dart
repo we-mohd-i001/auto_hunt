@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-import '../storage.dart';
 import 'base_service.dart';
 
 class NetworkStorageWithFirestore implements NetworkStorageService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  User? currentUser;
 
   @override
   Future<void> create({
@@ -15,11 +11,17 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
     required String key,
     required Map<String, dynamic> value,
   }) async {
-    try {
-      await _firestore.collection(collectionName).doc(key).set(value);
-    } catch (e) {
-      throw Exception(e.toString());
-    }
+    return _firestore.runTransaction((transaction) async {
+      final DocumentReference documentReference = _firestore.doc('$collectionName/$key');
+      final DocumentSnapshot documentSnapshot = await transaction.get(documentReference);
+      if (!documentSnapshot.exists) {
+        transaction.set(documentReference, value);
+      } else {
+        throw ('Document with ID "$key" already exists.');
+      }
+    }).catchError((e) {
+      throw (e.toString());
+    });
   }
 
   @override
@@ -27,41 +29,55 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
     required String collectionName,
     required Map<String, Map<String, dynamic>> values,
   }) async {
-    WriteBatch batch = _firestore.batch();
+    return _firestore.runTransaction((transaction) async {
+      bool allDocumentsNew = true;
 
-    values.forEach((key, value) async {
-      DocumentReference ref = _firestore.collection(collectionName).doc(key);
-      batch.set(ref, value);
+      for (String docId in values.keys) {
+        final DocumentReference documentReference =
+            _firestore.collection(collectionName).doc(docId);
+        final DocumentSnapshot documentSnapshot = await transaction.get(documentReference);
+
+        if (documentSnapshot.exists) {
+          allDocumentsNew = false;
+          throw ('Document with ID "$docId" already exists.');
+        }
+      }
+
+      if (allDocumentsNew) {
+        for (String docId in values.keys) {
+          DocumentReference documentReference = _firestore.collection(collectionName).doc(docId);
+          transaction.set(documentReference, values[docId]!);
+        }
+      } else {
+        throw ('One or more documents already exist. Aborting transaction.');
+      }
+    }).catchError((e) {
+      throw (e.toString());
     });
-
-    try {
-      await batch.commit();
-    } catch (e) {
-      throw ('Batch write failed: $e');
-    }
   }
 
   @override
-  GetData read({
+  Future<Map<String, dynamic>?> read({
     required String collectionName,
     required String key,
-  }) {
+  }) async {
     try {
-      final GetData getData = GetFirestoreData(collectionName: collectionName, key: key);
-      return getData;
+      final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await _firestore.doc('$collectionName/$key').get();
+      return documentSnapshot.data();
     } catch (e) {
-      throw Exception(e.toString());
+      throw (e.toString());
     }
   }
 
   @override
-  Future<Map<String, GetData>> readMany({
+  Future<Map<String, Map<String, dynamic>?>> readMany({
     required String collectionName,
-    List<String> keys = const [],
+    required List<String> keys,
   }) async {
-    Map<String, GetData> values = {};
+    final Map<String, Map<String, dynamic>?> values = {};
     for (int i = 0; i < keys.length; i++) {
-      values[keys[i]] = read(collectionName: collectionName, key: keys[i]);
+      values[keys[i]] = await read(collectionName: collectionName, key: keys[i]);
     }
     return values;
   }
@@ -69,16 +85,15 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   @override
   Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) async {
     try {
-      final Map<String, Map<String, dynamic>?> result;
       final querySnapshot = await _firestore.collection(collectionName).get();
-      result = Map.fromEntries(
+      final Map<String, Map<String, dynamic>?> result = Map.fromEntries(
         querySnapshot.docs.map(
-          (e) => MapEntry(e.id, e.data()),
+          (entry) => MapEntry(entry.id, entry.data()),
         ),
       );
       return result;
     } catch (e) {
-      throw Exception(e.toString());
+      throw (e.toString());
     }
   }
 
@@ -90,8 +105,18 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   }) async {
     try {
       await _firestore.doc('$collectionName/$key').update(value);
+    } on FirebaseException catch (e) {
+      if (e.code == 'not-found') {
+        throw FirebaseException(
+          plugin: e.plugin,
+          stackTrace: e.stackTrace,
+          code: e.code,
+          message: 'Update Failed: Document with ID "$key" does not exists. ${e.message}',
+        );
+      }
+      throw ('Update Failed: ${e.toString()}');
     } catch (e) {
-      throw Exception(e.toString());
+      throw ('Something went wrong: ${e.toString()}');
     }
   }
 
@@ -100,17 +125,25 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
     required String collectionName,
     required Map<String, Map<String, dynamic>> values,
   }) async {
-    WriteBatch batch = _firestore.batch();
-
-    values.forEach((key, value) async {
-      DocumentReference ref = _firestore.doc('$collectionName/$key');
-      batch.update(ref, value);
-    });
-
     try {
+      final WriteBatch batch = _firestore.batch();
+      values.forEach((key, value) async {
+        final DocumentReference<Map<String, dynamic>> ref = _firestore.doc('$collectionName/$key');
+        batch.update(ref, value);
+      });
       await batch.commit();
+    } on FirebaseException catch (e) {
+      if (e.code == 'not-found') {
+        throw FirebaseException(
+          plugin: e.plugin,
+          stackTrace: e.stackTrace,
+          code: e.code,
+          message: 'Update Failed: ${e.message}',
+        );
+      }
+      throw ('Update Failed: ${e.toString()}');
     } catch (e) {
-      throw ('Batch write failed: $e');
+      throw ('Something went wrong: ${e.toString()}');
     }
   }
 
@@ -123,7 +156,7 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
     try {
       await _firestore.doc('$collectionName/$key').set(value, SetOptions(merge: true));
     } catch (e) {
-      throw Exception(e.toString());
+      throw (e.toString());
     }
   }
 
@@ -132,17 +165,13 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
     required String collectionName,
     required Map<String, Map<String, dynamic>> values,
   }) async {
-    WriteBatch batch = _firestore.batch();
     try {
+      final WriteBatch batch = _firestore.batch();
       values.forEach((key, value) async {
-        DocumentReference ref = _firestore.doc('$collectionName/$key');
+        final DocumentReference<Map<String, dynamic>> ref = _firestore.doc('$collectionName/$key');
         batch.set(ref, value, SetOptions(merge: true));
       });
-    } catch (e) {
-      throw Exception(e.toString());
-    }
 
-    try {
       await batch.commit();
     } catch (e) {
       throw ('Batch write failed: $e');
@@ -154,26 +183,37 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
     try {
       await _firestore.doc('$collectionName/$key').delete();
     } catch (e) {
-      throw Exception(e.toString());
+      throw (e.toString());
     }
   }
 
   @override
   Future<void> deleteMany({required String collectionName, required List<String> keys}) async {
-    for (int i = 0; i < keys.length; i++) {
-      delete(collectionName: collectionName, key: keys[i]);
+    try {
+      final WriteBatch batch = _firestore.batch();
+      for (int i = 0; i < keys.length; i++) {
+        final DocumentReference<Map<String, dynamic>> ref =
+            _firestore.doc('$collectionName/${keys[i]}');
+        batch.delete(ref);
+      }
+
+      await batch.commit();
+    } catch (e) {
+      throw ('Delete failed: $e');
     }
   }
 
   @override
   Future<void> deleteAll({required collectionName}) async {
     try {
-      QuerySnapshot querySnapshot = await _firestore.collection(collectionName).get();
+      final WriteBatch batch = _firestore.batch();
+      final QuerySnapshot querySnapshot = await _firestore.collection(collectionName).get();
       for (DocumentSnapshot doc in querySnapshot.docs) {
-        await doc.reference.delete();
+        batch.delete(doc.reference);
       }
+      batch.commit();
     } catch (e) {
-      throw Exception(e.toString());
+      throw (e.toString());
     }
   }
 }

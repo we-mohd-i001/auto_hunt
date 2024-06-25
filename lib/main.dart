@@ -114,7 +114,8 @@ class _MyTestAppState extends State<MyTestApp> {
   }
 
   void read() async {
-    final data = await NetworkStorage.read(collectionName: 'users-collection', key: 'dave').call();
+    final data = await NetworkStorage.read(collectionName: 'users-collection', key: 'dave');
+
     smartPrint(data);
   }
 

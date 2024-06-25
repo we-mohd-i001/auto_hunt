@@ -30,7 +30,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   pushNotificationsServiceType: PushNotificationsServiceType.remote,
   internalNotificationsServiceType: InternalNotificationsServiceType.none,
   localStorageType: LocalStorageType.hive,
-  networkStorageType: NetworkStorageType.supabase,
+  networkStorageType: NetworkStorageType.firebase,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
   firebaseId: 'mohd-i001@webreinvent.com',

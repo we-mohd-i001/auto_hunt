@@ -1,10 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:yourtasks/vaahextendflutter/services/storage/network/storage.dart';
 
 import 'base_service.dart';
 
 class NetworkStorageWithSupabase implements NetworkStorageService {
-  final supabase = Supabase.instance.client;
+  final SupabaseClient _supabase = Supabase.instance.client;
 
   @override
   Future<void> create({
@@ -13,8 +12,9 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
     required Map<String, dynamic> value,
   }) async {
     try {
+      // add [key] as primary key
       value['key'] = key;
-      await supabase.from(collectionName).insert(value);
+      await _supabase.from(collectionName).insert(value);
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -25,42 +25,57 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
     required String collectionName,
     required Map<String, Map<String, dynamic>> values,
   }) async {
-    List<Map<String, dynamic>> valuesMapToList = [];
-    values.forEach((key, value) {
-      Map<String, dynamic> entry = Map<String, dynamic>.from(value);
-      entry['key'] = key;
-      valuesMapToList.add(entry);
-    });
-    await supabase.from(collectionName).insert(valuesMapToList);
+    try {
+      List<Map<String, dynamic>> valuesMapToList = [];
+      values.forEach((key, value) {
+        Map<String, dynamic> entry = Map<String, dynamic>.from(value);
+        entry['key'] = key;
+        valuesMapToList.add(entry);
+      });
+      await _supabase.from(collectionName).insert(valuesMapToList);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
-  GetData read({required String collectionName, required String key}) {
-    final GetData getData = GetSupabaseData(collectionName: collectionName, key: key);
-    return getData;
+  Future<Map<String, dynamic>?> read({required String collectionName, required String key}) async {
+    try {
+      final data = await _supabase.from(collectionName).select().eq('key', key);
+      final Map<String, dynamic> value = data[0];
+      value.remove('key');
+      return value;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
-  Future<Map<String, GetData>> readMany(
-      {required String collectionName, List<String> keys = const []}) {
-    throw UnimplementedError();
+  Future<Map<String, Map<String, dynamic>?>> readMany({
+    required String collectionName,
+    required List<String> keys,
+  }) async {
+    final Map<String, Map<String, dynamic>?> values = {};
+    for (int i = 0; i < keys.length; i++) {
+      values[keys[i]] = await read(collectionName: collectionName, key: keys[i]);
+    }
+    return values;
   }
 
   @override
   Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) async {
     try {
-      final listResult = await supabase.from(collectionName).select();
-      Map<String, Map<String, dynamic>> result = {};
+      final listResult = await _supabase.from(collectionName).select();
+      final Map<String, Map<String, dynamic>> values = {};
 
-      for (Map<String, dynamic> item in listResult) {
-        String key = item['key'];
+      for (Map<String, dynamic> entry in listResult) {
+        final String key = entry['key'];
+        Map<String, dynamic> value = Map<String, dynamic>.from(entry);
+        value.remove('key');
 
-        Map<String, dynamic> entry = Map<String, dynamic>.from(item);
-        entry.remove('key');
-
-        result[key] = entry;
+        values[key] = value;
       }
-      return result;
+      return values;
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -73,7 +88,7 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
     required Map<String, dynamic> value,
   }) async {
     try {
-      await supabase.from(collectionName).update(value).eq('key', key);
+      await _supabase.from(collectionName).update(value).eq('key', key);
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -96,8 +111,10 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
     required Map<String, dynamic> value,
   }) async {
     try {
+      // add [key] as primary key.
       value['key'] = key;
-      await supabase.from(collectionName).upsert(value);
+
+      await _supabase.from(collectionName).upsert(value);
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -115,16 +132,16 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
 
   @override
   Future<void> delete({required String collectionName, required String key}) async {
-    await supabase.from(collectionName).delete().eq('key', key);
+    await _supabase.from(collectionName).delete().eq('key', key);
   }
 
   @override
   Future<void> deleteMany({required String collectionName, required List<String> keys}) async {
-    await supabase.from(collectionName).delete().inFilter('key', keys);
+    await _supabase.from(collectionName).delete().inFilter('key', keys);
   }
 
   @override
   Future<void> deleteAll({required String collectionName}) async {
-    await supabase.from(collectionName).delete().neq('key', '');
+    await _supabase.from(collectionName).delete().neq('key', '');
   }
 }

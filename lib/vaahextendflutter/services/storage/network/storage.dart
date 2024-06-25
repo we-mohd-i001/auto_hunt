@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../../env.dart';
 import 'services/base_service.dart';
 import 'services/firebase_firestore.dart';
@@ -38,14 +35,14 @@ abstract class NetworkStorage {
     return _instanceNetwork.createMany(collectionName: collectionName, values: values);
   }
 
-  static GetData read({
+  static Future<Map<String, dynamic>?> read({
     String collectionName = _vaahFlutterCollection,
     required String key,
-  }) {
+  }) async {
     return _instanceNetwork.read(collectionName: collectionName, key: key);
   }
 
-  static Future<Map<String, GetData>> readMany({
+  static Future<Map<String, Map<String, dynamic>?>> readMany({
     String collectionName = _vaahFlutterCollection,
     required List<String> keys,
   }) async {
@@ -104,70 +101,5 @@ abstract class NetworkStorage {
     String collectionName = _vaahFlutterCollection,
   }) async {
     return _instanceNetwork.deleteAll(collectionName: collectionName);
-  }
-}
-
-abstract class GetData {
-  Future<Map<String, dynamic>?> call();
-  Future<Stream<Map<String, dynamic>>?> stream();
-}
-
-class GetFirestoreData implements GetData {
-  final String collectionName;
-  final String key;
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  GetFirestoreData({required this.collectionName, required this.key});
-
-  @override
-  Future<Map<String, dynamic>?> call() async {
-    Map<String, dynamic>? value = {};
-    await firestore.doc('$collectionName/$key').get().then((v) => value = v.data());
-    return value;
-  }
-
-  @override
-  Future<Stream<Map<String, dynamic>>> stream() async {
-    return firestore.doc('$collectionName/$key').snapshots().map((documentSnapshot) {
-      if (documentSnapshot.exists) {
-        return documentSnapshot.data()!;
-      } else {
-        return {};
-      }
-    });
-  }
-}
-
-class GetSupabaseData implements GetData {
-  final String collectionName;
-  final String key;
-
-  GetSupabaseData({required this.collectionName, required this.key});
-
-  @override
-  stream() {
-    // TODO: implement stream
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Map<String, dynamic>?> call() async {
-    final supabase = Supabase.instance.client;
-    final data = await supabase.from(collectionName).select();
-    Map<String, dynamic> map = data[0];
-    map.remove('key');
-    return map;
-  }
-}
-
-class GetNoData implements GetData {
-  @override
-  Future<Stream<Map<String, dynamic>>?> stream() async {
-    return null;
-  }
-
-  @override
-  Future<Map<String, dynamic>?> call() async {
-    return null;
   }
 }

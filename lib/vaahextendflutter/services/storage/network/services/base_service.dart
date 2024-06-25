@@ -1,5 +1,3 @@
-import 'package:yourtasks/vaahextendflutter/services/storage/network/storage.dart';
-
 abstract class NetworkStorageService {
   Future<void> create(
       {required String collectionName, required String key, required Map<String, dynamic> value});
@@ -9,11 +7,11 @@ abstract class NetworkStorageService {
     required Map<String, Map<String, dynamic>> values,
   });
 
-  GetData read({required String collectionName, required String key});
+  Future<Map<String, dynamic>?> read({required String collectionName, required String key});
 
-  Future<Map<String, GetData>> readMany({
+  Future<Map<String, Map<String, dynamic>?>> readMany({
     required String collectionName,
-    List<String> keys = const [],
+    required List<String> keys,
   });
 
   Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName});
