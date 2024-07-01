@@ -8,8 +8,12 @@ import 'app_config.dart';
 import 'firebase_options.dart';
 import 'vaahextendflutter/base/base_controller.dart';
 import 'vaahextendflutter/helpers/constants.dart';
+import 'vaahextendflutter/helpers/enums.dart';
 import 'vaahextendflutter/services/api_self_signed.dart';
 import 'vaahextendflutter/services/storage/network/storage.dart';
+import 'vaahextendflutter/widgets/atoms/buttons.dart';
+import 'views/data_table_view.dart';
+import 'views/test_app_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,46 +77,64 @@ class MyTestApp extends StatefulWidget {
 }
 
 class _MyTestAppState extends State<MyTestApp> {
+  final _controller = Get.put(TestAppController());
+
   void create() async {
-    smartPrint('Creating entry...');
-    await NetworkStorage.create(collectionName: 'users-collection', key: 'dave', value: {
-      'name': 'Dave',
-      'age': 30,
-      'email': 'gmail.com',
-    });
-    smartPrint('Entry created.');
+    Get.to(const CreateEntryView(
+      operation: Operation.create,
+    ));
+
+    // smartPrint('Creating entry...');
+    // await NetworkStorage.create(
+    //     collectionName: 'users-collection',
+    //     key: 'dave',
+    //     value: CustomUser(name: 'Dave', age: '23', email: 'xyz@email.com').toJson());
+    // smartPrint('Entry created.');
   }
 
   void createMany() async {
-    smartPrint('Creating multiple entries...');
-    await NetworkStorage.createMany(
-      collectionName: 'users-collection',
-      values: {
-        'john': {'name': 'John', 'age': 30, 'email': 'gmail.com'},
-        'sina': {'name': 'Sina', 'age': 30, 'email': 'gmail.com'},
-        'rock': {'name': 'Rock', 'age': 30, 'email': 'gmail.com'},
-        'sean': {'name': 'sean', 'age': 30, 'email': 'gmail.com'},
-      },
-    );
-    smartPrint('Multiple entries created.');
+    Get.to(const CreateEntryView(
+      operation: Operation.create,
+      isMany: true,
+    ));
+    // smartPrint('Creating multiple entries...');
+    // await NetworkStorage.createMany(
+    //   collectionName: 'users-collection',
+    //   values: {
+    //     'john': CustomUser(name: 'John', age: '23', email: 'xyz@email.com').toJson(),
+    //     'sina': CustomUser(name: 'Sina', age: '23', email: 'xyz@email.com').toJson(),
+    //     'sean': CustomUser(name: 'Sean', age: '23', email: 'xyz@email.com').toJson(),
+    //     'jack': CustomUser(name: 'Jack', age: '23', email: 'xyz@email.com').toJson(),
+    //     'lisa': CustomUser(name: 'Lisa', age: '23', email: 'xyz@email.com').toJson(),
+    //   },
+    // );
+    // _controller.hydrateList();
+    // smartPrint('Multiple entries created.');
   }
 
   void read() async {
-    final data = await NetworkStorage.read(
-      collectionName: 'users-collection',
-      key: 'dave',
-    );
+    Get.to(const CreateEntryView(
+      operation: Operation.read,
+    ));
+    // final data = await NetworkStorage.read(
+    //   collectionName: 'users-collection',
+    //   key: 'dave',
+    // );
 
-    smartPrint(data);
+    //smartPrint(data);
   }
 
   void readMany() async {
-    smartPrint(
-      await NetworkStorage.readMany(
-        collectionName: 'users-collection',
-        keys: ['dave', 'john', 'sina', 'sean'],
-      ),
-    );
+    Get.to(const CreateEntryView(
+      operation: Operation.read,
+      isMany: true,
+    ));
+    // smartPrint(
+    //   await NetworkStorage.readMany(
+    //     collectionName: 'users-collection',
+    //     keys: ['dave', 'john', 'sina', 'sean'],
+    //   ),
+    // );
   }
 
   void readAll() async {
@@ -120,74 +142,83 @@ class _MyTestAppState extends State<MyTestApp> {
   }
 
   void update() async {
-    smartPrint('Updating entry...');
-    await NetworkStorage.update(
-      collectionName: 'users-collection',
-      key: 'sean',
-      value: {
-        'name': 'Sean',
-      },
-    );
-    smartPrint('Entry updated.');
+    Get.to(const CreateEntryView(
+      operation: Operation.update,
+    ));
+    // smartPrint('Updating entry...');
+    // await NetworkStorage.update(
+    //   collectionName: 'users-collection',
+    //   key: 'sean',
+    //   value: CustomUser(name: 'Sean', age: '32', email: 'xyz@email.com').toJson(),
+    // );
+    // smartPrint('Entry updated.');
+    // Get.find<TestAppController>().hydrateList();
   }
 
   void updateMany() async {
-    smartPrint('Updating multiple entries...');
-    await NetworkStorage.updateMany(
-      collectionName: 'users-collection',
-      values: {
-        'dave': {'name': 'Dave', 'age': 31, 'email': 'gmail.com'},
-        'sina': {'name': 'Sina', 'age': 31, 'email': 'gmail.com'},
-        'rock': {'name': 'Rock', 'age': 31, 'email': 'gmail.com'},
-        'sean': {'name': 'sean', 'age': 31, 'email': 'gmail.com'},
-      },
-    );
-    smartPrint('Updated multiple entries.');
+    Get.to(const CreateEntryView(
+      operation: Operation.update,
+      isMany: true,
+    ));
+    // smartPrint('Updating multiple entries...');
+    // await NetworkStorage.updateMany(
+    //   collectionName: 'users-collection',
+    //   values: {
+    //     'jack': CustomUser(name: 'Jack', age: '23', email: 'xyz@email.com').toJson(),
+    //     'lisa': CustomUser(name: 'Lisa', age: '23', email: 'xyz@email.com').toJson(),
+    //   },
+    // );
+    // smartPrint('Updated multiple entries.');
   }
 
   void createOrUpdate() async {
     smartPrint('Creating or updating entry...');
     NetworkStorage.createOrUpdate(
       collectionName: 'users-collection',
-      key: 'sean',
-      value: {'age': 34, 'email': 't@email.com'},
+      key: 'lisa',
+      value: {},
     );
     smartPrint('Created Or updated the entry.');
+    Get.find<TestAppController>().hydrateList();
   }
 
   void createOrUpdateMany() async {
     smartPrint('Creating or updating multiple entries...');
     await NetworkStorage.createOrUpdateMany(
       collectionName: 'users-collection',
-      values: {
-        'dave': {'name': 'Dave', 'age': 38, 'email': 'gmail.com'},
-        'sina': {'name': 'Sina', 'age': 32, 'email': 'gmail.com'},
-        'rock': {'name': 'Rock', 'age': 32, 'email': 'gmail.com'},
-        'sean': {'name': 'Sean'},
-      },
+      values: {},
     );
     smartPrint('Created Or updated multiple entries.');
+    Get.find<TestAppController>().hydrateList();
   }
 
   void delete() async {
-    smartPrint('Deleting entry...');
-    await NetworkStorage.delete(collectionName: 'users-collection', key: 'sean');
-    smartPrint('Entry Deleted.');
+    Get.to(const CreateEntryView(
+      operation: Operation.delete,
+    ));
+    // smartPrint('Deleting entry...');
+    // await NetworkStorage.delete(collectionName: 'users-collection', key: 'sean');
+    // smartPrint('Entry Deleted.');
   }
 
   void deleteMany() async {
-    smartPrint('Deleting multiple entries...');
-    await NetworkStorage.deleteMany(
-      collectionName: 'users-collection',
-      keys: ['dave', 'sean', 'sina'],
-    );
-    smartPrint('Multiple entries deleted.');
+    Get.to(const CreateEntryView(
+      operation: Operation.delete,
+      isMany: true,
+    ));
+    // smartPrint('Deleting multiple entries...');
+    // await NetworkStorage.deleteMany(
+    //   collectionName: 'users-collection',
+    //   keys: ['dave', 'sean', 'sina'],
+    // );
+    // smartPrint('Multiple entries deleted.');
   }
 
   void deleteAll() async {
     smartPrint('Deleting All entries...');
     await NetworkStorage.deleteAll(collectionName: 'users-collection');
     smartPrint('All entries deleted.');
+    _controller.hydrateList();
   }
 
   @override
@@ -198,129 +229,148 @@ class _MyTestAppState extends State<MyTestApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _controller.hydrateList();
+        },
+        child: const Icon(Icons.refresh),
+      ),
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                color: Colors.green,
-                child: Row(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         create();
                       },
-                      child: const Text('Create'),
+                      text: 'Create',
                     ),
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         createMany();
                       },
-                      child: const Text('CreateMany'),
+                      text: 'CreateMany',
                     ),
                   ],
                 ),
-              ),
-              verticalMargin16,
-              Container(
-                color: Colors.blueGrey,
-                child: Row(
+                verticalMargin8,
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.blueGrey,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         read();
                       },
-                      child: const Text('Read'),
+                      text: 'Read',
                     ),
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.blueGrey,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         readMany();
                       },
-                      child: const Text('ReadMany'),
+                      text: 'ReadMany',
                     ),
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.blueGrey,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         readAll();
                       },
-                      child: const Text('ReadAll'),
+                      text: 'ReadAll',
                     ),
                   ],
                 ),
-              ),
-              verticalMargin16,
-              Container(
-                color: Colors.amber,
-                child: Row(
+                verticalMargin8,
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         update();
                       },
-                      child: const Text('Update'),
+                      text: 'Update',
                     ),
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         updateMany();
                       },
-                      child: const Text('UpdateMany'),
+                      text: 'UpdateMany',
                     ),
                   ],
                 ),
-              ),
-              verticalMargin16,
-              Container(
-                color: Colors.lime,
-                child: Row(
+                verticalMargin8,
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.lime,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         createOrUpdate();
                       },
-                      child: const Text('CreateOrUpdate'),
+                      text: 'CreateOrUpdate',
                     ),
-                    ElevatedButton(
+                    ButtonElevated(
+                      backgroundColor: Colors.lime,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         createOrUpdateMany();
                       },
-                      child: const Text('CreateOrUpdateMany'),
+                      text: 'CreateOrUpdateMany',
                     ),
                   ],
                 ),
-              ),
-              verticalMargin16,
-              Container(
-                color: Colors.red,
-                child: Row(
+                verticalMargin8,
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
+                    ButtonElevated(
+                      buttonType: ButtonType.danger,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         delete();
                       },
-                      child: const Text('Delete'),
+                      text: 'Delete',
                     ),
-                    ElevatedButton(
+                    ButtonElevated(
+                      buttonType: ButtonType.danger,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         deleteMany();
                       },
-                      child: const Text('DeleteMany'),
+                      text: 'DeleteMany',
                     ),
-                    ElevatedButton(
+                    ButtonElevated(
+                      buttonType: ButtonType.danger,
+                      foregroundColor: Colors.white,
                       onPressed: () async {
                         deleteAll();
                       },
-                      child: const Text('Delete All'),
+                      text: 'Delete All',
                     ),
                   ],
                 ),
-              ),
-            ],
+                const DataTableView(),
+              ],
+            ),
           ),
         ),
       ),
@@ -330,34 +380,6 @@ class _MyTestAppState extends State<MyTestApp> {
 
 void smartPrint(Object? s) {
   print('---> $s');
-}
-
-class Friends {
-  final List<UserLucky> userLucky;
-  Friends({
-    required this.userLucky,
-  });
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'userLucky': userLucky.map((x) => x.toMap()).toList(),
-    };
-  }
-
-  factory Friends.fromMap(Map<String, dynamic> map) {
-    return Friends(
-      userLucky: List<UserLucky>.from(
-        (map['userLucky'] as List<dynamic>).map<UserLucky>(
-          (x) => UserLucky.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Friends.fromJson(String source) =>
-      Friends.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class UserLucky {
@@ -410,3 +432,5 @@ class UserLucky {
   @override
   int get hashCode => name.hashCode ^ age.hashCode;
 }
+
+enum Operation { create, read, update, delete }
