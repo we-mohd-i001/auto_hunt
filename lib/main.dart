@@ -88,33 +88,20 @@ class _MyTestAppState extends State<MyTestApp> {
     await NetworkStorage.createMany(
       collectionName: 'users-collection',
       values: {
-        'john': {
-          'name': 'John',
-          'age': 30,
-          'email': 'gmail.com',
-        },
-        'sina': {
-          'name': 'Sina',
-          'age': 30,
-          'email': 'gmail.com',
-        },
-        'rock': {
-          'name': 'Rock',
-          'age': 30,
-          'email': 'gmail.com',
-        },
-        'sean': {
-          'name': 'sean',
-          'age': 30,
-          'email': 'gmail.com',
-        },
+        'john': {'name': 'John', 'age': 30, 'email': 'gmail.com'},
+        'sina': {'name': 'Sina', 'age': 30, 'email': 'gmail.com'},
+        'rock': {'name': 'Rock', 'age': 30, 'email': 'gmail.com'},
+        'sean': {'name': 'sean', 'age': 30, 'email': 'gmail.com'},
       },
     );
     smartPrint('Multiple entries created.');
   }
 
   void read() async {
-    final data = await NetworkStorage.read(collectionName: 'users-collection', key: 'dave');
+    final data = await NetworkStorage.read(
+      collectionName: 'users-collection',
+      key: 'dave',
+    );
 
     smartPrint(data);
   }
@@ -129,11 +116,7 @@ class _MyTestAppState extends State<MyTestApp> {
   }
 
   void readAll() async {
-    smartPrint(
-      await NetworkStorage.readAll(
-        collectionName: 'users-collection',
-      ),
-    );
+    smartPrint(await NetworkStorage.readAll(collectionName: 'users-collection'));
   }
 
   void update() async {
@@ -153,26 +136,10 @@ class _MyTestAppState extends State<MyTestApp> {
     await NetworkStorage.updateMany(
       collectionName: 'users-collection',
       values: {
-        'dave': {
-          'name': 'Dave',
-          'age': 31,
-          'email': 'gmail.com',
-        },
-        'sina': {
-          'name': 'Sina',
-          'age': 31,
-          'email': 'gmail.com',
-        },
-        'rock': {
-          'name': 'Rock',
-          'age': 31,
-          'email': 'gmail.com',
-        },
-        'sean': {
-          'name': 'sean',
-          'age': 31,
-          'email': 'gmail.com',
-        },
+        'dave': {'name': 'Dave', 'age': 31, 'email': 'gmail.com'},
+        'sina': {'name': 'Sina', 'age': 31, 'email': 'gmail.com'},
+        'rock': {'name': 'Rock', 'age': 31, 'email': 'gmail.com'},
+        'sean': {'name': 'sean', 'age': 31, 'email': 'gmail.com'},
       },
     );
     smartPrint('Updated multiple entries.');
@@ -190,27 +157,13 @@ class _MyTestAppState extends State<MyTestApp> {
 
   void createOrUpdateMany() async {
     smartPrint('Creating or updating multiple entries...');
-    NetworkStorage.createOrUpdateMany(
+    await NetworkStorage.createOrUpdateMany(
       collectionName: 'users-collection',
       values: {
-        'dave': {
-          'name': 'Dave',
-          'age': 38,
-          'email': 'gmail.com',
-        },
-        'sina': {
-          'name': 'Sina',
-          'age': 32,
-          'email': 'gmail.com',
-        },
-        'rock': {
-          'name': 'Rock',
-          'age': 32,
-          'email': 'gmail.com',
-        },
-        'sean': {
-          'name': 'Sean',
-        },
+        'dave': {'name': 'Dave', 'age': 38, 'email': 'gmail.com'},
+        'sina': {'name': 'Sina', 'age': 32, 'email': 'gmail.com'},
+        'rock': {'name': 'Rock', 'age': 32, 'email': 'gmail.com'},
+        'sean': {'name': 'Sean'},
       },
     );
     smartPrint('Created Or updated multiple entries.');
@@ -218,7 +171,7 @@ class _MyTestAppState extends State<MyTestApp> {
 
   void delete() async {
     smartPrint('Deleting entry...');
-    await NetworkStorage.delete(collectionName: 'users-collection', key: 'john');
+    await NetworkStorage.delete(collectionName: 'users-collection', key: 'sean');
     smartPrint('Entry Deleted.');
   }
 
@@ -233,9 +186,7 @@ class _MyTestAppState extends State<MyTestApp> {
 
   void deleteAll() async {
     smartPrint('Deleting All entries...');
-    await NetworkStorage.deleteAll(
-      collectionName: 'users-collection',
-    );
+    await NetworkStorage.deleteAll(collectionName: 'users-collection');
     smartPrint('All entries deleted.');
   }
 
